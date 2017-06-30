@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         disableShiftMode(navigation);
 
         new TestDatabase().execute("SELECT * FROM Category");
-
+        int i = 9;
         FloatingActionButton addclothes_button = (FloatingActionButton) findViewById(R.id.addClothesButton);
         addclothes_button.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v) {
