@@ -1,0 +1,40 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash"
+    tools:context="com.example.reube.droby.Activities.SplashActivity">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+
+    <Button
+        android:id="@+id/signupbutton"
+        android:layout_width="230dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="175dp"
+        android:background="#80CBC4"
+        android:text="SIGN UP"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+    <Button
+        android:id="@+id/loginbutton"
+        android:layout_width="230dp"
+        android:layout_height="55dp"
+        android:background="#26A69A"
+        android:text="LOGIN"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:visibility="visible"
+        android:layout_marginTop="76dp"
+        android:layout_alignTop="@+id/signupbutton"
+        android:layout_alignStart="@+id/signupbutton" />
+</RelativeLayout>

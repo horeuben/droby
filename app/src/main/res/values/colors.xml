@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#80cbc4</color>
+    <color name="colorPrimaryDark">#00897B</color>
+    <color name="colorAccent">#00897B</color>
+    <color name ="actionBarText">#000000</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="texthint">#afded9</color>
+    <color name="colorPrimaryFade">#80cbc4</color>
+    <color name="bg">#ab000000</color>
+</resources>

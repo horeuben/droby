@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_social"
+        android:icon="@drawable/ic_social_black_24dp"
+        android:title="Social" />
+
+    <item
+        android:id="@+id/navigation_outfits"
+        android:icon="@drawable/ic_outfit_black_24dp"
+        android:title="Outfits" />
+    <item
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="loginstuff" />
+    <item
+        android:id="@+id/navigation_wardrobe"
+        android:icon="@drawable/ic_icon_wardrobe"
+        android:title="Wardrobe" />
+    <item
+        android:id="@+id/navigation_me"
+        android:icon="@drawable/ic_me_black_24dp"
+        android:title="Me" />
+</menu>
