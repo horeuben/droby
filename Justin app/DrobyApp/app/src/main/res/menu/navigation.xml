@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_wardrobe"
+        android:icon="@drawable/wardrobe_icon"
+        android:title="@string/title_wardrobe" />
+
+    <item
+        android:id="@+id/navigation_social"
+        android:icon="@drawable/facebook_icon"
+        android:title="@string/title_social" />
+
+    <item
+        android:id="@+id/navigation_styles"
+        android:icon="@drawable/styles_icon"
+        android:title="@string/title_styles" />
+    <item
+        android:id="@+id/navigation_me"
+        android:icon="@drawable/me_icon"
+        android:title="@string/title_me" />
+</menu>

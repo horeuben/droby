@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">DrobyApp</string>
+    <string name="title_wardrobe">Wardrobe</string>
+    <string name="title_me">Me</string>
+    <string name="title_social">Social</string>
+    <string name="title_styles">Styles</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
