@@ -1,4 +1,4 @@
-package com.example.android.drobyapp;
+package com.example.reube.droby.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,12 @@ import android.widget.GridView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+
+import com.example.reube.droby.Activities.Clothes;
+import com.example.reube.droby.Activities.ClothesBasket;
+import com.example.reube.droby.Activities.ClothesDescription;
+import com.example.reube.droby.Adapters.ClothesAdapter;
+import com.example.reube.droby.R;
 
 import java.util.ArrayList;
 import java.util.List;

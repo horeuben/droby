@@ -1,4 +1,4 @@
-package com.example.android.drobyapp;
+package com.example.reube.droby.Adapters;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,7 +8,7 @@ import android.widget.ImageView;
  * Created by Family on 12/6/2017.
  */
 
-public class SquareImageView extends ImageView {
+public class SquareImageView extends android.support.v7.widget.AppCompatImageView {
     public SquareImageView(Context context) {
         super(context);
     }

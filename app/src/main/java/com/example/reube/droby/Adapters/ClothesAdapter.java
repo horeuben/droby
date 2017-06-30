@@ -1,4 +1,4 @@
-package com.example.android.drobyapp;
+package com.example.reube.droby.Adapters;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,13 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.reube.droby.Activities.Clothes;
+import com.example.reube.droby.R;
+
 import java.util.ArrayList;
 
-import static android.R.id.list;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static android.media.CamcorderProfile.get;
-import static android.widget.Toast.makeText;
-import static com.example.android.drobyapp.R.id.btn1;
 
 /**
  * Created by Family on 14/6/2017.

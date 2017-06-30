@@ -1,18 +1,12 @@
-package com.example.android.drobyapp;
+package com.example.reube.droby.Activities;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import static android.R.attr.bitmap;
-import static android.R.attr.y;
+import com.example.reube.droby.Adapters.ClothesBasketAdapter;
+import com.example.reube.droby.R;
 
 /**
  * Created by Family on 9/6/2017.
@@ -23,7 +17,9 @@ public class ClothesDescription extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.clothes_description);
+        setTitle("Details");
+
+        setContentView(R.layout.activity_clothes_description);
 
         ImageView imageView = (ImageView) findViewById(R.id.clothes_image);
 

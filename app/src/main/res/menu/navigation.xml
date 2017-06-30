@@ -16,7 +16,7 @@
         android:title="loginstuff" />
     <item
         android:id="@+id/navigation_wardrobe"
-        android:icon="@drawable/ic_icon_wardrobe"
+        android:icon="@drawable/wardrobe_icon"
         android:title="Wardrobe" />
     <item
         android:id="@+id/navigation_me"

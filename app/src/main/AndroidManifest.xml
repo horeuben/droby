@@ -52,6 +52,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
             />
+        <activity android:name=".Activities.ClothesDescription"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            />
+        <activity android:name=".Activities.ClothesBasket"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            />
     </application>
 
 
