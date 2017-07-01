@@ -1,5 +1,6 @@
-package com.example.android.drobyapp;
+package com.example.reube.droby.Activities;
 
+import android.media.Image;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -48,8 +49,8 @@ public class Clothes implements Parcelable {
     }
 
     // Creator
-    public static final Creator CREATOR
-            = new Creator() {
+    public static final Parcelable.Creator CREATOR
+            = new Parcelable.Creator() {
         public Clothes createFromParcel(Parcel in) {
             return new Clothes(in);
         }

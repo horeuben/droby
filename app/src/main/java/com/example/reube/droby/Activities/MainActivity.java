@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.reube.droby.Database.DatabaseHandler;
+import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.Fragments.MeFragment;
 import com.example.reube.droby.Fragments.OutfitFragment;
 import com.example.reube.droby.Fragments.Social.FashionFragment;
@@ -90,16 +91,18 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
                 case R.id.navigation_wardrobe:
                     mTextMessage.setText("Wardrobe");
                     //TODO set to wardrobe activity
-                    WardrobeFragment wardrobeFragment = new WardrobeFragment();
+                  //  WardrobeFragment wardrobeFragment = new WardrobeFragment();
 //                    Bundle args = new Bundle();
 //                    args.putInt(SocialFragment.ARG_POSITION, position);
 //                    newFragment.setArguments(args);
 
                     // Replace whatever is in the fragment_container view with this fragment,
                     // and add the transaction to the back stack so the user can navigate back
-                    transaction.replace(R.id.fragment_container, wardrobeFragment);
+                    //transaction.replace(R.id.fragment_container, wardrobeFragment);
                     //transaction.addToBackStack(null);
 
+                    ClothesFragment clothesFragment = new ClothesFragment();
+                    transaction.replace(R.id.fragment_container,clothesFragment);
                     // Commit the transaction
                     transaction.commit();
                     return true;
@@ -142,17 +145,16 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         disableShiftMode(navigation);
 
         new TestDatabase().execute("SELECT * FROM Category");
-        int i = 9;
-        FloatingActionButton addclothes_button = (FloatingActionButton) findViewById(R.id.addClothesButton);
-        addclothes_button.setOnClickListener(new Button.OnClickListener(){
-            public void onClick(View v) {
-                Intent intent=new Intent();
-                intent.setClass(MainActivity.this, ClothesBasketActivity.class);
-                startActivity(intent);
-                //    SplashActivity.this.finish();
-            }
-
-        });
+//        FloatingActionButton addclothes_button = (FloatingActionButton) findViewById(R.id.addClothesButton);
+//        addclothes_button.setOnClickListener(new Button.OnClickListener(){
+//            public void onClick(View v) {
+//                Intent intent=new Intent();
+//                intent.setClass(MainActivity.this, ClothesBasketActivity.class);
+//                startActivity(intent);
+//                //    SplashActivity.this.finish();
+//            }
+//
+//        });
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
