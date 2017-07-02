@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -96,108 +97,95 @@ public class ClothesFragment extends Fragment {
                 clothesIntent.putExtra("imageId",image_id);
                 clothesIntent.putExtra("imageDescription", clothes_description);
                 startActivity(clothesIntent);
-
-
-                CheckBox checkbox = (CheckBox) view.getTag(R.id.btn1);
-                //Toast.makeText(view.getContext(), isCheckedOrNot(checkbox), Toast.LENGTH_LONG).show();
-
             }
-            private String isCheckedOrNot(CheckBox checkbox) {
-                if(checkbox.isChecked())
 
-                    return "is checked";
-
-                else
-                    return "is not checked";
-            }
         });
 
-
-
         setHasOptionsMenu(true);
-        gridView.setTextFilterEnabled(true);
-
-
 
         return rootView;
     }
 
 
 
-    private void filter(String text){
-
-        for(int i = 0; i < size; i+=1){
-
-            if (clothes.get(i).getClothesDescription().contains(text)){
-
-                clothes2.add(new Clothes(clothes.get(i).getClothesDescription(),clothes.get(i).getImageResourceId()));
-            }
-            adapter.notifyDataSetChanged();
-            gridView.setAdapter(adapter);
-            gridView.invalidateViews();
-
-            adapter = new ClothesAdapter(getActivity(), clothes2);
-            //gridView = (GridView) findViewById(R.id.clothes_list);
-            gridView.setAdapter(adapter);
-
-        }
-
-
-
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        // Implementing ActionBar Search inside a fragment
-        MenuItem item = menu.add("Search");
-        item.setIcon(R.drawable.ic_search_black_24dp); // sets icon
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        SearchView sv = new SearchView(getActivity());
+        getActivity().getMenuInflater().inflate(R.menu.menu_search, menu);
+        MenuItem searchItem = menu.findItem(R.id.menuSearch);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         // modifying the text inside edittext component
-        int id = sv.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
-        TextView textView = (TextView) sv.findViewById(id);
+        int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        TextView textView = (TextView) searchView.findViewById(id);
         textView.setHint("Search clothing...");
-        textView.setHintTextColor(getResources().getColor(R.color.black));
+        textView.setHintTextColor(getResources().getColor(R.color.texthint));
         textView.setTextColor(getResources().getColor(R.color.black));
 
-        // implementing the listener
-        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextChange(String newText)
-            {
-
-                if (TextUtils.isEmpty(newText)) {
-                    gridView.clearTextFilter();
-                } else {
-                    //gridView.setFilterText(newText);
-                    filter(newText);
-                }
-//                if (TextUtils.isEmpty(newText)) {
-//                    adapter.filter("");
-//                    gridView.clearTextFilter();
-//                } else {
-//                    adapter.filter(newText);
-//                }
-
-                return true;
-            }
+        //*** setOnQueryTextFocusChangeListener ***
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
-            public boolean onQueryTextSubmit(String query)
-            {
-                return false;
+            public void onFocusChange(View v, boolean hasFocus) {
+
             }
         });
-        item.setActionView(sv);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String searchQuery) {
+
+                adapter.filter(searchQuery.toString().trim());
+                gridView.invalidate();
+                return true;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // Do something when collapsed
+                return true;  // Return true to collapse action view
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // Do something when expanded
+                return true;  // Return true to expand action view
+            }
+        });
+
+
+    }
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item){
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.menuSearch) {
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
-
-
-
-
-
 }
+
+
+
+
+
+
+
 

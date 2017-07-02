@@ -19,6 +19,7 @@ import com.example.reube.droby.Activities.Clothes;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 /**
@@ -29,12 +30,15 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
 
     public ArrayList<Clothes> clothes_cart = new ArrayList<Clothes>();
     private ArrayList<Clothes> clothes;
+    private ArrayList<Clothes> filteredClothes;
 
 
     public ClothesAdapter(Activity context, ArrayList<Clothes> clothes) {
 
         super(context,0,clothes);
         this.clothes = clothes;
+        filteredClothes = new ArrayList<Clothes>();
+        filteredClothes.addAll(clothes);
 
     }
 
@@ -115,6 +119,27 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
         ImageView thumbnail;
         TextView title;
         CheckBox button;
+    }
+    public void filter(String charText) {
+
+        charText = charText.toLowerCase(Locale.getDefault());
+
+        clothes.clear();
+        if (charText.length() == 0) {
+            clothes.addAll(filteredClothes);
+
+        } else {
+            for (Clothes clothesDetail : filteredClothes) {
+                if (charText.length() != 0 && clothesDetail.getClothesDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    clothes.add(clothesDetail);
+                }
+
+                else if (charText.length() != 0 && clothesDetail.getClothesDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    clothes.add(clothesDetail);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
 
