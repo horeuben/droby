@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.reube.droby.Fragments.Social.TrendingFragment;
+import com.microsoft.windowsazure.mobileservices.table.sync.MobileServiceSyncTable;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -25,13 +26,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 1;
-
+    private static final int DATABASE_VERSION = 2;
+    private MobileServiceSyncTable<Clothes> clothesMobileServiceSyncTable;
     // Database Name
     private static final String DATABASE_NAME = "droby_database";
 
     // Table names
-    private static final String TABLE_USER = "user";
+    private static final String TABLE_USER = "appuser";
     private static final String TABLE_CATEGORY ="category";
     private static final String TABLE_CLOTHES ="clothes";
     private static final String TABLE_IMAGE ="image";
@@ -82,8 +83,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT,"+ KEY_PASSWORD + " TEXT,"+ KEY_EMAIL + " TEXT" + ")";
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT" + ")";
-        String CREATE_CLOTHES_TABLE = "CREATE TABLE " + TABLE_CLOTHES + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_USER_ID + " INTEGER," + KEY_CATEGORY_ID + " INTEGER," + KEY_IMAGE_ID + " INTEGER," + KEY_NAME + " TEXT,"+ KEY_DESCRIPTION + " TEXT,"+ KEY_CREATED_DATE + " DATETIME," + KEY_FREQUENCY + " TEXT,"+ KEY_LOCATION+" TEXT"+")";
-        String CREATE_IMAGE_TABLE = "CREATE TABLE " + TABLE_IMAGE + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_IMAGE_BLOB + " BLOB" + ")";
+        String CREATE_CLOTHES_TABLE = "CREATE TABLE " + TABLE_CLOTHES + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_USER_ID + " INTEGER," + KEY_CATEGORY_ID + " INTEGER," + KEY_IMAGE_BLOB + " BLOB,"  + KEY_NAME + " TEXT,"+ KEY_DESCRIPTION + " TEXT,"+ KEY_CREATED_DATE + " DATETIME," + KEY_FREQUENCY + " TEXT,"+ KEY_LOCATION+" TEXT"+")";
+        //String CREATE_IMAGE_TABLE = "CREATE TABLE " + TABLE_IMAGE + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_IMAGE_BLOB + " BLOB" + ")";
         String CREATE_OUTFIT_TABLE = "CREATE TABLE " + TABLE_OUTFIT + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ KEY_OUTFIT_ID + " INTEGER, " + KEY_USER_ID + " INTEGER, "+ KEY_CLOTHES_ID + " INTEGER, "+ KEY_NAME+" TEXT "+")";
         String CREATE_TAG_TABLE = "CREATE TABLE " + TABLE_TAG + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT,"+ KEY_USER_ID + " INTEGER," + KEY_CLOTHES_ID + " INTEGER," + KEY_CATEGORY_ID + " INTEGER," + KEY_IMAGE_ID + " INTEGER" +")";
         String CREATE_FREQUENCY_TABLE = "CREATE TABLE " + TABLE_FREQUENCY + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_CLOTHES_ID + " INTEGER,"+ KEY_DATE_WORN + " DATETIME "+ ")";
@@ -91,7 +92,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_CATEGORY_TABLE);
         db.execSQL(CREATE_CLOTHES_TABLE);
-        db.execSQL(CREATE_IMAGE_TABLE);
+       // db.execSQL(CREATE_IMAGE_TABLE);
         db.execSQL(CREATE_OUTFIT_TABLE);
         db.execSQL(CREATE_TAG_TABLE);
         db.execSQL(CREATE_FREQUENCY_TABLE);
@@ -105,7 +106,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CLOTHES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_OUTFIT);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGE);
+       // db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TAG);
 
         // Create tables again
@@ -215,7 +216,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 clothes.setName(c.getString((c.getColumnIndex(KEY_NAME))));
                 clothes.setDescription(c.getString((c.getColumnIndex(KEY_DESCRIPTION))));
                 clothes.setUser_id(c.getInt(c.getColumnIndex(KEY_USER_ID)));
-                clothes.setImage_id(c.getInt(c.getColumnIndex(KEY_IMAGE_ID)));
+                byte[] imgByte = c.getBlob(c.getColumnIndex(KEY_IMAGE_BLOB));
+                clothes.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
                 clothes.setCategory_id(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
                 clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
                 clothes.setLocation(c.getString(c.getColumnIndex(KEY_LOCATION)).charAt(0));
@@ -245,20 +247,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // get image of clothes , way to use is to setImageBitmap(bitmap)
-    public Bitmap getClothesImage(Clothes clothes){
-        String selectQuery = "SELECT  * FROM " + TABLE_IMAGE + " WHERE "+ KEY_ID + " = '"+ new String[] { String.valueOf(clothes.getImage_id()) }+"'";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c = db.rawQuery(selectQuery, null);
-        if (c != null)
-            c.moveToFirst();
-        byte[] imgByte = c.getBlob(c.getColumnIndex(KEY_IMAGE_BLOB));
-        db.close();
-        c.close();
-        return BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
-
-
-    }
+//    public Bitmap getClothesImage(Clothes clothes){
+//        String selectQuery = "SELECT  * FROM " + TABLE_IMAGE + " WHERE "+ KEY_ID + " = '"+ new String[] { String.valueOf(clothes.getImage_id()) }+"'";
+//
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor c = db.rawQuery(selectQuery, null);
+//        if (c != null)
+//            c.moveToFirst();
+//        byte[] imgByte = c.getBlob(c.getColumnIndex(KEY_IMAGE_BLOB));
+//        db.close();
+//        c.close();
+//        return BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
+//
+//
+//    }
     //for converting bitmap to byte to store
     public byte[] getBitmapAsByteArray(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

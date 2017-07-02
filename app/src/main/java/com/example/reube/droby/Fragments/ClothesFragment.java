@@ -43,7 +43,7 @@ public class ClothesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        getActivity().setTitle("Wardrobe");
         View rootView = inflater.inflate(R.layout.clothes_list, container, false);
 
 
