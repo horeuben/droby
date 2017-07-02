@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reube.droby.Adapters.ClothesBasketAdapter;
+import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;

@@ -1,6 +1,8 @@
 package com.example.reube.droby.Fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -17,28 +19,27 @@ import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-
-import com.example.reube.droby.Activities.Clothes;
 import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.ClothesDescription;
 import com.example.reube.droby.Adapters.ClothesAdapter;
+import com.example.reube.droby.Database.Clothes;
+import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.reube.droby.R.id.clothes_description;
+
 
 public class ClothesFragment extends Fragment {
 
     public static ArrayList<Clothes> clothes = new ArrayList<Clothes>();
-    public static ArrayList<Clothes> clothes2 = new ArrayList<Clothes>();
-    private SearchView mSearchView;
     private GridView gridView;
     private ClothesAdapter adapter;
-    private List<String> clothesList; //search bar
-    private List<String> searchList;
-    private int size = clothes.size();
+    private DatabaseHandler mDbHelper;
 
 
     @Override
@@ -53,29 +54,16 @@ public class ClothesFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ArrayList<Clothes> final_cart = adapter.clothes_cart;
+                //Toast.makeText(getActivity(),final_cart.get(0).getDescription(), Toast.LENGTH_SHORT).show();
                 Intent clothesBasketIntent = new Intent(getActivity(), ClothesBasket.class);
                 clothesBasketIntent.putExtra("ArrayList",final_cart);
                 startActivity(clothesBasketIntent);
             }
         });
 
+        mDbHelper = new DatabaseHandler(getActivity());
 
-        clothes = new ArrayList<Clothes>();  //prevent list from multiplying everytime clothesfragment is activated
-        //final ArrayList<Clothes> clothes = new ArrayList<Clothes>();
-        clothes.add(new Clothes("Black Shirt", R.drawable.black_shirt));
-        clothes.add(new Clothes("Brown Coat", R.drawable.brown_coat));
-        clothes.add(new Clothes("Orange Dress", R.drawable.orange_dress));
-        clothes.add(new Clothes("Pink T-shirt", R.drawable.pink_tshirt));
-        clothes.add(new Clothes("White Shirt", R.drawable.white_shirt));
-        clothes.add(new Clothes("White Shorts", R.drawable.white_shorts));
-        clothes.add(new Clothes("Blue Shirt", R.drawable.blue_shirt));
-        clothes.add(new Clothes("Other Black Shirt", R.drawable.black_shirt));
-        clothes.add(new Clothes("Other Blue Shirt", R.drawable.blue_shirt));
-        clothes.add(new Clothes("Other Brown Coat", R.drawable.brown_coat));
-        clothes.add(new Clothes("Other Orange Dress", R.drawable.orange_dress));
-        clothes.add(new Clothes("Other Pink T-shirt", R.drawable.pink_tshirt));
-        clothes.add(new Clothes("Other White Shirt", R.drawable.white_shirt));
-        clothes.add(new Clothes("Other White Shorts", R.drawable.white_shorts));
+        clothes = mDbHelper.getAllClothesTest();
 
         adapter = new ClothesAdapter(getActivity(), clothes);
 
@@ -90,8 +78,8 @@ public class ClothesFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Toast.makeText(getActivity(), "Item #" + position + " clicked", Toast.LENGTH_SHORT).show();
                 Clothes pos = clothes.get(position);
-                int image_id = pos.getImageResourceId();
-                String clothes_description = pos.getClothesDescription();
+                byte[] image_id = pos.getImage();
+                String clothes_description = pos.getDescription();
 
                 Intent clothesIntent = new Intent(getActivity(), ClothesDescription.class);
                 clothesIntent.putExtra("imageId",image_id);
@@ -105,8 +93,6 @@ public class ClothesFragment extends Fragment {
 
         return rootView;
     }
-
-
 
 
     @Override

@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.example.reube.droby.Fragments.ClothesFragment.clothes;
+
 /**
  * Created by reube on 21/6/2017.
  */
@@ -26,7 +28,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
     private MobileServiceSyncTable<Clothes> clothesMobileServiceSyncTable;
     // Database Name
     private static final String DATABASE_NAME = "droby_database";
@@ -34,7 +36,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Table names
     private static final String TABLE_USER = "appuser";
     private static final String TABLE_CATEGORY ="category";
-    private static final String TABLE_CLOTHES ="clothes";
+    public static final String TABLE_CLOTHES ="clothes";
     private static final String TABLE_IMAGE ="image";
     private static final String TABLE_OUTFIT ="outfit";
     private static final String TABLE_TAG ="tag";
@@ -56,14 +58,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // Clothes Table Column names
     private static final String KEY_IMAGE_ID = "image_id";
-    private static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_DESCRIPTION = "description";
     private static final String KEY_CREATED_DATE = "created_date";
     private static final String KEY_FREQUENCY = "frequency";
     private static final String KEY_LOCATION = "location";
     // get arraylist of tags that a clothes have
 
     // Image Table Column names
-    private static final String KEY_IMAGE_BLOB = "image_blob";
+    public static final String KEY_IMAGE_BLOB = "image_blob";
 
     // Outfit Table Column names
     // get arraylist of clothes that make up an outfit, the rest all common
@@ -108,6 +110,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_OUTFIT);
        // db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TAG);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FREQUENCY);
 
         // Create tables again
         onCreate(db);
@@ -199,6 +202,62 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public String getClothes() {
+         String clothesList = new String();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_CLOTHES;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Clothes clothes = new Clothes();
+                clothes.setDescription(c.getString((c.getColumnIndex(KEY_DESCRIPTION))));
+                clothesList += clothes.getDescription() + "\n";
+
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        // return contact list
+        return clothesList;
+    }
+
+    public ArrayList<Clothes> getAllClothesTest() {
+        ArrayList<Clothes> clothesList = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_CLOTHES;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Clothes clothes = new Clothes();
+                clothes.setId(c.getInt((c.getColumnIndex(KEY_ID))));
+                clothes.setName(c.getString((c.getColumnIndex(KEY_NAME))));
+                clothes.setDescription(c.getString((c.getColumnIndex(KEY_DESCRIPTION))));
+                clothes.setUser_id(c.getInt(c.getColumnIndex(KEY_USER_ID)));
+                byte[] imgByte = c.getBlob(c.getColumnIndex(KEY_IMAGE_BLOB));
+                clothes.setImage(imgByte);
+                //clothes.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
+                clothes.setCategory_id(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
+                clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
+                //clothes.setLocation(c.getString(c.getColumnIndex(KEY_LOCATION)).charAt(0));
+                // Adding clothes to list
+                clothesList.add(clothes);
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        // return contact list
+        return clothesList;
+    }
+
     //get clothes of a user
     public ArrayList<Clothes> getAllClothes(User user) {
         ArrayList<Clothes> clothesList = new ArrayList<>();
@@ -217,7 +276,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 clothes.setDescription(c.getString((c.getColumnIndex(KEY_DESCRIPTION))));
                 clothes.setUser_id(c.getInt(c.getColumnIndex(KEY_USER_ID)));
                 byte[] imgByte = c.getBlob(c.getColumnIndex(KEY_IMAGE_BLOB));
-                clothes.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
+                //clothes.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
                 clothes.setCategory_id(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
                 clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
                 clothes.setLocation(c.getString(c.getColumnIndex(KEY_LOCATION)).charAt(0));

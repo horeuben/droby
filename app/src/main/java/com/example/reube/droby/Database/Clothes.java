@@ -1,6 +1,8 @@
 package com.example.reube.droby.Database;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,8 +11,8 @@ import java.util.Date;
  * Created by reube on 4/6/2017.
  */
 //might have to create another class for frequency, to add clothes id and date worn, then sum them up
-public class Clothes {
-    public Clothes(int id, int user_id, Bitmap image, int category_id, String name, String description, Date created_date, char location) {
+public class Clothes implements Parcelable {
+    public Clothes(int id, int user_id, byte[] image, int category_id, String name, String description, Date created_date, char location) {
         this.id = id;
         this.user_id = user_id;
         this.image = image;
@@ -19,6 +21,7 @@ public class Clothes {
         this.description = description;
         this.created_date = created_date;
         this.location = location;
+
         //tags get separately
         //frequency get separately
     }
@@ -99,19 +102,64 @@ public class Clothes {
         this.location = location;
     }
 
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
     private int id,user_id,category_id;
     private String name,description;
     private ArrayList<Tag> tags;
     private Date created_date;
     private ArrayList<Date> frequency;
     private char location;
-    private Bitmap image;
+    private byte[] image;
+    private boolean selected;
 
-    public Bitmap getImage() {
-        return image;
+
+
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setImage(Bitmap image) {
-        this.image = image;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(description);
+        dest.writeInt(image.length);
+        dest.writeByteArray(image);
+
+
+    }
+
+    // Creator
+    public static final Parcelable.Creator CREATOR
+            = new Parcelable.Creator() {
+        public Clothes createFromParcel(Parcel in) {
+            return new Clothes(in);
+        }
+
+        public Clothes[] newArray(int size) {
+            return new Clothes[size];
+        }
+    };
+
+    // "De-parcel object
+    public Clothes(Parcel in) {
+        description = in.readString();
+        image = new byte[in.readInt()];
+        in.readByteArray(image);
     }
 }

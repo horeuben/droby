@@ -1,13 +1,16 @@
 package com.example.reube.droby.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.example.reube.droby.Activities.AddImageTestActivity;
 import com.example.reube.droby.R;
 
 /**
@@ -64,10 +67,22 @@ public class OutfitFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.fragment_outfit, container, false);
         // Inflate the layout for this fragment
         getActivity().setTitle("Outfits");
 
-        return inflater.inflate(R.layout.fragment_outfit, container, false);
+        Button button = (Button) rootView.findViewById(R.id.add_image);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddImageTestActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
