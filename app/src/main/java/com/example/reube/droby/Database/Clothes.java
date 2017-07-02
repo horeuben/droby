@@ -1,5 +1,7 @@
 package com.example.reube.droby.Database;
 
+import android.graphics.Bitmap;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -8,10 +10,10 @@ import java.util.Date;
  */
 //might have to create another class for frequency, to add clothes id and date worn, then sum them up
 public class Clothes {
-    public Clothes(int id, int user_id, int image_id, int category_id, String name, String description, Date created_date, char location) {
+    public Clothes(int id, int user_id, Bitmap image, int category_id, String name, String description, Date created_date, char location) {
         this.id = id;
         this.user_id = user_id;
-        this.image_id = image_id;
+        this.image = image;
         this.category_id = category_id;
         this.name = name;
         this.description = description;
@@ -39,14 +41,6 @@ public class Clothes {
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
-    }
-
-    public int getImage_id() {
-        return image_id;
-    }
-
-    public void setImage_id(int image_id) {
-        this.image_id = image_id;
     }
 
     public int getCategory_id() {
@@ -105,10 +99,19 @@ public class Clothes {
         this.location = location;
     }
 
-    private int id,user_id,image_id,category_id;
+    private int id,user_id,category_id;
     private String name,description;
     private ArrayList<Tag> tags;
     private Date created_date;
     private ArrayList<Date> frequency;
     private char location;
+    private Bitmap image;
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
 }
