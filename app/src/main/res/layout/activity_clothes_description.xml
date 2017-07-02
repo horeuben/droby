@@ -41,7 +41,6 @@
 
         </RelativeLayout>
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -49,33 +48,14 @@
             android:textSize="20sp"
             android:gravity="center"
             android:background="@android:color/white"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_corner"
-            android:textSize="15sp"
-            android:text="Dress"
-            android:layout_gravity="center"
-            android:padding="8dp"
-            android:layout_marginBottom="8dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_corner"
-            android:textSize="15sp"
-            android:text="Bright Coloured"
-            android:layout_gravity="center"
-            android:padding="8dp"
-            android:layout_marginBottom="8dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_corner"
-            android:textSize="15sp"
-            android:text="Comfortable"
-            android:layout_gravity="center"
-            android:padding="8dp"
-            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:id="@+id/tagslayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
