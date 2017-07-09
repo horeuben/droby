@@ -16,6 +16,8 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.reube.droby.Activities.AddImageTestActivity;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.R;
 
@@ -30,6 +32,7 @@ import java.util.Locale;
 public class ClothesAdapter extends ArrayAdapter<Clothes> {
 
     public ArrayList<Clothes> clothes_cart = new ArrayList<Clothes>();
+    public ArrayList<String> clothes_basket_cart = new ArrayList<String>();
     private ArrayList<Clothes> clothes;
     private ArrayList<Clothes> filteredClothes;
 
@@ -53,7 +56,7 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
             convertView = inflater.inflate(R.layout.clothes_item, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.title = (TextView) convertView.findViewById(R.id.description);
-            viewHolder.image = (ImageView) convertView.findViewById(R.id.add_to_cart);
+            //viewHolder.image = (ImageView) convertView.findViewById(R.id.add_to_cart);
             viewHolder.button = (CheckBox) convertView.findViewById(R.id.btn1);
             viewHolder.image_clothes = (ImageView) convertView.findViewById(R.id.clothes_image);
             convertView.setTag(viewHolder);
@@ -83,12 +86,14 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
                         Toast.makeText(getContext(),"Already Selected",Toast.LENGTH_SHORT);
                     }
                     else{
+                        clothes_basket_cart.add(Integer.toString(item.getId()));
                         clothes_cart.add(item);
-                        Toast.makeText(getContext(), getItem(position).getDescription() + " selected", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getItem(position).getDescription() + " selected", Toast.LENGTH_SHORT);
                     }
 
                 }
                 else{
+                    clothes_basket_cart.remove(Integer.toString(item.getId()));
                     clothes_cart.remove(item);
                 }
             }
@@ -115,12 +120,32 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
         return convertView;
     }
 
-    public class ViewHolder {
+    private class ViewHolder {
 
         ImageView image;
         TextView title;
         CheckBox button;
         ImageView image_clothes;
+    }
+
+    //recursive blind checks removal for everything inside a View
+    public void removeAllChecks(ViewGroup vg) {
+        View v = null;
+        for(int i = 0; i < vg.getChildCount(); i++){
+            try {
+                v = vg.getChildAt(i);
+                ((CheckBox)v).setChecked(false);
+            }
+            catch(Exception e1){ //if not checkBox, null View, etc
+                try {
+                    removeAllChecks((ViewGroup)v);
+                }
+                catch(Exception e2){ //v is not a view group
+                    continue;
+                }
+            }
+        }
+
     }
 
     private Bitmap convertToBitmap(byte[] b){
@@ -150,7 +175,6 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
         }
         notifyDataSetChanged();
     }
-
 
 
 }

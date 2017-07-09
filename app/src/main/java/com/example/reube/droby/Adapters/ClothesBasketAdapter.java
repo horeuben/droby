@@ -10,14 +10,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Database.Clothes;
+import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
+
+import static android.R.attr.data;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
+import static com.example.reube.droby.Fragments.ClothesFragment.clothes;
 
 
 /**
@@ -28,33 +36,72 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
 
 
 
+    public ClothesBasketAdapter(Activity context, ArrayList<Clothes> clothesBasket) {
 
-    public ClothesBasketAdapter(Activity context, ArrayList<Clothes> clothes) {
-
-        super(context,0,clothes);
+        super(context,0,clothesBasket);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
+
+        ViewHolder viewHolder = null;
         // Check if the existing view is being reused, otherwise inflate the view
         View listItemView = convertView;
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.clothes_basket_item, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.discard = (ImageView) listItemView.findViewById(R.id.trash);
+            viewHolder.check = (CheckBox) listItemView.findViewById(R.id.boxx);
+            viewHolder.clothes_image = (ImageView) listItemView.findViewById(R.id.selected_clothes);
+            viewHolder.description_clothes = (TextView) listItemView.findViewById(R.id.selected_clothes_descr);
+            listItemView.setTag(viewHolder);
+            listItemView.setTag(R.id.trash, viewHolder.discard);
+            listItemView.setTag(R.id.boxx, viewHolder.check);
+            listItemView.setTag(R.id.selected_clothes_descr, viewHolder.description_clothes);
+        }
+        else{
+            viewHolder = (ViewHolder) listItemView.getTag();
         }
 
-        Clothes currentClothe = getItem(position);
+        final ViewHolder finalViewHolder = viewHolder;
+        viewHolder.discard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(getContext(), position + " Discarded", Toast.LENGTH_SHORT).show();
+                finalViewHolder.check.setChecked(false);
+                ClothesBasket.basketList.remove(position);
 
-        TextView clothes_description = (TextView) listItemView.findViewById(R.id.selected_clothes_descr);
+                notifyDataSetChanged();
+            }
+        });
 
-        clothes_description.setText(currentClothe.getDescription());
 
-        ImageView clothes_image = (ImageView) listItemView.findViewById(R.id.selected_clothes);
 
-        clothes_image.setImageBitmap(convertToBitmap(currentClothe.getImage()));
+
+        viewHolder.clothes_image.setImageBitmap(convertToBitmap(getItem(position).getImage()));
+        viewHolder.description_clothes.setText(getItem(position).getDescription());
+
+//        Clothes currentClothe = getItem(position);
+//
+//        TextView clothes_description = (TextView) listItemView.findViewById(R.id.selected_clothes_descr);
+//
+//        clothes_description.setText(currentClothe.getDescription());
+//
+//        ImageView clothes_image = (ImageView) listItemView.findViewById(R.id.selected_clothes);
+//
+//        clothes_image.setImageBitmap(convertToBitmap(currentClothe.getImage()));
 
         return listItemView;
 
+    }
+
+    private class ViewHolder {
+
+        ImageView discard;
+        ImageView clothes_image;
+        TextView description_clothes;
+        CheckBox check;
     }
 
     private Bitmap convertToBitmap(byte[] b){

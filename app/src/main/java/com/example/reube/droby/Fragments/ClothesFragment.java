@@ -1,12 +1,18 @@
 package com.example.reube.droby.Fragments;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+
+
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,11 +21,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
 
 import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.ClothesDescription;
@@ -31,7 +42,9 @@ import com.example.reube.droby.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.action;
 import static com.example.reube.droby.R.id.clothes_description;
+import static com.example.reube.droby.R.id.spinner;
 
 
 public class ClothesFragment extends Fragment {
@@ -40,30 +53,41 @@ public class ClothesFragment extends Fragment {
     private GridView gridView;
     private ClothesAdapter adapter;
     private DatabaseHandler mDbHelper;
+    private MenuItem mSpinnerItem = null;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         getActivity().setTitle("Wardrobe");
         View rootView = inflater.inflate(R.layout.clothes_list, container, false);
+        //((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("TEst");
+
 
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 ArrayList<Clothes> final_cart = adapter.clothes_cart;
+                ArrayList<String> clothesBasketCart = new ArrayList<String>();
+                clothesBasketCart = adapter.clothes_basket_cart;
                 //Toast.makeText(getActivity(),final_cart.get(0).getDescription(), Toast.LENGTH_SHORT).show();
+
                 Intent clothesBasketIntent = new Intent(getActivity(), ClothesBasket.class);
                 clothesBasketIntent.putExtra("ArrayList",final_cart);
+                clothesBasketIntent.putExtra("StringList", clothesBasketCart);
                 startActivity(clothesBasketIntent);
+                adapter.removeAllChecks(container);
+
             }
         });
 
         mDbHelper = new DatabaseHandler(getActivity());
 
         clothes = mDbHelper.getAllClothesTest();
+
 
         adapter = new ClothesAdapter(getActivity(), clothes);
 
@@ -100,6 +124,34 @@ public class ClothesFragment extends Fragment {
         getActivity().getMenuInflater().inflate(R.menu.menu_search, menu);
         MenuItem searchItem = menu.findItem(R.id.menuSearch);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        //setting up spinner
+
+        MenuItem item = menu.findItem(R.id.spinner);
+        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+
+
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.spinner_data, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(spinnerAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                if(selectedItem.equals("Formal")){
+                    Toast.makeText(getActivity(), "Formal selected", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         // modifying the text inside edittext component
         int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
@@ -162,9 +214,18 @@ public class ClothesFragment extends Fragment {
 
             return true;
         }
+
+        switch (item.getItemId()) {
+            case R.id.option1:
+                Toast.makeText(getActivity(), "Option 1 selected", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.option2:
+                Toast.makeText(getActivity(), "Option 2 selected", Toast.LENGTH_SHORT).show();
+                return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
-
 
 }
 

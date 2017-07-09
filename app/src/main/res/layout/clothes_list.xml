@@ -5,18 +5,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <GridView
-        android:id="@+id/clothes_list"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="2"
-        android:descendantFocusability="blocksDescendants"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:orientation="vertical">
 
-    </GridView>
+
+        <GridView
+            android:id="@+id/clothes_list"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="2"
+            android:descendantFocusability="blocksDescendants"
+            android:overScrollMode="always"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        </GridView>
+
+    </LinearLayout>
+
+
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -24,7 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="45dp"
+        android:layout_marginRight="20dp"
         app:srcCompat="@drawable/ic_shopping_cart_grey_24dp"
         app:backgroundTint="#B2DFDB" />
 

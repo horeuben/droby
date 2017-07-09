@@ -202,6 +202,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+//-->////////////////////////////////////////////////////////////////////////////////////////////////
     public String getClothes() {
          String clothesList = new String();
         // Select All Query
@@ -216,7 +217,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
                 Clothes clothes = new Clothes();
                 clothes.setDescription(c.getString((c.getColumnIndex(KEY_DESCRIPTION))));
-                clothesList += clothes.getDescription() + "\n";
+                clothes.setId(c.getInt((c.getColumnIndex(KEY_ID))));
+                clothesList += clothes.getDescription() +" "+ clothes.getId() + "\n";
 
             } while (c.moveToNext());
         }
@@ -257,6 +259,51 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // return contact list
         return clothesList;
     }
+
+    public ArrayList<Clothes> getSelectedClothesIdTest(ArrayList<String> items){
+        ArrayList<Clothes> clothesList = new ArrayList<Clothes>();
+        String s = new String();
+        for (int i=0; i<items.size(); i++){
+            if(i< items.size()-1){
+                s += items.get(i) + ",";
+            }
+            else{
+                s += items.get(i);
+            }
+
+        }
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+//        String[] projection = {KEY_ID, KEY_USER_ID, KEY_CATEGORY_ID, KEY_IMAGE_BLOB, KEY_NAME, KEY_DESCRIPTION, KEY_CREATED_DATE, KEY_FREQUENCY, KEY_LOCATION};
+//        Cursor c = db.query(TABLE_CLOTHES, projection, KEY_ID + " IN(?)", new String[]{"1","2"},null,null,null);
+        String selectQuery = "SELECT  * FROM " + TABLE_CLOTHES + " WHERE " + KEY_ID + " IN " + "("+ s + ")";
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+            do {
+                Clothes clothes = new Clothes();
+                clothes.setId(c.getInt((c.getColumnIndex(KEY_ID))));
+                clothes.setName(c.getString((c.getColumnIndex(KEY_NAME))));
+                clothes.setDescription(c.getString((c.getColumnIndex(KEY_DESCRIPTION))));
+                clothes.setUser_id(c.getInt(c.getColumnIndex(KEY_USER_ID)));
+                byte[] imgByte = c.getBlob(c.getColumnIndex(KEY_IMAGE_BLOB));
+                clothes.setImage(imgByte);
+                //clothes.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
+                clothes.setCategory_id(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
+                clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
+                //clothes.setLocation(c.getString(c.getColumnIndex(KEY_LOCATION)).charAt(0));
+                // Adding clothes to list
+                clothesList.add(clothes);
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        // return contact list
+        return clothesList;
+
+    }
+    //////////////////////////////////////////////////////////////////////////<--
 
     //get clothes of a user
     public ArrayList<Clothes> getAllClothes(User user) {

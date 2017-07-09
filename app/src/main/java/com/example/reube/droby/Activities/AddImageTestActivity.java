@@ -122,7 +122,7 @@ public class AddImageTestActivity extends AppCompatActivity {
 
                     if (choosenImage != null) {
 
-                        bp = decodeUri(choosenImage, 400);
+                        bp = decodeUri(choosenImage, 150);
                         pic.setImageBitmap(bp);
                     }
                 }
@@ -130,7 +130,7 @@ public class AddImageTestActivity extends AppCompatActivity {
     }
 
 
-    //COnvert and resize our image to 400dp for faster uploading our images to DB
+    //Convert and resize our image to 400dp for faster uploading our images to DB
     protected Bitmap decodeUri(Uri selectedImage, int REQUIRED_SIZE) {
 
         try {
@@ -187,19 +187,10 @@ public class AddImageTestActivity extends AppCompatActivity {
         // Gets the database in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        // Create a ContentValues object where column names are the keys,
-        // and Toto's pet attributes are the values.
         ContentValues values = new ContentValues();
         values.put(DatabaseHandler.KEY_DESCRIPTION, des);
         values.put(DatabaseHandler.KEY_IMAGE_BLOB, profileImage(bp));
 
-        // Insert a new row for Toto in the database, returning the ID of that new row.
-        // The first argument for db.insert() is the pets table name.
-        // The second argument provides the name of a column in which the framework
-        // can insert NULL in the event that the ContentValues is empty (if
-        // this is set to "null", then the framework will not insert a row when
-        // there are no values).
-        // The third argument is the ContentValues object containing the info for Toto.
         long newRowId = db.insert(DatabaseHandler.TABLE_CLOTHES, null, values);
         Toast.makeText(getApplicationContext(),"Added data", Toast.LENGTH_SHORT).show();
     }
