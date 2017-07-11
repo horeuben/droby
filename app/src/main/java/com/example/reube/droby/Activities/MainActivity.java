@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_social:
-                    mTextMessage.setText("Social");
+                    //mTextMessage.setText("Social");
                     // Create fragment and give it an argument specifying the article it should show
                     SocialFragment socialFragment = new SocialFragment();
 //                    Bundle args = new Bundle();
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
                     transaction.commit();
                     return true;
                 case R.id.navigation_outfits:
-                    mTextMessage.setText("Outfits");
+                    //mTextMessage.setText("Outfits");
                     OutfitFragment outfitFragment = new OutfitFragment();
 //                    Bundle args = new Bundle();
 //                    args.putInt(SocialFragment.ARG_POSITION, position);
@@ -84,14 +84,13 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
                     transaction.commit();
                     return true;
                 case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                    //mTextMessage.setText(R.string.title_notifications);
                     Intent intent=new Intent();
                     intent.setClass(MainActivity.this, SplashActivity.class);
                     startActivity(intent);
                     //MainActivity.this.finish();
                     return true;
                 case R.id.navigation_wardrobe:
-                    mTextMessage.setText("Wardrobe");
                     //TODO set to wardrobe activity
                   //  WardrobeFragment wardrobeFragment = new WardrobeFragment();
 //                    Bundle args = new Bundle();
@@ -109,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
                     transaction.commit();
                     return true;
                 case R.id.navigation_me:
-                    mTextMessage.setText("Me");
+                    //mTextMessage.setText("Me");
                     //TODO set to me profile screen
                     MeFragment meFragment = new MeFragment();
 //                    Bundle args = new Bundle();
@@ -148,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         disableShiftMode(navigation);
 
-        new TestDatabase().execute("SELECT * FROM Category");
+        //new TestDatabase().execute("SELECT * FROM Category");
 //        FloatingActionButton addclothes_button = (FloatingActionButton) findViewById(R.id.addClothesButton);
 //        addclothes_button.setOnClickListener(new Button.OnClickListener(){
 //            public void onClick(View v) {

@@ -33,18 +33,6 @@
         <category android:name="android.intent.category.LAUNCHER" />
     </intent-filter></activity>
 
-        <activity android:name=".Activities.ClothesBasketActivity"
-            android:screenOrientation="portrait"
-            android:label="Clothes Basket"
-            android:parentActivityName=".Activities.MainActivity"
-            android:theme="@style/AppTheme" >
-
-        <!-- Parent activity meta-data to support 4.0 and lower -->
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".Activities.MainActivity" />
-        </activity>
-
         <activity android:name=".Activities.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"/>
@@ -56,10 +44,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             />
-        <activity android:name=".Activities.ClothesBasket"
+        <activity android:name=".Activities.AddImageTestActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             />
+        <activity
+            android:name=".Activities.ClothesBasket"
+            android:label="Clothes Basket"
+            android:parentActivityName=".Activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.MainActivity"/>
+        </activity>
     </application>
 
 

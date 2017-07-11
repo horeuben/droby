@@ -1,10 +1,18 @@
 package com.example.reube.droby.Fragments;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+
+
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,71 +21,71 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
-import com.example.reube.droby.Activities.Clothes;
+
 import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.ClothesDescription;
 import com.example.reube.droby.Adapters.ClothesAdapter;
-import com.example.reube.droby.Database.DatabaseHandler;
-import com.example.reube.droby.Database.Outfit;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.action;
+import static com.example.reube.droby.R.id.clothes_description;
+import static com.example.reube.droby.R.id.spinner;
+
 
 public class ClothesFragment extends Fragment {
 
     public static ArrayList<Clothes> clothes = new ArrayList<Clothes>();
-    public static ArrayList<Clothes> clothes2 = new ArrayList<Clothes>();
-    private SearchView mSearchView;
     private GridView gridView;
     private ClothesAdapter adapter;
-    private List<String> clothesList; //search bar
-    private List<String> searchList;
-    private int size = clothes.size();
+    private DatabaseHandler mDbHelper;
+    private MenuItem mSpinnerItem = null;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         getActivity().setTitle("Wardrobe");
         View rootView = inflater.inflate(R.layout.clothes_list, container, false);
+        //((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("TEst");
+
 
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 ArrayList<Clothes> final_cart = adapter.clothes_cart;
+                ArrayList<String> clothesBasketCart = new ArrayList<String>();
+                clothesBasketCart = adapter.clothes_basket_cart;
+                //Toast.makeText(getActivity(),final_cart.get(0).getDescription(), Toast.LENGTH_SHORT).show();
+
                 Intent clothesBasketIntent = new Intent(getActivity(), ClothesBasket.class);
                 clothesBasketIntent.putExtra("ArrayList",final_cart);
+                clothesBasketIntent.putExtra("StringList", clothesBasketCart);
                 startActivity(clothesBasketIntent);
+                adapter.removeAllChecks(container);
+
             }
         });
 
+        mDbHelper = new DatabaseHandler(getActivity());
 
-        clothes = new ArrayList<Clothes>();  //prevent list from multiplying everytime clothesfragment is activated
-        //final ArrayList<Clothes> clothes = new ArrayList<Clothes>();
-        clothes.add(new Clothes("Black Shirt", R.drawable.black_shirt));
-        clothes.add(new Clothes("Brown Coat", R.drawable.brown_coat));
-        clothes.add(new Clothes("Orange Dress", R.drawable.orange_dress));
-        clothes.add(new Clothes("Pink T-shirt", R.drawable.pink_tshirt));
-        clothes.add(new Clothes("White Shirt", R.drawable.white_shirt));
-        clothes.add(new Clothes("White Shorts", R.drawable.white_shorts));
-        clothes.add(new Clothes("Blue Shirt", R.drawable.blue_shirt));
-        clothes.add(new Clothes("Other Black Shirt", R.drawable.black_shirt));
-        clothes.add(new Clothes("Other Blue Shirt", R.drawable.blue_shirt));
-        clothes.add(new Clothes("Other Brown Coat", R.drawable.brown_coat));
-        clothes.add(new Clothes("Other Orange Dress", R.drawable.orange_dress));
-        clothes.add(new Clothes("Other Pink T-shirt", R.drawable.pink_tshirt));
-        clothes.add(new Clothes("Other White Shirt", R.drawable.white_shirt));
-        clothes.add(new Clothes("Other White Shorts", R.drawable.white_shorts));
+        clothes = mDbHelper.getAllClothesTest();
+
 
         adapter = new ClothesAdapter(getActivity(), clothes);
 
@@ -92,8 +100,8 @@ public class ClothesFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Toast.makeText(getActivity(), "Item #" + position + " clicked", Toast.LENGTH_SHORT).show();
                 Clothes pos = clothes.get(position);
-                int image_id = pos.getImageResourceId();
-                String clothes_description = pos.getClothesDescription();
+                byte[] image_id = pos.getImage();
+                String clothes_description = pos.getDescription();
 
                 Intent clothesIntent = new Intent(getActivity(), ClothesDescription.class);
                 clothesIntent.putExtra("imageId",image_id);
@@ -116,6 +124,34 @@ public class ClothesFragment extends Fragment {
         getActivity().getMenuInflater().inflate(R.menu.menu_search, menu);
         MenuItem searchItem = menu.findItem(R.id.menuSearch);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        //setting up spinner
+
+        MenuItem item = menu.findItem(R.id.spinner);
+        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+
+
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.spinner_data, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(spinnerAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                if(selectedItem.equals("Formal")){
+                    Toast.makeText(getActivity(), "Formal selected", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         // modifying the text inside edittext component
         int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
@@ -178,6 +214,16 @@ public class ClothesFragment extends Fragment {
 
             return true;
         }
+
+        switch (item.getItemId()) {
+            case R.id.option1:
+                Toast.makeText(getActivity(), "Option 1 selected", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.option2:
+                Toast.makeText(getActivity(), "Option 2 selected", Toast.LENGTH_SHORT).show();
+                return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

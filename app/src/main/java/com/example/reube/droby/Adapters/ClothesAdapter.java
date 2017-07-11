@@ -2,6 +2,8 @@ package com.example.reube.droby.Adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.reube.droby.Activities.Clothes;
+import com.example.reube.droby.Activities.AddImageTestActivity;
+import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ import java.util.Locale;
 public class ClothesAdapter extends ArrayAdapter<Clothes> {
 
     public ArrayList<Clothes> clothes_cart = new ArrayList<Clothes>();
+    public ArrayList<String> clothes_basket_cart = new ArrayList<String>();
     private ArrayList<Clothes> clothes;
     private ArrayList<Clothes> filteredClothes;
 
@@ -52,8 +56,9 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
             convertView = inflater.inflate(R.layout.clothes_item, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.title = (TextView) convertView.findViewById(R.id.description);
-            viewHolder.thumbnail = (ImageView) convertView.findViewById(R.id.add_to_cart);
+            //viewHolder.image = (ImageView) convertView.findViewById(R.id.add_to_cart);
             viewHolder.button = (CheckBox) convertView.findViewById(R.id.btn1);
+            viewHolder.image_clothes = (ImageView) convertView.findViewById(R.id.clothes_image);
             convertView.setTag(viewHolder);
             convertView.setTag(R.id.description, viewHolder.title);
             convertView.setTag(R.id.btn1, viewHolder.button);
@@ -81,12 +86,14 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
                         Toast.makeText(getContext(),"Already Selected",Toast.LENGTH_SHORT);
                     }
                     else{
+                        clothes_basket_cart.add(Integer.toString(item.getId()));
                         clothes_cart.add(item);
-                        Toast.makeText(getContext(), getItem(position).getClothesDescription() + " selected", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getItem(position).getDescription() + " selected", Toast.LENGTH_SHORT);
                     }
 
                 }
                 else{
+                    clothes_basket_cart.remove(Integer.toString(item.getId()));
                     clothes_cart.remove(item);
                 }
             }
@@ -95,31 +102,58 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
 
 
         viewHolder.button.setTag(position); // This line is important.
-
-        viewHolder.title.setText(clothes.get(position).getClothesDescription());
         viewHolder.button.setChecked(clothes.get(position).isSelected());
 
+        viewHolder.title.setText(clothes.get(position).getDescription());
+        viewHolder.image_clothes.setImageBitmap(convertToBitmap(clothes.get(position).getImage()));
 
 
-        Clothes currentClothe = getItem(position);
-
-        TextView clothes_description = (TextView) convertView.findViewById(R.id.description);
-
-        clothes_description.setText(currentClothe.getClothesDescription());
-
-        ImageView clothes_image = (ImageView) convertView.findViewById(R.id.clothes_image);
-
-        clothes_image.setImageResource(currentClothe.getImageResourceId());
+//        Clothes currentClothe = getItem(position);
+//
+//        TextView clothes_description = (TextView) convertView.findViewById(R.id.description);
+//        clothes_description.setText(currentClothe.getDescription());
+//
+//        ImageView clothes_image = (ImageView) convertView.findViewById(R.id.clothes_image);
+//
+//        clothes_image.setImageBitmap(convertToBitmap(currentClothe.getImage()));
 
         return convertView;
     }
 
-    public class ViewHolder {
+    private class ViewHolder {
 
-        ImageView thumbnail;
+        ImageView image;
         TextView title;
         CheckBox button;
+        ImageView image_clothes;
     }
+
+    //recursive blind checks removal for everything inside a View
+    public void removeAllChecks(ViewGroup vg) {
+        View v = null;
+        for(int i = 0; i < vg.getChildCount(); i++){
+            try {
+                v = vg.getChildAt(i);
+                ((CheckBox)v).setChecked(false);
+            }
+            catch(Exception e1){ //if not checkBox, null View, etc
+                try {
+                    removeAllChecks((ViewGroup)v);
+                }
+                catch(Exception e2){ //v is not a view group
+                    continue;
+                }
+            }
+        }
+
+    }
+
+    private Bitmap convertToBitmap(byte[] b){
+
+        return BitmapFactory.decodeByteArray(b, 0, b.length);
+
+    }
+
     public void filter(String charText) {
 
         charText = charText.toLowerCase(Locale.getDefault());
@@ -130,18 +164,17 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
 
         } else {
             for (Clothes clothesDetail : filteredClothes) {
-                if (charText.length() != 0 && clothesDetail.getClothesDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
+                if (charText.length() != 0 && clothesDetail.getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
                     clothes.add(clothesDetail);
                 }
 
-                else if (charText.length() != 0 && clothesDetail.getClothesDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
+                else if (charText.length() != 0 && clothesDetail.getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
                     clothes.add(clothesDetail);
                 }
             }
         }
         notifyDataSetChanged();
     }
-
 
 
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -11,24 +11,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:drawSelectorOnTop="true"
-        android:layout_marginBottom="0sp"/>
+        android:layout_marginBottom="0sp"
+        android:overScrollMode="ifContentScrolls"
+        android:layout_weight="1"/>
 
-    <Button
-        android:id="@+id/b1"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="style from selection"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:backgroundTint="@color/colorPrimary"/>
+        android:orientation="horizontal"
+        android:layout_weight="0"
+        android:layout_gravity="right">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="empty"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/b1" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="empty" />
+        <Button
+            android:id="@+id/b1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="style from selection"
+            android:backgroundTint="@color/colorPrimary" />
 
 
 
-</RelativeLayout>
+
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>

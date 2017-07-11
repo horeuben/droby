@@ -1,15 +1,20 @@
 package com.example.reube.droby.Activities;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.reube.droby.Adapters.ClothesBasketAdapter;
 import com.example.reube.droby.R;
@@ -34,9 +39,10 @@ public class ClothesDescription extends AppCompatActivity {
 
         TextView textView = (TextView) findViewById(R.id.clothes_description);
 
-        int image_Id = getIntent().getIntExtra("imageId",0);
+        //int image_Id = getIntent().getIntExtra("imageId",0);
+        byte[] image_Id = getIntent().getByteArrayExtra("imageId");
         String description = getIntent().getStringExtra("imageDescription");
-        imageView.setImageResource(image_Id);
+        imageView.setImageBitmap(convertToBitmap(image_Id));
         textView.setText(description);
 
 
@@ -57,6 +63,12 @@ public class ClothesDescription extends AppCompatActivity {
 
 
         populateText(layout, views, this );
+
+    }
+
+    private Bitmap convertToBitmap(byte[] b){
+
+        return BitmapFactory.decodeByteArray(b, 0, b.length);
 
     }
 
