@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import static android.content.ContentValues.TAG;
+import static com.example.reube.droby.Fragments.ClothesFragment.clothes;
 
 /**
  * Created by reube on 21/6/2017.
@@ -42,7 +43,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Table names
     private static final String TABLE_USER = "appuser";
     private static final String TABLE_CATEGORY ="category";
-    private static final String TABLE_CLOTHES ="clothes";
+    public static final String TABLE_CLOTHES ="clothes";
     private static final String TABLE_IMAGE ="image";
     private static final String TABLE_OUTFIT ="outfit";
     private static final String TABLE_TAG ="tag";
@@ -64,14 +65,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // Clothes Table Column names
     private static final String KEY_IMAGE_ID = "image_id";
-    private static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_DESCRIPTION = "description";
     private static final String KEY_CREATED_DATE = "created_date";
     private static final String KEY_FREQUENCY = "frequency";
     private static final String KEY_LOCATION = "location";
     // get arraylist of tags that a clothes have
 
     // Image Table Column names
-    private static final String KEY_IMAGE_BLOB = "image_blob";
+    public static final String KEY_IMAGE_BLOB = "image_blob";
 
     // Outfit Table Column names
     // get arraylist of clothes that make up an outfit, the rest all common
@@ -207,6 +208,109 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+//-->////////////////////////////////////////////////////////////////////////////////////////////////
+    public String getClothes() {
+         String clothesList = new String();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_CLOTHES;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Clothes clothes = new Clothes();
+                clothes.setDescription(c.getString((c.getColumnIndex(KEY_DESCRIPTION))));
+                clothes.setId(c.getInt((c.getColumnIndex(KEY_ID))));
+                clothesList += clothes.getDescription() +" "+ clothes.getId() + "\n";
+
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        // return contact list
+        return clothesList;
+    }
+
+    public ArrayList<Clothes> getAllClothesTest() {
+        ArrayList<Clothes> clothesList = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_CLOTHES;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Clothes clothes = new Clothes();
+                clothes.setId(c.getInt((c.getColumnIndex(KEY_ID))));
+                clothes.setName(c.getString((c.getColumnIndex(KEY_NAME))));
+                clothes.setDescription(c.getString((c.getColumnIndex(KEY_DESCRIPTION))));
+                clothes.setUser_id(c.getInt(c.getColumnIndex(KEY_USER_ID)));
+                byte[] imgByte = c.getBlob(c.getColumnIndex(KEY_IMAGE_BLOB));
+                clothes.setImage(imgByte);
+                //clothes.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
+                clothes.setCategory_id(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
+                clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
+                //clothes.setLocation(c.getString(c.getColumnIndex(KEY_LOCATION)).charAt(0));
+                // Adding clothes to list
+                clothesList.add(clothes);
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        // return contact list
+        return clothesList;
+    }
+
+    public ArrayList<Clothes> getSelectedClothesIdTest(ArrayList<String> items){
+        ArrayList<Clothes> clothesList = new ArrayList<Clothes>();
+        String s = new String();
+        for (int i=0; i<items.size(); i++){
+            if(i< items.size()-1){
+                s += items.get(i) + ",";
+            }
+            else{
+                s += items.get(i);
+            }
+
+        }
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+//        String[] projection = {KEY_ID, KEY_USER_ID, KEY_CATEGORY_ID, KEY_IMAGE_BLOB, KEY_NAME, KEY_DESCRIPTION, KEY_CREATED_DATE, KEY_FREQUENCY, KEY_LOCATION};
+//        Cursor c = db.query(TABLE_CLOTHES, projection, KEY_ID + " IN(?)", new String[]{"1","2"},null,null,null);
+        String selectQuery = "SELECT  * FROM " + TABLE_CLOTHES + " WHERE " + KEY_ID + " IN " + "("+ s + ")";
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+            do {
+                Clothes clothes = new Clothes();
+                clothes.setId(c.getInt((c.getColumnIndex(KEY_ID))));
+                clothes.setName(c.getString((c.getColumnIndex(KEY_NAME))));
+                clothes.setDescription(c.getString((c.getColumnIndex(KEY_DESCRIPTION))));
+                clothes.setUser_id(c.getInt(c.getColumnIndex(KEY_USER_ID)));
+                byte[] imgByte = c.getBlob(c.getColumnIndex(KEY_IMAGE_BLOB));
+                clothes.setImage(imgByte);
+                //clothes.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
+                clothes.setCategory_id(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
+                clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
+                //clothes.setLocation(c.getString(c.getColumnIndex(KEY_LOCATION)).charAt(0));
+                // Adding clothes to list
+                clothesList.add(clothes);
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        // return contact list
+        return clothesList;
+
+    }
+    //////////////////////////////////////////////////////////////////////////<--
+
     //get clothes of a user
     public ArrayList<Clothes> getAllClothes(User user) {
         ArrayList<Clothes> clothesList = new ArrayList<>();
@@ -225,7 +329,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 clothes.setDescription(c.getString((c.getColumnIndex(KEY_DESCRIPTION))));
                 clothes.setUser_id(c.getInt(c.getColumnIndex(KEY_USER_ID)));
                 byte[] imgByte = c.getBlob(c.getColumnIndex(KEY_IMAGE_BLOB));
-                clothes.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
+                clothes.setImage(imgByte);
                 clothes.setCategory_id(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
                 clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
                 clothes.setLocation(c.getString(c.getColumnIndex(KEY_LOCATION)).charAt(0));
@@ -496,7 +600,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     cloth.setLocation(c.getString(KEY_LOCATION).charAt(0));
                     cloth.setDescription(c.getString(KEY_DESCRIPTION));
                     byte[] imgByte = c.getString(KEY_IMAGE_BLOB).getBytes();
-                    cloth.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
+                    cloth.setImage(imgByte);
                     //allClothes.add(cloth);
                     String query = "INSERT OR REPLACE INTO "+ TABLE_CLOTHES + "("+KEY_ID+","+KEY_USER_ID+","+KEY_CATEGORY_ID+","+KEY_CREATED_DATE+","+KEY_NAME+","+KEY_LOCATION+","+KEY_DESCRIPTION+","+KEY_IMAGE_BLOB+") VALUES ("+cloth.getId()+","+cloth.getUser_id()+","+cloth.getCategory_id()+","+cloth.getCreated_date()+","+cloth.getName()+","+cloth.getLocation()+","+cloth.getDescription()+","+imgByte+")";
                     SQLiteDatabase db = this.getWritableDatabase();
