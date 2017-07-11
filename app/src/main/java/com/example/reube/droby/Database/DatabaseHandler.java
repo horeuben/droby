@@ -7,10 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.reube.droby.Fragments.Social.TrendingFragment;
 import com.microsoft.windowsazure.mobileservices.table.sync.MobileServiceSyncTable;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -18,6 +23,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by reube on 21/6/2017.
@@ -466,10 +473,98 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   }
 
   // For use in syncing with online database
+  // Use DatabaseUtilities to interface with cloud database
   // Sync new clothes from online to phone, sync descriptions of clothes from phone to online, thus update from phone one by one to online then select * from online to phone.
+    public void syncClothes(){
+        //need to insert into cloud database first
+
+        //this part is to sync from cloud to phone
+        String statement = "select * from Clothes";
+        String result = DatabaseUtilities.getResult(statement);
+        //ArrayList<Clothes> allClothes = new ArrayList<>();
+        if (result != null){
+            try{
+                JSONArray clothes = new JSONArray(result);
+                for (int i = 0; i<clothes.length();i++){
+                    JSONObject c = clothes.getJSONObject(i);
+                    Clothes cloth = new Clothes();
+                    cloth.setId(c.getInt(KEY_ID));
+                    cloth.setUser_id(c.getInt(KEY_USER_ID));
+                    cloth.setCategory_id(c.getInt(KEY_CATEGORY_ID));
+                    cloth.setCreated_date(new Date(c.getLong(KEY_CREATED_DATE)*1000));
+                    cloth.setName(c.getString(KEY_NAME));
+                    cloth.setLocation(c.getString(KEY_LOCATION).charAt(0));
+                    cloth.setDescription(c.getString(KEY_DESCRIPTION));
+                    byte[] imgByte = c.getString(KEY_IMAGE_BLOB).getBytes();
+                    cloth.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
+                    //allClothes.add(cloth);
+                    String query = "INSERT OR REPLACE INTO "+ TABLE_CLOTHES + "("+KEY_ID+","+KEY_USER_ID+","+KEY_CATEGORY_ID+","+KEY_CREATED_DATE+","+KEY_NAME+","+KEY_LOCATION+","+KEY_DESCRIPTION+","+KEY_IMAGE_BLOB+") VALUES ("+cloth.getId()+","+cloth.getUser_id()+","+cloth.getCategory_id()+","+cloth.getCreated_date()+","+cloth.getName()+","+cloth.getLocation()+","+cloth.getDescription()+","+imgByte+")";
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    Cursor cursor = db.rawQuery(query, null);
+                    cursor.close();
+                    db.close();
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+            }
+        }
+    }
   // Sync User -> from phone to cloud insert, then select * from cloud
+    public void syncUsers(){
+        String statement = "select * from AppUser";
+        String result = DatabaseUtilities.getResult(statement);
+        if (result!=null){
+            try{
+                JSONArray users = new JSONArray(result);
+                for (int i = 0; i <users.length();i++){
+                    JSONObject u = users.getJSONObject(i);
+                    User user = new User();
+                    user.setId(u.getInt(KEY_ID));
+                    user.setNickname(u.getString(KEY_NAME));
+                    user.setPassword(u.getString(KEY_PASSWORD));
+                    user.setEmail(u.getString(KEY_EMAIL));
+
+                    String query = "INSERT OR REPLACE INTO "+ TABLE_USER + " (" + KEY_ID + "," + KEY_NAME + "," + KEY_PASSWORD+ ","+ KEY_EMAIL +") VALUES ("+user.getId()+ ","+user.getNickname()+ ","+user.getPassword()+ ","+user.getEmail()+")";
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    Cursor cursor = db.rawQuery(query, null);
+                    cursor.close();
+                    db.close();
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+            }
+        }
+    }
   // Sync Outfit: update from phone to cloud, update/insert, then cloud to phone
-    // outfit might need a deleted column, so all outfits are saved, but only show those with deleted column not true
+  // outfit might need a deleted column, so all outfits are saved, but only show those with deleted column not true
+    public void syncOutfit(){
+        String statement = "Select * from Outfit";
+        String result = DatabaseUtilities.getResult(statement);
+        if (result!=null) {
+            try {
+                JSONArray outfits = new JSONArray(result);
+                for (int i = 0; i < outfits.length(); i++) {
+                    JSONObject o = outfits.getJSONObject(i);
+                    Outfit outfit = new Outfit();
+                    outfit.setId(o.getInt(KEY_ID));
+                    outfit.setUser_id(o.getInt(KEY_USER_ID));
+                    outfit.setName(o.getString(KEY_NAME));
+                    outfit.setOutfit_id(o.getInt(KEY_OUTFIT_ID));
+                    outfit.setClothes_id(o.getInt(KEY_CLOTHES_ID));
+
+                                                                           String query = "INSERT OR REPLACE INTO "+ TABLE_OUTFIT + " (" + KEY_ID + ","+KEY_USER_ID+ "," + KEY_NAME + "," + KEY_OUTFIT_ID+ ","+ KEY_CLOTHES_ID +") VALUES ("+outfit.getId()+ ","+outfit.getUser_id()+ ","+outfit.getName()+ ","+outfit.getOutfit_id()+ ","+outfit.getClothes_id()+")";
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    Cursor cursor = db.rawQuery(query, null);
+                    cursor.close();
+                    db.close();
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+
+            }
+        }
+    }
+
     // same goes for Tag
     // Frequency: Just get the latest from cloud to phone
 

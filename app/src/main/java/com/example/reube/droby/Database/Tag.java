@@ -62,5 +62,14 @@ public class Tag {
     private String name;
     private int clothes_id;
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+//setisdeleted to true to delete the tag
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    private boolean isDeleted;
 
 }

@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.reube.droby.Database.DatabaseHandler;
+import com.example.reube.droby.Database.User;
 import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.Fragments.MeFragment;
 import com.example.reube.droby.Fragments.OutfitFragment;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
 
     private TextView mTextMessage;
     ProgressDialog pd;
+    public static User user;
     @Override
     public void onFragmentInteraction(Uri uri) {
         //you can leave it empty
@@ -138,7 +140,9 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        int userid = getIntent().getIntExtra("userid",0);
+//        String email = getIntent().getStringExtra("email");
+//        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+//        user = db.getUser(email);
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -204,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
 
         @Override
         protected String doInBackground(String... params) {
-            System.out.print("Params is "+ params);
+
             return DatabaseUtilities.getResult(params[0]);
         }
 

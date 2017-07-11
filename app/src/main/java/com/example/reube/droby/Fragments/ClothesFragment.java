@@ -23,6 +23,8 @@ import com.example.reube.droby.Activities.Clothes;
 import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.ClothesDescription;
 import com.example.reube.droby.Adapters.ClothesAdapter;
+import com.example.reube.droby.Database.DatabaseHandler;
+import com.example.reube.droby.Database.Outfit;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;

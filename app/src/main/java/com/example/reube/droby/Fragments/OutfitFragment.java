@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.reube.droby.Activities.MainActivity;
+import com.example.reube.droby.Database.DatabaseHandler;
+import com.example.reube.droby.Database.Outfit;
 import com.example.reube.droby.R;
 
 /**

@@ -35,13 +35,13 @@ public class SignupActivity extends AppCompatActivity {
                         user.setNickname(nickname.getText().toString());
                         user.setPassword(password.getText().toString());
                         int id = (int)db.createUser(user);
-                        Toast.makeText(getApplicationContext(),"User created! " + id,Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(getApplicationContext(),"User created! " ,Toast.LENGTH_SHORT).show();
+                        MainActivity.user = user;
                         Intent intent=new Intent();
-                        intent.putExtra("userid", id);
+                        //intent.putExtra("email", email.getText().toString());
                         intent.setClass(SignupActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                        //    SplashActivity.this.finish();
                     }
                     else
                         Toast.makeText(getApplicationContext(),"User exists!",Toast.LENGTH_SHORT).show();
