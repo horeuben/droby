@@ -84,13 +84,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
                     // Commit the transaction
                     transaction.commit();
                     return true;
-                case R.id.navigation_notifications:
-                    //mTextMessage.setText(R.string.title_notifications);
-                    Intent intent=new Intent();
-                    intent.setClass(MainActivity.this, SplashActivity.class);
-                    startActivity(intent);
-                    //MainActivity.this.finish();
-                    return true;
+
                 case R.id.navigation_wardrobe:
                     //TODO set to wardrobe activity
                   //  WardrobeFragment wardrobeFragment = new WardrobeFragment();
