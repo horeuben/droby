@@ -23,11 +23,12 @@
         android:layout_gravity="right">
 
         <Button
+            android:id="@+id/empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="empty" />
         <Button
-            android:id="@+id/b1"
+            android:id="@+id/style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="style from selection"

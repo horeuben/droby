@@ -49,9 +49,8 @@ public class ClothesFragment extends Fragment {
 
     public static ArrayList<Clothes> clothes = new ArrayList<Clothes>();
     private GridView gridView;
-    private ClothesAdapter adapter;
+    public static ClothesAdapter adapter;
     private DatabaseHandler mDbHelper;
-    private MenuItem mSpinnerItem = null;
 
 
     @Override
@@ -71,13 +70,13 @@ public class ClothesFragment extends Fragment {
                 ArrayList<Clothes> final_cart = adapter.clothes_cart;
                 ArrayList<String> clothesBasketCart = new ArrayList<String>();
                 clothesBasketCart = adapter.clothes_basket_cart;
-                //Toast.makeText(getActivity(),final_cart.get(0).getDescription(), Toast.LENGTH_SHORT).show();
 
                 Intent clothesBasketIntent = new Intent(getActivity(), ClothesBasket.class);
-                clothesBasketIntent.putExtra("ArrayList",final_cart);
+                //clothesBasketIntent.putExtra("ArrayList",final_cart);
                 clothesBasketIntent.putExtra("StringList", clothesBasketCart);
                 startActivity(clothesBasketIntent);
-                adapter.removeAllChecks(container);
+                //adapter.removeAllChecks(container);
+
 
             }
         });
@@ -85,7 +84,6 @@ public class ClothesFragment extends Fragment {
         mDbHelper = new DatabaseHandler(getActivity());
 
         clothes = mDbHelper.getAllClothesTest();
-
 
         adapter = new ClothesAdapter(getActivity(), clothes);
 
@@ -118,6 +116,15 @@ public class ClothesFragment extends Fragment {
 
 
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //ClothesAdapter adapter2 = new ClothesAdapter(getActivity(), clothes);
+//        gridView.setAdapter(adapter);
+//        adapter.notifyDataSetChanged();
+
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -226,6 +233,21 @@ public class ClothesFragment extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
+//    int mCurCheckPosition = 0;
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putInt("curChoice", mCurCheckPosition);
+//    }
+//
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        if (savedInstanceState != null) {
+//            // Restore last state for checked position.
+//            mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
+//        }
+//    }
 
 
 }

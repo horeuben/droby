@@ -34,7 +34,7 @@ import static com.example.reube.droby.Fragments.ClothesFragment.clothes;
 
 public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
 
-
+    public static ArrayList<Clothes> adapterList = new ArrayList<Clothes>();
 
     public ClothesBasketAdapter(Activity context, ArrayList<Clothes> clothesBasket) {
 
@@ -70,11 +70,23 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
             public void onClick(View v) {
                 //Toast.makeText(getContext(), position + " Discarded", Toast.LENGTH_SHORT).show();
                 finalViewHolder.check.setChecked(false);
+                for (int i=0; i<ClothesFragment.clothes.size(); i++){
+                    if (ClothesFragment.clothes.get(i).getId()== ClothesBasket.basketList.get(position).getId()){
+                        //ClothesFragment.clothes.get(i).setDescription("Discarded");
+                        ClothesFragment.clothes.get(i).setSelected(false);
+                    }
+
+                }
+
                 ClothesBasket.basketList.remove(position);
+                ClothesAdapter.clothes_basket_cart.remove(position);
 
                 notifyDataSetChanged();
+                ClothesFragment.adapter.notifyDataSetChanged();
             }
         });
+
+
 
 
 
