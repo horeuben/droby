@@ -1,6 +1,7 @@
 package com.example.reube.droby.Activities;
 
 import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -178,6 +179,10 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
                     .add(R.id.fragment_container, firstFragment).commit();
         }
     }
+
+
+
+
     //Method to disable the bottom navigation view from screwing up haha
     private void disableShiftMode(BottomNavigationView view) {
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);

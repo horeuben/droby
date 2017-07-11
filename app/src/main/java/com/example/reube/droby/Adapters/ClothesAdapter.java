@@ -18,10 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reube.droby.Activities.AddImageTestActivity;
+import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Database.Clothes;
+import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -32,7 +35,7 @@ import java.util.Locale;
 public class ClothesAdapter extends ArrayAdapter<Clothes> {
 
     public ArrayList<Clothes> clothes_cart = new ArrayList<Clothes>();
-    public ArrayList<String> clothes_basket_cart = new ArrayList<String>();
+    public static ArrayList<String> clothes_basket_cart = new ArrayList<String>();
     private ArrayList<Clothes> clothes;
     private ArrayList<Clothes> filteredClothes;
 
@@ -62,11 +65,15 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
             convertView.setTag(viewHolder);
             convertView.setTag(R.id.description, viewHolder.title);
             convertView.setTag(R.id.btn1, viewHolder.button);
+
         }
 
         else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
+
+
 
         viewHolder.button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -78,8 +85,7 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
 
                 CheckBox checkbox = (CheckBox) buttonView;
                 Clothes item = getItem(position);
-                //clothes_cart.add(item);
-                //Toast.makeText(getContext(), "position " + position , Toast.LENGTH_SHORT).show();
+
                 if(checkbox.isChecked()){
 
                     if(clothes_cart.contains(item)){
@@ -88,17 +94,23 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
                     else{
                         clothes_basket_cart.add(Integer.toString(item.getId()));
                         clothes_cart.add(item);
-                        Toast.makeText(getContext(), getItem(position).getDescription() + " selected", Toast.LENGTH_SHORT);
+                        Toast.makeText(getContext(), getItem(position).getDescription() + " selected", Toast.LENGTH_SHORT).show();
+                        //clothes.get(position).setDescription("Selected");
+
                     }
 
                 }
                 else{
                     clothes_basket_cart.remove(Integer.toString(item.getId()));
                     clothes_cart.remove(item);
+
                 }
+                ClothesFragment.adapter.notifyDataSetChanged();
             }
 
         });
+
+
 
 
         viewHolder.button.setTag(position); // This line is important.
@@ -119,6 +131,7 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
 
         return convertView;
     }
+
 
     private class ViewHolder {
 
