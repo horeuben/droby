@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.reube.droby.Database.User;
 import com.example.reube.droby.R;
 
 /**
@@ -15,7 +16,6 @@ import com.example.reube.droby.R;
 public class SplashActivity extends AppCompatActivity {
     //should do syncing here instead of main activity i think
     private View mContentView;
-
 
 
     @Override

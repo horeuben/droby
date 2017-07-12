@@ -28,12 +28,14 @@ public class LoginActivity extends AppCompatActivity {
                 User user = db.getUser(email.getText().toString(),password.getText().toString());
                 if (user!=null){
                     //login successfully!
-                    Toast.makeText(getApplicationContext(),"User "+ user.getId()+ " has logged in!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"User "+ user.getNickname()+ " has logged in!",Toast.LENGTH_SHORT).show();
                     Intent intent=new Intent();
-                    intent.putExtra("userid",user.getId());
+                    //intent.putExtra("email",user.getEmail());
+                    MainActivity.user = user;
                     intent.setClass(LoginActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    //    SplashActivity.this.finish();
+
                 }
                 else{
                     Toast.makeText(getApplicationContext(),"User/Password incorrect!",Toast.LENGTH_SHORT).show();

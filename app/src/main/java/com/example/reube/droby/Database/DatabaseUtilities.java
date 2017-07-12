@@ -13,7 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-
+// To interface with the cloud database
 public class DatabaseUtilities {
     // database details
     static String url = "https://drobysql.azurewebsites.net/";
@@ -37,7 +37,8 @@ public class DatabaseUtilities {
             String line = "";
 
             while ((line = reader.readLine()) != null) {
-                buffer.append(line+"\n");
+                //buffer.append(line+"\n");
+                buffer.append(line);
                 Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
 
             }
@@ -64,4 +65,5 @@ public class DatabaseUtilities {
         return "Error retrieving data... Check Internet connection.";
 
     }
+
 }

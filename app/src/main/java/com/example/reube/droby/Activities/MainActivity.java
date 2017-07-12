@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.reube.droby.Database.DatabaseHandler;
+import com.example.reube.droby.Database.User;
 import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.Fragments.MeFragment;
 import com.example.reube.droby.Fragments.OutfitFragment;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
 
     private TextView mTextMessage;
     ProgressDialog pd;
+    public static User user;
     @Override
     public void onFragmentInteraction(Uri uri) {
         //you can leave it empty
@@ -82,13 +84,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
                     // Commit the transaction
                     transaction.commit();
                     return true;
-                case R.id.navigation_notifications:
-                    //mTextMessage.setText(R.string.title_notifications);
-                    Intent intent=new Intent();
-                    intent.setClass(MainActivity.this, SplashActivity.class);
-                    startActivity(intent);
-                    //MainActivity.this.finish();
-                    return true;
+
                 case R.id.navigation_wardrobe:
                     //TODO set to wardrobe activity
                   //  WardrobeFragment wardrobeFragment = new WardrobeFragment();
@@ -138,7 +134,9 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        int userid = getIntent().getIntExtra("userid",0);
+//        String email = getIntent().getStringExtra("email");
+//        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+//        user = db.getUser(email);
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -208,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
 
         @Override
         protected String doInBackground(String... params) {
-            System.out.print("Params is "+ params);
+
             return DatabaseUtilities.getResult(params[0]);
         }
 

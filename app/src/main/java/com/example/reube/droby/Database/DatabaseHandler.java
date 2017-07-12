@@ -7,9 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.reube.droby.Fragments.Social.TrendingFragment;
 import com.microsoft.windowsazure.mobileservices.table.sync.MobileServiceSyncTable;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -18,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static android.content.ContentValues.TAG;
 import static com.example.reube.droby.Fragments.ClothesFragment.clothes;
 
 /**
@@ -48,7 +55,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_USER_ID = "user_id";
     private static final String KEY_CATEGORY_ID = "category_id";
     private static final String KEY_CLOTHES_ID = "clothes_id";
-
+    private static final String KEY_IS_DELETED = "is_deleted";
     // User Table Columns names
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PASSWORD = "password";
@@ -87,8 +94,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT" + ")";
         String CREATE_CLOTHES_TABLE = "CREATE TABLE " + TABLE_CLOTHES + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_USER_ID + " INTEGER," + KEY_CATEGORY_ID + " INTEGER," + KEY_IMAGE_BLOB + " BLOB,"  + KEY_NAME + " TEXT,"+ KEY_DESCRIPTION + " TEXT,"+ KEY_CREATED_DATE + " DATETIME," + KEY_FREQUENCY + " TEXT,"+ KEY_LOCATION+" TEXT"+")";
         //String CREATE_IMAGE_TABLE = "CREATE TABLE " + TABLE_IMAGE + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_IMAGE_BLOB + " BLOB" + ")";
-        String CREATE_OUTFIT_TABLE = "CREATE TABLE " + TABLE_OUTFIT + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ KEY_OUTFIT_ID + " INTEGER, " + KEY_USER_ID + " INTEGER, "+ KEY_CLOTHES_ID + " INTEGER, "+ KEY_NAME+" TEXT "+")";
-        String CREATE_TAG_TABLE = "CREATE TABLE " + TABLE_TAG + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT,"+ KEY_USER_ID + " INTEGER," + KEY_CLOTHES_ID + " INTEGER," + KEY_CATEGORY_ID + " INTEGER," + KEY_IMAGE_ID + " INTEGER" +")";
+        String CREATE_OUTFIT_TABLE = "CREATE TABLE " + TABLE_OUTFIT + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ KEY_OUTFIT_ID + " INTEGER, " + KEY_USER_ID + " INTEGER, "+ KEY_CLOTHES_ID + " INTEGER, "+ KEY_NAME+" TEXT, " + KEY_IS_DELETED + " BOOLEAN " + ")";
+        String CREATE_TAG_TABLE = "CREATE TABLE " + TABLE_TAG + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT,"+ KEY_USER_ID + " INTEGER," + KEY_CLOTHES_ID + " INTEGER," + KEY_CATEGORY_ID + " INTEGER," + KEY_IMAGE_ID + " INTEGER, " + KEY_IS_DELETED + " BOOLEAN "+ ")";
         String CREATE_FREQUENCY_TABLE = "CREATE TABLE " + TABLE_FREQUENCY + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_CLOTHES_ID + " INTEGER,"+ KEY_DATE_WORN + " DATETIME "+ ")";
 
         db.execSQL(CREATE_USER_TABLE);
@@ -111,7 +118,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
        // db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TAG);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FREQUENCY);
-
         // Create tables again
         onCreate(db);
     }
@@ -323,7 +329,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 clothes.setDescription(c.getString((c.getColumnIndex(KEY_DESCRIPTION))));
                 clothes.setUser_id(c.getInt(c.getColumnIndex(KEY_USER_ID)));
                 byte[] imgByte = c.getBlob(c.getColumnIndex(KEY_IMAGE_BLOB));
-                //clothes.setImage(BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length));
+                clothes.setImage(imgByte);
                 clothes.setCategory_id(c.getInt(c.getColumnIndex(KEY_CATEGORY_ID)));
                 clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
                 clothes.setLocation(c.getString(c.getColumnIndex(KEY_LOCATION)).charAt(0));
@@ -337,6 +343,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return clothesList;
     }
     //update one piece of clothing
+    //TODO: change the tags of the clothes as well
     public void updateClothes(Clothes clothes){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -450,7 +457,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Tag stuff
     public ArrayList<Tag> getTags(Clothes clothes){
         ArrayList<Tag> tags = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + TABLE_TAG + " WHERE "+ KEY_CLOTHES_ID + " = '"+ new String[] { String.valueOf(clothes.getId()) }+"'";
+        String selectQuery = "SELECT  * FROM " + TABLE_TAG + " WHERE "+ KEY_CLOTHES_ID + " = '"+ new String[] { String.valueOf(clothes.getId()) }+"' AND "+KEY_IS_DELETED+ " = '"+false+"'";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -488,9 +495,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void deleteTag(Tag tag){
         SQLiteDatabase db = this.getWritableDatabase();
-
-        db.delete(TABLE_TAG, KEY_ID + " = ?",
+        ContentValues values = new ContentValues();
+        values.put(KEY_IS_DELETED, tag.isDeleted());
+        db.update(TABLE_TAG, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(tag.getId()) });
+       // db.delete(TABLE_TAG, KEY_ID + " = ?",
+         //       new String[] { String.valueOf(tag.getId()) });
         db.close();
     }
 
@@ -502,7 +512,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
       // then need to select clothes where clothes_id = ? from table_clothes and add to the arraylist in an outfit
       // i can already get all clothes, so juz need the clothes_id then
       ArrayList<Clothes> clothes = this.getAllClothes(user);
-      String selectQuery = "SELECT  * FROM " + TABLE_OUTFIT + " WHERE "+ KEY_USER_ID + " = '"+ new String[] { String.valueOf(user.getId()) } + "' ORDER BY "+ KEY_OUTFIT_ID+" ASC";
+      String selectQuery = "SELECT  * FROM " + TABLE_OUTFIT + " WHERE "+ KEY_USER_ID + " = '"+ new String[] { String.valueOf(user.getId()) } + "' AND " + KEY_IS_DELETED + " = '" + false + "' ORDER BY "+ KEY_OUTFIT_ID+" ASC";
 
       SQLiteDatabase db = this.getWritableDatabase();
       Cursor c = db.rawQuery(selectQuery, null);
@@ -533,12 +543,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
   public void createOutfit(Outfit outfit){
       SQLiteDatabase db = this.getWritableDatabase();
-      String selectQuery = "SELECT COUNT（DISTINCT "+KEY_OUTFIT_ID+") FROM " + TABLE_OUTFIT + " WHERE "+ KEY_USER_ID + " = '"+ new String[] { String.valueOf(outfit.getUser_id()) } + "' ORDER BY "+ KEY_OUTFIT_ID+" ASC";
+      String selectQuery = "SELECT COUNT(DISTINCT "+KEY_OUTFIT_ID+") FROM " + TABLE_OUTFIT + " WHERE "+ KEY_USER_ID + " = '"+ new String[] { String.valueOf(outfit.getUser_id()) } + "'";;
       Cursor c = db.rawQuery(selectQuery, null);
+
       int count = 0;
       if (c.moveToFirst()){
           count +=c.getInt(0);
       }
+      if(outfit.getClothes()!=null){
       for (int i =0; i<outfit.getClothes().size();i++){
           ContentValues values = new ContentValues();
           values.put(KEY_NAME, outfit.getName());
@@ -548,18 +560,117 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
           // insert row
           db.insert(TABLE_TAG, null, values);
-      }
-
+      }}
+      c.close();
       db.close();
   }
 
   public void deleteOutfit(Outfit outfit){
       SQLiteDatabase db = this.getWritableDatabase();
-
-      db.delete(TABLE_OUTFIT, KEY_OUTFIT_ID+ " = ?",
-              new String[] { String.valueOf(outfit.getOutfit_id()) });
+      ContentValues values = new ContentValues();
+      values.put(KEY_IS_DELETED, outfit.isDeleted());
+      db.update(TABLE_TAG, values, KEY_ID + " = ?",
+              new String[] { String.valueOf(outfit.getId()) });
+//      db.delete(TABLE_OUTFIT, KEY_OUTFIT_ID+ " = ?",
+//              new String[] { String.valueOf(outfit.getOutfit_id()) });
       db.close();
   }
+
+  // For use in syncing with online database
+  // Use DatabaseUtilities to interface with cloud database
+  // Sync new clothes from online to phone, sync descriptions of clothes from phone to online, thus update from phone one by one to online then select * from online to phone.
+    public void syncClothes(){
+        //need to insert into cloud database first
+
+        //this part is to sync from cloud to phone
+        String statement = "select * from Clothes";
+        String result = DatabaseUtilities.getResult(statement);
+        //ArrayList<Clothes> allClothes = new ArrayList<>();
+        if (result != null){
+            try{
+                JSONArray clothes = new JSONArray(result);
+                for (int i = 0; i<clothes.length();i++){
+                    JSONObject c = clothes.getJSONObject(i);
+                    Clothes cloth = new Clothes();
+                    cloth.setId(c.getInt(KEY_ID));
+                    cloth.setUser_id(c.getInt(KEY_USER_ID));
+                    cloth.setCategory_id(c.getInt(KEY_CATEGORY_ID));
+                    cloth.setCreated_date(new Date(c.getLong(KEY_CREATED_DATE)*1000));
+                    cloth.setName(c.getString(KEY_NAME));
+                    cloth.setLocation(c.getString(KEY_LOCATION).charAt(0));
+                    cloth.setDescription(c.getString(KEY_DESCRIPTION));
+                    byte[] imgByte = c.getString(KEY_IMAGE_BLOB).getBytes();
+                    cloth.setImage(imgByte);
+                    //allClothes.add(cloth);
+                    String query = "INSERT OR REPLACE INTO "+ TABLE_CLOTHES + "("+KEY_ID+","+KEY_USER_ID+","+KEY_CATEGORY_ID+","+KEY_CREATED_DATE+","+KEY_NAME+","+KEY_LOCATION+","+KEY_DESCRIPTION+","+KEY_IMAGE_BLOB+") VALUES ("+cloth.getId()+","+cloth.getUser_id()+","+cloth.getCategory_id()+","+cloth.getCreated_date()+","+cloth.getName()+","+cloth.getLocation()+","+cloth.getDescription()+","+imgByte+")";
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    Cursor cursor = db.rawQuery(query, null);
+                    cursor.close();
+                    db.close();
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+            }
+        }
+    }
+  // Sync User -> from phone to cloud insert, then select * from cloud
+    public void syncUsers(){
+        String statement = "select * from AppUser";
+        String result = DatabaseUtilities.getResult(statement);
+        if (result!=null){
+            try{
+                JSONArray users = new JSONArray(result);
+                for (int i = 0; i <users.length();i++){
+                    JSONObject u = users.getJSONObject(i);
+                    User user = new User();
+                    user.setId(u.getInt(KEY_ID));
+                    user.setNickname(u.getString(KEY_NAME));
+                    user.setPassword(u.getString(KEY_PASSWORD));
+                    user.setEmail(u.getString(KEY_EMAIL));
+
+                    String query = "INSERT OR REPLACE INTO "+ TABLE_USER + " (" + KEY_ID + "," + KEY_NAME + "," + KEY_PASSWORD+ ","+ KEY_EMAIL +") VALUES ("+user.getId()+ ","+user.getNickname()+ ","+user.getPassword()+ ","+user.getEmail()+")";
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    Cursor cursor = db.rawQuery(query, null);
+                    cursor.close();
+                    db.close();
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+            }
+        }
+    }
+  // Sync Outfit: update from phone to cloud, update/insert, then cloud to phone
+  // outfit might need a deleted column, so all outfits are saved, but only show those with deleted column not true
+    public void syncOutfit(){
+        String statement = "Select * from Outfit";
+        String result = DatabaseUtilities.getResult(statement);
+        if (result!=null) {
+            try {
+                JSONArray outfits = new JSONArray(result);
+                for (int i = 0; i < outfits.length(); i++) {
+                    JSONObject o = outfits.getJSONObject(i);
+                    Outfit outfit = new Outfit();
+                    outfit.setId(o.getInt(KEY_ID));
+                    outfit.setUser_id(o.getInt(KEY_USER_ID));
+                    outfit.setName(o.getString(KEY_NAME));
+                    outfit.setOutfit_id(o.getInt(KEY_OUTFIT_ID));
+                    outfit.setClothes_id(o.getInt(KEY_CLOTHES_ID));
+
+                                                                           String query = "INSERT OR REPLACE INTO "+ TABLE_OUTFIT + " (" + KEY_ID + ","+KEY_USER_ID+ "," + KEY_NAME + "," + KEY_OUTFIT_ID+ ","+ KEY_CLOTHES_ID +") VALUES ("+outfit.getId()+ ","+outfit.getUser_id()+ ","+outfit.getName()+ ","+outfit.getOutfit_id()+ ","+outfit.getClothes_id()+")";
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    Cursor cursor = db.rawQuery(query, null);
+                    cursor.close();
+                    db.close();
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+
+            }
+        }
+    }
+
+    // same goes for Tag
+    // Frequency: Just get the latest from cloud to phone
 
 
 }

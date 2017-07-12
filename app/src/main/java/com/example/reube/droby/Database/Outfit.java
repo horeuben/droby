@@ -12,6 +12,15 @@ public class Outfit {
     private int user_id;
     private int clothes_id;
     private String name;
+    private boolean isDeleted;
+//set isdeleted to true to delete the outfit
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 
     public String getName() {
         return name;

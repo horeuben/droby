@@ -117,6 +117,8 @@ public class ClothesFragment extends Fragment {
     }
 
 
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -248,6 +250,7 @@ public class ClothesFragment extends Fragment {
 //            mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
 //        }
 //    }
+
 
 }
 
