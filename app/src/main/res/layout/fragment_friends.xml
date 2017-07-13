@@ -11,12 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:weightSum="1"
             android:baselineAligned="false">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Image"
+                android:id="@+id/add_image"
+                android:layout_alignParentRight="true"/>
 
             <ImageView
                 android:id="@+id/imageView"
@@ -29,6 +36,6 @@
                 android:scaleType="fitStart"
                 app:srcCompat="@drawable/friend1" />
 
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 </FrameLayout>

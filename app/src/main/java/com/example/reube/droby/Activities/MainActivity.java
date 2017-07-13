@@ -1,10 +1,10 @@
 package com.example.reube.droby.Activities;
 
+import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -12,19 +12,16 @@ import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.Database.User;
 import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.Fragments.MeFragment;
-import com.example.reube.droby.Fragments.OutfitFragment;
+import com.example.reube.droby.Fragments.StylesFragment;
 import com.example.reube.droby.Fragments.Social.FashionFragment;
 import com.example.reube.droby.Fragments.Social.FriendsFragment;
 import com.example.reube.droby.Fragments.Social.TrendingFragment;
@@ -35,11 +32,14 @@ import com.example.reube.droby.Database.DatabaseUtilities;
 
 import java.lang.reflect.Field;
 
-public class MainActivity extends AppCompatActivity implements SocialFragment.OnFragmentInteractionListener, OutfitFragment.OnFragmentInteractionListener,WardrobeFragment.OnFragmentInteractionListener,MeFragment.OnFragmentInteractionListener,TrendingFragment.OnFragmentInteractionListener,FriendsFragment.OnFragmentInteractionListener,FashionFragment.OnFragmentInteractionListener{
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+
+public class MainActivity extends AppCompatActivity implements SocialFragment.OnFragmentInteractionListener, StylesFragment.OnFragmentInteractionListener,WardrobeFragment.OnFragmentInteractionListener,MeFragment.OnFragmentInteractionListener,TrendingFragment.OnFragmentInteractionListener,FriendsFragment.OnFragmentInteractionListener,FashionFragment.OnFragmentInteractionListener{
 
     private TextView mTextMessage;
     ProgressDialog pd;
     public static User user;
+
     @Override
     public void onFragmentInteraction(Uri uri) {
         //you can leave it empty
@@ -52,70 +52,43 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_social:
-                    //mTextMessage.setText("Social");
-                    // Create fragment and give it an argument specifying the article it should show
+
                     SocialFragment socialFragment = new SocialFragment();
-//                    Bundle args = new Bundle();
-//                    args.putInt(SocialFragment.ARG_POSITION, position);
-//                    newFragment.setArguments(args);
 
-
-
-                    // Replace whatever is in the fragment_container view with this fragment,
-                    // and add the transaction to the back stack so the user can navigate back
                     transaction.replace(R.id.fragment_container, socialFragment);
-                    //transaction.addToBackStack(null);
 
-                    // Commit the transaction
                     transaction.commit();
+
                     return true;
+
                 case R.id.navigation_outfits:
-                    //mTextMessage.setText("Outfits");
-                    OutfitFragment outfitFragment = new OutfitFragment();
-//                    Bundle args = new Bundle();
-//                    args.putInt(SocialFragment.ARG_POSITION, position);
-//                    newFragment.setArguments(args);
 
-                    // Replace whatever is in the fragment_container view with this fragment,
-                    // and add the transaction to the back stack so the user can navigate back
-                    transaction.replace(R.id.fragment_container, outfitFragment);
-                    //transaction.addToBackStack(null);
+                    StylesFragment stylesFragment = new StylesFragment();
 
-                    // Commit the transaction
+                    transaction.replace(R.id.fragment_container, stylesFragment);
+
                     transaction.commit();
+
                     return true;
 
                 case R.id.navigation_wardrobe:
-                    //TODO set to wardrobe activity
-                  //  WardrobeFragment wardrobeFragment = new WardrobeFragment();
-//                    Bundle args = new Bundle();
-//                    args.putInt(SocialFragment.ARG_POSITION, position);
-//                    newFragment.setArguments(args);
-
-                    // Replace whatever is in the fragment_container view with this fragment,
-                    // and add the transaction to the back stack so the user can navigate back
-                    //transaction.replace(R.id.fragment_container, wardrobeFragment);
-                    //transaction.addToBackStack(null);
 
                     ClothesFragment clothesFragment = new ClothesFragment();
-                    transaction.replace(R.id.fragment_container,clothesFragment);
-                    // Commit the transaction
-                    transaction.commit();
-                    return true;
-                case R.id.navigation_me:
-                    //mTextMessage.setText("Me");
-                    //TODO set to me profile screen
-                    MeFragment meFragment = new MeFragment();
-//                    Bundle args = new Bundle();
-//                    args.putInt(SocialFragment.ARG_POSITION, position);
-//                    newFragment.setArguments(args);
 
-                    // Replace whatever is in the fragment_container view with this fragment,
-                    // and add the transaction to the back stack so the user can navigate back
+                    transaction.replace(R.id.fragment_container,clothesFragment);
+
+                    transaction.commit();
+
+                    return true;
+
+                case R.id.navigation_me:
+
+                    MeFragment meFragment = new MeFragment();
+
                     transaction.replace(R.id.fragment_container, meFragment);
                     //transaction.addToBackStack(null);
 
-                    // Commit the transaction
+
                     transaction.commit();
                     return true;
             }
@@ -141,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         disableShiftMode(navigation);
+
 
         //new TestDatabase().execute("SELECT * FROM Category");
 //        FloatingActionButton addclothes_button = (FloatingActionButton) findViewById(R.id.addClothesButton);
@@ -172,9 +146,29 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
             // Intent, pass the Intent's extras to the fragment as arguments
             firstFragment.setArguments(getIntent().getExtras());
 
-            // Add the fragment to the 'fragment_container' FrameLayout
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, firstFragment).commit();
+            Intent intent = this.getIntent();
+
+  /* Obtain String from Intent  */
+            if(intent !=null)
+            {
+                String string = intent.getStringExtra("test");
+                if(string== null ){
+                    // Add the fragment to the 'fragment_container' FrameLayout
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.fragment_container, firstFragment).commit();
+                }
+                else if(string.equals("Style")){
+                    StylesFragment newFragment = new StylesFragment();
+                    // Add the fragment to the 'fragment_container' FrameLayout
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.fragment_container, newFragment).commit();
+                    BottomNavigationView navigationView = (BottomNavigationView) findViewById(R.id.navigation);
+                    navigationView.setSelectedItemId(R.id.navigation_outfits);
+
+                }
+
+            }
+
         }
     }
 

@@ -122,7 +122,7 @@ public class ClothesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //ClothesAdapter adapter2 = new ClothesAdapter(getActivity(), clothes);
+
 //        gridView.setAdapter(adapter);
 //        adapter.notifyDataSetChanged();
 

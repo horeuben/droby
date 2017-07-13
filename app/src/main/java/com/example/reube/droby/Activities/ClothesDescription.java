@@ -57,7 +57,7 @@ public class ClothesDescription extends AppCompatActivity {
             views[list].setTextSize(15);
             views[list].setLayoutParams(lp);
             views[list].setBackgroundResource(R.drawable.rounded_corner);
-            views[list].setPadding(40,30,40,30);
+            views[list].setPadding(40,20,40,20);
 
         }
 

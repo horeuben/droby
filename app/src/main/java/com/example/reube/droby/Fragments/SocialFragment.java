@@ -1,6 +1,7 @@
 package com.example.reube.droby.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -12,7 +13,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.example.reube.droby.Activities.AddImageTestActivity;
 import com.example.reube.droby.Fragments.Social.FashionFragment;
 import com.example.reube.droby.Fragments.Social.FriendsFragment;
 import com.example.reube.droby.Fragments.Social.TrendingFragment;
@@ -86,12 +89,13 @@ public class SocialFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         getActivity().setTitle("Social");
-        View v = inflater.inflate(R.layout.fragment_social,container,false);
+        final View v = inflater.inflate(R.layout.fragment_social,container,false);
         tabLayout = (TabLayout) v.findViewById(R.id.tablayout);
         tabLayout.addTab(tabLayout.newTab().setText("TRENDING"));
         tabLayout.addTab(tabLayout.newTab().setText("FRIENDS"));
         tabLayout.addTab(tabLayout.newTab().setText("FASHION"));
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
+
 
         viewPager.setAdapter(new PagerAdapter
                 (getFragmentManager(), tabLayout.getTabCount()));
@@ -100,6 +104,15 @@ public class SocialFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                Button button = (Button) v.findViewById(R.id.add_image);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), AddImageTestActivity.class);
+                        startActivity(intent);
+
+                    }
+                });
             }
 
             @Override
@@ -131,6 +144,7 @@ public class SocialFragment extends Fragment {
                     return tab1;
                 case 1:
                     FriendsFragment tab2 = new FriendsFragment();
+
                     return tab2;
                 case 2:
                     FashionFragment tab3 = new FashionFragment();

@@ -27,5 +27,22 @@
         <item name="android:background">?android:attr/actionBarItemBackground</item>
         <item name="android:contentDescription">"filter"</item>
     </style>
+    <style name="FinalOutfitMargins" parent="AppTheme">
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:background">#FFFFFF</item>
+    </style>
+
+    <style name="finalOutfitTopMargins" parent="AppTheme">
+        <item name="android:layout_marginTop">15dp</item>
+    </style>
+
+    <style name="finalOutfitSideMargins" parent="AppTheme">
+        <item name="android:layout_marginLeft">18dp</item>
+    </style>
+
+
+
+
 
 </resources>

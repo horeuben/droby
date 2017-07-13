@@ -2,31 +2,19 @@ package com.example.reube.droby.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.reube.droby.Adapters.ClothesAdapter;
 import com.example.reube.droby.Adapters.ClothesBasketAdapter;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
-import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static android.R.id.list;
-import static com.example.reube.droby.Fragments.ClothesFragment.adapter;
-import static com.example.reube.droby.Fragments.ClothesFragment.clothes;
 
 /**
  * Created by Family on 14/6/2017.
@@ -73,7 +61,7 @@ public class ClothesBasket extends AppCompatActivity{
         styleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ClothesBasket.this, StylingActivity.class);
+                Intent intent = new Intent(ClothesBasket.this, FinalOutfitActivity.class);
                 startActivity(intent);
             }
         });

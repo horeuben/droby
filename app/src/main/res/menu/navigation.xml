@@ -9,7 +9,7 @@
     <item
         android:id="@+id/navigation_outfits"
         android:icon="@drawable/ic_outfit_black_24dp"
-        android:title="Outfits" />
+        android:title="Styling" />
 
     <item
         android:id="@+id/navigation_wardrobe"

@@ -27,6 +27,18 @@
         <item>Inner Wear</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--styles fragment strings -->
+    <string name="Wear">wear</string>
+    <string name="Like">like</string>
+    <string name="Share">share</string>
+    <string name="Suggestion1">Suggestion 1</string>
+    <string name="Suggestion2">Suggestion 2</string>
+    <string name="Suggestion3">Suggestion 3</string>
+    <string name="FinalisedOutfit">Finalized Outfit for Today</string>
+    <string name="PlanPrompt">Planning Tomorrow\'s Outfit?</string>
+    <string name="SuggestionPrompt">Droby can give you some suggestions!</string>
+    <string name="Planner">planner</string>
+    <string name="RecommendMe">Recommend</string>
 </resources>
