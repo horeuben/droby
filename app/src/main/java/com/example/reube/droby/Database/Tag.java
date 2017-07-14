@@ -10,11 +10,10 @@ public class Tag {
     public Tag() {
     }
 
-    public Tag(int id,int clothes_id, int user_id, int category_id, String name) {
+    public Tag(int id,int clothes_id, int user_id, String name) {
         this.id = id;
         this.clothes_id=clothes_id;
         this.user_id = user_id;
-        this.category_id = category_id;
         this.name = name;
     }
 
@@ -34,13 +33,6 @@ public class Tag {
         this.user_id = user_id;
     }
 
-    public int getCategory_id() {
-        return category_id;
-    }
-
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
-    }
     public int getClothes_id() {
         return clothes_id;
     }
@@ -58,7 +50,6 @@ public class Tag {
         this.name = name;
     }
     private int user_id;
-    private int category_id;
     private String name;
     private int clothes_id;
 

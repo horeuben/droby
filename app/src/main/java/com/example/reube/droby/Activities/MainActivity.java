@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.Database.User;
 import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.Fragments.MeFragment;
@@ -107,9 +108,9 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-//        String email = getIntent().getStringExtra("email");
-//        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-//        user = db.getUser(email);
+        String email = getIntent().getStringExtra("email");
+        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+        user = db.getUser(email);
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
