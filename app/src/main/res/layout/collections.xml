@@ -1,6 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:card.view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:baselineAligned="false">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="top"
+        card.view:cardCornerRadius="4dp"
+        card.view:cardElevation="5dp"
+        card.view:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/formal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Formal"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/last_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Last Edit: 2 days ago"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:id="@+id/outfit_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:paddingRight="5dp"
+                        android:src="@drawable/outfit_1" />
+
+                    <ImageView
+                        android:id="@+id/outfit_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:paddingRight="5dp"
+                        android:src="@drawable/outfit_2" />
+
+                    <ImageView
+                        android:id="@+id/outfit_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:paddingRight="5dp"
+                        android:src="@drawable/outfit_3" />
+
+                    <ImageView
+                        android:id="@+id/outfit_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:paddingRight="5dp"
+                        android:src="@drawable/outfit_4" />
+
+                    <ImageView
+                        android:id="@+id/outfit_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:paddingRight="5dp"
+                        android:src="@drawable/outfit_5" />
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>
