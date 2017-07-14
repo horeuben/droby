@@ -9,6 +9,15 @@ import java.util.Date;
 public class Frequency {
     private int clothes_id;
     private Date date_worn;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Frequency() {
     }

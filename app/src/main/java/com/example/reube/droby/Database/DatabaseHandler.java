@@ -618,7 +618,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     cloth.setCategory_id(c.getString(KEY_CATEGORY_ID));
                     cloth.setCreated_date(new Date(c.getLong(KEY_CREATED_DATE)*1000));
                     cloth.setName(c.getString(KEY_NAME));
-                    cloth.setLocation(c.getString(KEY_LOCATION).charAt(0));
+                    cloth.setLocation(c.getInt(KEY_LOCATION));
                     cloth.setDescription(c.getString(KEY_DESCRIPTION));
                     byte[] imgByte = c.getString(KEY_IMAGE_BLOB).getBytes();
                     cloth.setImage(imgByte);
@@ -676,8 +676,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     outfit.setName(o.getString(KEY_NAME));
                     outfit.setOutfit_id(o.getInt(KEY_OUTFIT_ID));
                     outfit.setClothes_id(o.getInt(KEY_CLOTHES_ID));
+                    outfit.setDeleted(o.getBoolean(KEY_IS_DELETED));
 
-                    String query = "INSERT OR REPLACE INTO "+ TABLE_OUTFIT + " (" + KEY_ID + ","+KEY_USER_ID+ "," + KEY_NAME + "," + KEY_OUTFIT_ID+ ","+ KEY_CLOTHES_ID +") VALUES ("+outfit.getId()+ ","+outfit.getUser_id()+ ","+outfit.getName()+ ","+outfit.getOutfit_id()+ ","+outfit.getClothes_id()+")";
+                    String query = "INSERT OR REPLACE INTO "+ TABLE_OUTFIT + " (" + KEY_ID + ","+KEY_USER_ID+ "," + KEY_NAME + "," + KEY_OUTFIT_ID+ ","+ KEY_CLOTHES_ID +","+ KEY_IS_DELETED+") VALUES ("+outfit.getId()+ ","+outfit.getUser_id()+ ","+outfit.getName()+ ","+outfit.getOutfit_id()+ ","+outfit.getClothes_id()+"," + outfit.isDeleted()+ ")";
                     SQLiteDatabase db = this.getWritableDatabase();
                     Cursor cursor = db.rawQuery(query, null);
                     cursor.close();
@@ -691,7 +692,57 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // same goes for Tag
-    // Frequency: Just get the latest from cloud to phone
+    public void syncTags(){
+        String statement = "Select * from Tag";
+        String result = DatabaseUtilities.getResult(statement);
+        if (result!=null) {
+            try {
+                JSONArray tags = new JSONArray(result);
+                for (int i = 0; i < tags.length(); i++) {
+                    JSONObject o = tags.getJSONObject(i);
+                    Tag tag = new Tag();
+                    tag.setId(o.getInt(KEY_ID));
+                    tag.setUser_id(o.getInt(KEY_USER_ID));
+                    tag.setName(o.getString(KEY_NAME));
+                    tag.setClothes_id(o.getInt(KEY_CLOTHES_ID));
+                    tag.setDeleted(o.getBoolean(KEY_IS_DELETED));
+                    String query = "INSERT OR REPLACE INTO "+ TABLE_TAG + " (" + KEY_ID + ","+KEY_USER_ID+ "," + KEY_NAME + "," + KEY_CLOTHES_ID +","+ KEY_IS_DELETED+ ") VALUES ("+tag.getId()+ ","+tag.getUser_id()+ ","+tag.getName()+ ","+ tag.getClothes_id()+"," + tag.isDeleted()+ ")";
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    Cursor cursor = db.rawQuery(query, null);
+                    cursor.close();
+                    db.close();
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
 
+            }
+        }
+    }
+    // Frequency: Just get the latest from cloud to phone
+    public void syncFrequency(){
+        String statement = "Select * from Frequency";
+        String result = DatabaseUtilities.getResult(statement);
+        if (result != null){
+            try {
+                JSONArray frequencies = new JSONArray(result);
+                for (int i =0; i<frequencies.length();i++){
+                    JSONObject o = frequencies.getJSONObject(i);
+                    Frequency frequency = new Frequency();
+                    frequency.setId(o.getInt(KEY_ID));
+                    frequency.setClothes_id(o.getInt(KEY_CLOTHES_ID));
+                    frequency.setDate_worn(new Date(o.getLong(KEY_DATE_WORN)*1000));
+
+                    String query = "INSERT OR REPLACE INTO "+ TABLE_FREQUENCY + " (" + KEY_ID + ","+ KEY_CLOTHES_ID +","+ KEY_DATE_WORN+ ") VALUES ("+frequency.getId()+ ","+ frequency.getClothes_id()+"," + frequency.getDate_worn()+ ")";
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    Cursor cursor = db.rawQuery(query, null);
+                    cursor.close();
+                    db.close();
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+
+            }
+        }
+    }
 
 }
