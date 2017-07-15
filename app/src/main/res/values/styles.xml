@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
@@ -27,10 +27,13 @@
         <item name="android:background">?android:attr/actionBarItemBackground</item>
         <item name="android:contentDescription">"filter"</item>
     </style>
-    <style name="FinalOutfitMargins" parent="AppTheme">
+
+    <!--Final Outfit XML styles-->
+    <style name="BorderMargins" parent="AppTheme">
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:layout_marginLeft">5dp</item>
         <item name="android:background">#FFFFFF</item>
+        <item name="android:elevation" tools:ignore="NewApi">5dp</item>
     </style>
 
     <style name="finalOutfitTopMargins" parent="AppTheme">
@@ -40,6 +43,15 @@
     <style name="finalOutfitSideMargins" parent="AppTheme">
         <item name="android:layout_marginLeft">18dp</item>
     </style>
+
+    <!-- Styles Fragment XML styles-->
+    <style name="StylesFragSideMargins" parent="AppTheme">
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+    </style>
+
 
 
 

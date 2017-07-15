@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E3F2FD">
+    android:background="#E3F2FD"
+    android:foreground="#B3000000"
+    android:id="@+id/finalOutfitFrame">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -21,11 +23,10 @@
                 android:layout_height="0dp"
                 android:orientation="vertical"
                 android:background="@drawable/background_final_outfit"
-                android:elevation="5dp"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="2dp"
                 android:layout_weight="1"
-                style="@style/FinalOutfitMargins"
+                style="@style/BorderMargins"
                 android:outlineProvider="bounds">
 
                 <ImageView
@@ -68,9 +69,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                style="@style/FinalOutfitMargins"
+                style="@style/BorderMargins"
                 android:background="@drawable/background_final_outfit"
-                android:elevation="5dp"
                 android:outlineProvider="bounds"
                 android:layout_weight="0">
 
@@ -84,16 +84,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:srcCompat="@drawable/ic_date_range_black_24dp"
-                        android:layout_alignTop="@+id/textView3"
+                        android:layout_alignTop="@+id/calendarText"
                         android:layout_alignParentStart="true"
                         style="@style/finalOutfitSideMargins"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Save this for another day..."
+                        android:text="@string/SaveForAnotherDay"
                         android:layout_toRightOf="@id/calenderIcon"
                         android:layout_centerVertical="true"
-                        android:id="@+id/textView3"
+                        android:id="@+id/calendarText"
                         style="@style/finalOutfitSideMargins"/>
                 </RelativeLayout>
 
@@ -293,5 +293,15 @@
         </LinearLayout>
     </ScrollView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/calendarPopup">
 
-</LinearLayout>
+
+
+    </LinearLayout>
+
+
+</FrameLayout>

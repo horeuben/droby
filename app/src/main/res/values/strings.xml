@@ -30,7 +30,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!--styles fragment strings -->
-    <string name="Wear">wear</string>
+    <string name="Pick">pick</string>
+    <string name="WearNow">wear now!</string>
     <string name="Like">like</string>
     <string name="Share">share</string>
     <string name="Suggestion1">Suggestion 1</string>
@@ -41,4 +42,7 @@
     <string name="SuggestionPrompt">Droby can give you some suggestions!</string>
     <string name="Planner">planner</string>
     <string name="RecommendMe">Recommend</string>
+
+    <!--final outfit strings-->
+    <string name="SaveForAnotherDay">Save this for another day...</string>
 </resources>

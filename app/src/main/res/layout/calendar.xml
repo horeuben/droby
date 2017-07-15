@@ -1,0 +1,64 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.reube.droby.Fragments.WardrobeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        style="@style/BorderMargins"
+        android:background="@drawable/background_calendar"
+        android:elevation="3dp">
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF">
+
+            <CalendarView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/calendar"
+                android:paddingBottom="10dp"
+                android:layout_marginBottom="10dp">
+
+            </CalendarView>
+
+            <TextView
+                android:id="@+id/cancelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="cancel"
+                android:textAllCaps="true"
+                android:textSize="14dp"
+                android:padding="8dp"
+                android:layout_marginRight="15dp"
+                android:layout_alignBottom="@+id/calendar"
+                android:layout_toStartOf="@+id/okText" />
+            <TextView
+                android:id="@+id/okText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ok"
+                android:textSize="14dp"
+                android:textAllCaps="true"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@id/calendar"
+                android:padding="8dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="0dp"
+                android:textColor="@color/colorPrimary"/>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

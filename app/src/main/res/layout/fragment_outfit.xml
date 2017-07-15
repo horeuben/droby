@@ -16,29 +16,29 @@
 
             <!-- Finalised Outfit Block-->
             <LinearLayout
+                android:id="@+id/finalisedOutfitLL"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="gone"
-                style="@style/FinalOutfitMargins"
+                android:visibility="visible"
+                style="@style/BorderMargins"
                 android:background="@drawable/background_styles_fragment"
-                android:elevation="5dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="2dp">
+                android:layout_marginTop="6dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/FinalisedOutfit"
+                    android:textStyle="bold|italic"
+                    style="@style/StylesFragSideMargins"
                     android:layout_marginTop="12dp"
-                    android:layout_marginStart="10dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Business, Formal"
+                    style="@style/StylesFragSideMargins"
                     android:layout_marginTop="8dp"
-                    android:layout_marginStart="10dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
@@ -49,7 +49,7 @@
                         android:id="@+id/fTop"
                         android:layout_width="165dp"
                         android:layout_height="235dp"
-                        android:src="@drawable/black_shirt"
+                        android:src="@drawable/pink_tshirt"
                         android:layout_marginRight="30dp"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -62,7 +62,7 @@
                         android:id="@+id/fBottom"
                         android:layout_width="162dp"
                         android:layout_height="205dp"
-                        android:src="@drawable/black_shirt"
+                        android:src="@drawable/pink_tshirt"
                         android:layout_marginTop="0dp"
                         app:layout_constraintTop_toBottomOf="@+id/fTop"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -75,7 +75,7 @@
                         android:id="@+id/fOuterwear"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:src="@drawable/black_shirt"
+                        android:src="@drawable/pink_tshirt"
                         app:layout_constraintRight_toLeftOf="@+id/fTop"
                         android:layout_marginRight="5dp"
                         android:layout_marginLeft="15dp"
@@ -90,10 +90,11 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp">
 
                     <TextView
-                        android:id="@+id/wearTextF"
+                        android:id="@+id/shareTextF"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Share"
@@ -101,9 +102,21 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textStyle="bold"
                         android:padding="10dp"
+                        android:layout_toRightOf="@+id/wearTextF"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="10dp" />
+
+                    <TextView
+                        android:id="@+id/wearTextF"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/WearNow"
+                        android:textAllCaps="true"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textStyle="bold"
+                        android:padding="10dp"
                         android:layout_marginLeft="25dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginBottom="5dp"
                         android:textColor="@color/colorPrimary"/>
 
                 </RelativeLayout>
@@ -112,14 +125,15 @@
 
             <!--Planner Prompt Block-->
             <LinearLayout
+                android:id="@+id/plannerPromptLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone"
-                style="@style/FinalOutfitMargins"
+                style="@style/BorderMargins"
                 android:background="@drawable/background_styles_fragment"
-                android:elevation="5dp"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="6dp">
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -174,30 +188,31 @@
 
             <!-- Suggestion 1 Outfit Block-->
             <LinearLayout
+                android:id="@+id/suggestion1LL"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:visibility="visible"
-                style="@style/FinalOutfitMargins"
                 android:background="@drawable/background_styles_fragment"
-                android:elevation="5dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="2dp">
+                style="@style/BorderMargins"
+                android:layout_marginTop="6dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/Suggestion1"
+                    android:textStyle="italic"
+                    style="@style/StylesFragSideMargins"
                     android:layout_marginTop="12dp"
-                    android:layout_marginLeft="10dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Business, Formal"
+                    style="@style/StylesFragSideMargins"
                     android:layout_marginTop="8dp"
-                    android:layout_marginLeft="10dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -247,7 +262,8 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp">
 
                     <TextView
                         android:id="@+id/wearText1"
@@ -255,14 +271,13 @@
                         android:clickable="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/Wear"
+                        android:text="@string/Pick"
                         android:textAllCaps="true"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textStyle="bold"
                         android:padding="10dp"
                         android:layout_marginLeft="25dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginBottom="5dp"
                         android:textColor="@color/colorPrimary"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -272,7 +287,6 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textStyle="bold"
                         android:padding="10dp"
-                        android:layout_marginBottom="5dp"
                         android:layout_toRightOf="@id/wearText1"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -283,7 +297,6 @@
                         android:textStyle="bold"
                         android:padding="10dp"
                         android:layout_marginRight="15dp"
-                        android:layout_marginBottom="5dp"
                         android:layout_alignParentRight="true"/>
 
                 </RelativeLayout>
@@ -292,30 +305,31 @@
 
             <!-- Suggestion 2 Outfit Block-->
             <LinearLayout
+                android:id="@+id/suggestion2LL"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:visibility="visible"
-                style="@style/FinalOutfitMargins"
+                style="@style/BorderMargins"
                 android:background="@drawable/background_styles_fragment"
-                android:elevation="5dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="2dp">
+                android:layout_marginTop="6dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/Suggestion2"
+                    android:textStyle="italic"
+                    style="@style/StylesFragSideMargins"
                     android:layout_marginTop="12dp"
-                    android:layout_marginLeft="10dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Business, Formal"
+                    style="@style/StylesFragSideMargins"
                     android:layout_marginTop="8dp"
-                    android:layout_marginLeft="10dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -365,20 +379,20 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp">
 
                     <TextView
                         android:id="@+id/wearText2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/Wear"
+                        android:text="@string/Pick"
                         android:textAllCaps="true"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textStyle="bold"
                         android:padding="10dp"
                         android:layout_marginLeft="25dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginBottom="5dp"
                         android:textColor="@color/colorPrimary"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -388,7 +402,6 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textStyle="bold"
                         android:padding="10dp"
-                        android:layout_marginBottom="5dp"
                         android:layout_toRightOf="@id/wearText2"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -399,7 +412,6 @@
                         android:textStyle="bold"
                         android:padding="10dp"
                         android:layout_marginRight="15dp"
-                        android:layout_marginBottom="5dp"
                         android:layout_alignParentRight="true"/>
 
                 </RelativeLayout>
@@ -408,30 +420,31 @@
 
             <!-- Suggestion 3 Outfit Block-->
             <LinearLayout
+                android:id="@+id/suggestion3LL"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:visibility="visible"
-                style="@style/FinalOutfitMargins"
+                style="@style/BorderMargins"
                 android:background="@drawable/background_styles_fragment"
-                android:elevation="5dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="2dp">
+                android:layout_marginTop="6dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/Suggestion3"
+                    android:textStyle="italic"
+                    style="@style/StylesFragSideMargins"
                     android:layout_marginTop="12dp"
-                    android:layout_marginLeft="10dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Business, Formal"
+                    style="@style/StylesFragSideMargins"
                     android:layout_marginTop="8dp"
-                    android:layout_marginLeft="10dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -481,20 +494,20 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp">
 
                     <TextView
                         android:id="@+id/wearText3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/Wear"
+                        android:text="@string/Pick"
                         android:textAllCaps="true"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textStyle="bold"
                         android:padding="10dp"
                         android:layout_marginLeft="25dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginBottom="5dp"
                         android:textColor="@color/colorPrimary"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -504,7 +517,6 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textStyle="bold"
                         android:padding="10dp"
-                        android:layout_marginBottom="5dp"
                         android:layout_toRightOf="@id/wearText3"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -515,7 +527,6 @@
                         android:textStyle="bold"
                         android:padding="10dp"
                         android:layout_marginRight="15dp"
-                        android:layout_marginBottom="5dp"
                         android:layout_alignParentRight="true"/>
 
                 </RelativeLayout>
