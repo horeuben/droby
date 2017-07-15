@@ -12,7 +12,7 @@ import java.util.Date;
  */
 //might have to create another class for frequency, to add clothes id and date worn, then sum them up
 public class Clothes implements Parcelable {
-    public Clothes(int id, int user_id, byte[] image, int category_id, String name, String description, Date created_date, char location) {
+    public Clothes(int id, int user_id, byte[] image, String category_id, String name, String description, Date created_date, int location) {
         this.id = id;
         this.user_id = user_id;
         this.image = image;
@@ -46,11 +46,11 @@ public class Clothes implements Parcelable {
         this.user_id = user_id;
     }
 
-    public int getCategory_id() {
+    public String getCategory_id() {
         return category_id;
     }
 
-    public void setCategory_id(int category_id) {
+    public void setCategory_id(String category_id) {
         this.category_id = category_id;
     }
 
@@ -94,11 +94,11 @@ public class Clothes implements Parcelable {
         this.frequency = frequency;
     }
 
-    public char getLocation() {
+    public int getLocation() {
         return location;
     }
 
-    public void setLocation(char location) {
+    public void setLocation(int location) {
         this.location = location;
     }
 
@@ -118,12 +118,12 @@ public class Clothes implements Parcelable {
         this.selected = selected;
     }
 
-    private int id,user_id,category_id;
-    private String name,description;
+    private int id,user_id;
+    private String name,description,category_id;
     private ArrayList<Tag> tags;
     private Date created_date;
     private ArrayList<Date> frequency;
-    private char location;
+    private int location;
     private byte[] image;
     private boolean selected;
 
