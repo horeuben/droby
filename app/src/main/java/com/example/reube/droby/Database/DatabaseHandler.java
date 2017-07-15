@@ -92,7 +92,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT,"+ KEY_PASSWORD + " TEXT,"+ KEY_EMAIL + " TEXT" + ")";
         String CREATE_CLOTHES_TABLE = "CREATE TABLE " + TABLE_CLOTHES + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_USER_ID + " INTEGER," + KEY_CATEGORY_ID + " TEXT," + KEY_IMAGE_BLOB + " BLOB,"  + KEY_NAME + " TEXT,"+ KEY_DESCRIPTION + " TEXT,"+ KEY_CREATED_DATE + " DATETIME," + KEY_LOCATION+" INTEGER"+")";
-        String CREATE_OUTFIT_TABLE = "CREATE TABLE " + TABLE_OUTFIT + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ KEY_OUTFIT_ID + " INTEGER, " + KEY_USER_ID + " INTEGER, "+ KEY_CLOTHES_ID + " INTEGER, "+ KEY_NAME+" TEXT, " + KEY_IS_DELETED + " BOOLEAN " + ")";
+        String CREATE_OUTFIT_TABLE = "CREATE TABLE " + TABLE_OUTFIT + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ KEY_OUTFIT_ID + " INTEGER, " + KEY_USER_ID + " INTEGER, "+ KEY_CLOTHES_ID + " INTEGER, "+ KEY_CATEGORY_ID + " TEXT, "+ KEY_NAME+" TEXT, " + KEY_IS_DELETED + " BOOLEAN " + ")";
         String CREATE_TAG_TABLE = "CREATE TABLE " + TABLE_TAG + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT,"+ KEY_USER_ID + " INTEGER," + KEY_CLOTHES_ID + " INTEGER," + KEY_IS_DELETED + " BOOLEAN "+ ")";
         String CREATE_FREQUENCY_TABLE = "CREATE TABLE " + TABLE_FREQUENCY + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_CLOTHES_ID + " INTEGER,"+ KEY_DATE_WORN + " DATETIME "+ ")";
 
@@ -542,6 +542,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
               Outfit outfit = new Outfit();
               outfit.setId(c.getInt(c.getColumnIndex(KEY_OUTFIT_ID)));
               outfit.setName(c.getString(c.getColumnIndex(KEY_NAME)));
+              outfit.setUser_id(c.getInt(c.getColumnIndex(KEY_USER_ID)));
+              outfit.setCategory_id(c.getString(c.getColumnIndex(KEY_CATEGORY_ID)));
               int clothes_id = c.getInt(c.getColumnIndex(KEY_CLOTHES_ID));
               ArrayList<Clothes> outfitClothes = new ArrayList<>();
               for (int i =0; i<clothes.size();i++){
@@ -578,9 +580,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
           values.put(KEY_USER_ID, outfit.getUser_id());
           values.put(KEY_OUTFIT_ID, count );
           values.put(KEY_CLOTHES_ID, outfit.getClothes().get(i).getId());
-
+          values.put(KEY_CATEGORY_ID, outfit.getCategory_id());
+          values.put(KEY_IS_DELETED, outfit.isDeleted());
           // insert row
-          db.insert(TABLE_TAG, null, values);
+          db.insert(TABLE_OUTFIT, null, values);
       }}
       c.close();
       db.close();
@@ -590,7 +593,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
       SQLiteDatabase db = this.getWritableDatabase();
       ContentValues values = new ContentValues();
       values.put(KEY_IS_DELETED, outfit.isDeleted());
-      db.update(TABLE_TAG, values, KEY_ID + " = ?",
+      db.update(TABLE_OUTFIT, values, KEY_ID + " = ?",
               new String[] { String.valueOf(outfit.getId()) });
 //      db.delete(TABLE_OUTFIT, KEY_OUTFIT_ID+ " = ?",
 //              new String[] { String.valueOf(outfit.getOutfit_id()) });
