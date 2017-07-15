@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.reube.droby.Fragments.Social.TrendingFragment;
 import com.microsoft.windowsazure.mobileservices.table.sync.MobileServiceSyncTable;
+import com.microsoft.windowsazure.mobileservices.table.sync.operations.TableOperation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -337,6 +338,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 clothes.setCategory_id(c.getString(c.getColumnIndex(KEY_CATEGORY_ID)));
                 clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
                 clothes.setLocation(c.getInt(c.getColumnIndex(KEY_LOCATION)));
+                clothes.setTags(this.getTags(clothes));
+
                 // Adding clothes to list
                 clothesList.add(clothes);
             } while (c.moveToNext());
@@ -346,7 +349,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // return contact list
         return clothesList;
     }
-    //get all clothes where user = ? and category_id = ?
+    //get all clothes where user = ? and category_id = ? as well as its tags
     public ArrayList<Clothes> getAllClothes(User user, String category_id) {
         ArrayList<Clothes> clothesList = new ArrayList<>();
         // Select All Query
@@ -368,6 +371,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 clothes.setCategory_id(c.getString(c.getColumnIndex(KEY_CATEGORY_ID)));
                 clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
                 clothes.setLocation(c.getInt(c.getColumnIndex(KEY_LOCATION)));
+                clothes.setTags(this.getTags(clothes));
+
                 // Adding clothes to list
                 clothesList.add(clothes);
             } while (c.moveToNext());
@@ -377,7 +382,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // return contact list
         return clothesList;
     }
-    //get all clothes of a user
+    //get all clothes of a user as well as its tags
     public ArrayList<Clothes> getAllClothes(User user) {
         ArrayList<Clothes> clothesList = new ArrayList<>();
         // Select All Query
@@ -399,17 +404,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 clothes.setCategory_id(c.getString(c.getColumnIndex(KEY_CATEGORY_ID)));
                 clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
                 clothes.setLocation(c.getInt(c.getColumnIndex(KEY_LOCATION)));
+                clothes.setTags(this.getTags(clothes));
                 // Adding clothes to list
                 clothesList.add(clothes);
             } while (c.moveToNext());
         }
         c.close();
         db.close();
-        // return contact list
+        // return clothes list
         return clothesList;
     }
-    //update one piece of clothing
-    //TODO: change the tags of the clothes as well so not need to call edit tags method as well
+    //update one piece of clothing as well as its tags
+
     public void updateClothes(Clothes clothes){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -422,24 +428,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // updating row
         db.update(TABLE_CLOTHES, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(clothes.getId()) });
+        //get old tags first
+        ArrayList<Tag> oldTags = new ArrayList<>();
+        oldTags.addAll(this.getTags(clothes));
+        ArrayList<Tag> newTags = new ArrayList<>();
+        newTags.addAll(clothes.getTags());
+        ArrayList<Tag> removedTags = new ArrayList<>();
+        ArrayList<Tag> addedTags = new ArrayList<>();
+        removedTags.addAll(oldTags);
+        removedTags.removeAll(newTags);
+        addedTags.addAll(newTags);
+        addedTags.removeAll(oldTags);
+        for (int i =0; i <removedTags.size();i++){
+            this.deleteTag(removedTags.get(i));
+        }
+        for (int i = 0; i<addedTags.size();i++){
+            this.createTag(addedTags.get(i));
+        }
         db.close();
     }
 
-    // get image of clothes , way to use is to setImageBitmap(bitmap)
-//    public Bitmap getClothesImage(Clothes clothes){
-//        String selectQuery = "SELECT  * FROM " + TABLE_IMAGE + " WHERE "+ KEY_ID + " = '"+ new String[] { String.valueOf(clothes.getImage_id()) }+"'";
-//
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor c = db.rawQuery(selectQuery, null);
-//        if (c != null)
-//            c.moveToFirst();
-//        byte[] imgByte = c.getBlob(c.getColumnIndex(KEY_IMAGE_BLOB));
-//        db.close();
-//        c.close();
-//        return BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
-//
-//
-//    }
+
     //for converting bitmap to byte to store
     public byte[] getBitmapAsByteArray(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -478,6 +487,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Tag stuff
+    // NOTE: DO NOT USE THIS METHOD AS ITS MEANT TO BE USED IN GETCLOTHES
     public ArrayList<Tag> getTags(Clothes clothes){
         ArrayList<Tag> tags = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_TAG + " WHERE "+ KEY_CLOTHES_ID + " = '"+ new String[] { String.valueOf(clothes.getId()) }+"' AND "+KEY_IS_DELETED+ " = '"+false+"'";
@@ -499,7 +509,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
         return tags;
     }
-
+    // NOTE: DO NOT USE THIS METHOD AS ITS MEANT TO BE USED WITHIN UPDATECLOTHES
     public void createTag(Tag tag){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -513,7 +523,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_TAG, null, values);
         db.close();
     }
-
+    // NOTE: DO NOT USE THIS METHOD AS ITS MEANT TO BE USED WITHIN UPDATECLOTHES
     public void deleteTag(Tag tag){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
