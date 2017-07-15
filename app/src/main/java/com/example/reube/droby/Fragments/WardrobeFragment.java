@@ -67,7 +67,7 @@ public class WardrobeFragment extends Fragment {
         // Inflate the layout for this fragment
         getActivity().setTitle("Wardrobe");
 
-        return inflater.inflate(R.layout.fragment_wardrobe, container, false);
+        return inflater.inflate(R.layout.calendar, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

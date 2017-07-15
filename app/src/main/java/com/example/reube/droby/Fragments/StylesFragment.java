@@ -9,7 +9,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.FinalOutfitActivity;
@@ -17,6 +19,7 @@ import com.example.reube.droby.R;
 
 import java.util.ArrayList;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static com.example.reube.droby.Fragments.ClothesFragment.adapter;
 import static com.example.reube.droby.R.id.StylesFab;
 
@@ -91,6 +94,35 @@ public class StylesFragment extends Fragment {
                 startActivity(wears1Intent);
             }
         });
+
+        Intent intent = getActivity().getIntent();
+        LinearLayout finalLL = (LinearLayout) rootView.findViewById(R.id.finalisedOutfitLL);
+        LinearLayout promptLL = (LinearLayout) rootView.findViewById(R.id.plannerPromptLL);
+        LinearLayout s1LL = (LinearLayout) rootView.findViewById(R.id.suggestion1LL);
+        LinearLayout s2LL = (LinearLayout) rootView.findViewById(R.id.suggestion2LL);
+        LinearLayout s3LL = (LinearLayout) rootView.findViewById(R.id.suggestion3LL);
+        FloatingActionButton stylesFab = (FloatingActionButton) rootView.findViewById(R.id.StylesFab);
+
+        if(intent != null){
+            String string = intent.getStringExtra("test");
+            if(string == null){
+                finalLL.setVisibility(LinearLayout.GONE);
+                promptLL.setVisibility(LinearLayout.GONE);
+                s1LL.setVisibility(LinearLayout.VISIBLE);
+                s2LL.setVisibility(LinearLayout.VISIBLE);
+                s3LL.setVisibility(LinearLayout.VISIBLE);
+                stylesFab.setVisibility(FloatingActionButton.VISIBLE);
+            }
+            else if(string.equals(string)){
+                finalLL.setVisibility(LinearLayout.VISIBLE);
+                promptLL.setVisibility(LinearLayout.VISIBLE);
+                s1LL.setVisibility(LinearLayout.GONE);
+                s2LL.setVisibility(LinearLayout.GONE);
+                s3LL.setVisibility(LinearLayout.GONE);
+                stylesFab.setVisibility(FloatingActionButton.GONE);
+            }
+
+        }
 
         return rootView;
     }
