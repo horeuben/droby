@@ -4,15 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.example.reube.droby.Activities.ClothesBasket;
@@ -122,7 +128,7 @@ public class StylesFragment extends Fragment {
         suggestedOutfitList.add(Integer.toString(AllClothes.get(i3).getId()));
 
 
-
+        //Clicking suggestion 1 wear text
         TextView wears1 = (TextView) rootView.findViewById(R.id.wearText1);
         wears1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,12 +139,23 @@ public class StylesFragment extends Fragment {
             }
         });
 
+        //Clicking select styles text
+        TextView stylesText = (TextView) rootView.findViewById(R.id.StylesText);
+        stylesText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popUpWindow(v);
+
+            }
+        });
+
         Intent intent = getActivity().getIntent();
         LinearLayout finalLL = (LinearLayout) rootView.findViewById(R.id.finalisedOutfitLL);
         LinearLayout promptLL = (LinearLayout) rootView.findViewById(R.id.plannerPromptLL);
         LinearLayout s1LL = (LinearLayout) rootView.findViewById(R.id.suggestion1LL);
         LinearLayout s2LL = (LinearLayout) rootView.findViewById(R.id.suggestion2LL);
         LinearLayout s3LL = (LinearLayout) rootView.findViewById(R.id.suggestion3LL);
+        LinearLayout stylesPrompt = (LinearLayout) rootView.findViewById(R.id.stylePromptLL);
         FloatingActionButton stylesFab = (FloatingActionButton) rootView.findViewById(R.id.StylesFab);
         ImageView finalisedTop = (ImageView) rootView.findViewById(R.id.fTop);
         ImageView finalisedBottom = (ImageView) rootView.findViewById(R.id.fBottom);
@@ -153,6 +170,7 @@ public class StylesFragment extends Fragment {
                 s2LL.setVisibility(LinearLayout.VISIBLE);
                 s3LL.setVisibility(LinearLayout.VISIBLE);
                 stylesFab.setVisibility(FloatingActionButton.VISIBLE);
+                stylesPrompt.setVisibility(LinearLayout.VISIBLE);
             }
             else if(string.equals(string)){
                 outfitFinalList = (ArrayList<String>)intent.getExtras().getSerializable("outfitClothes");
@@ -163,6 +181,7 @@ public class StylesFragment extends Fragment {
                 s1LL.setVisibility(LinearLayout.GONE);
                 s2LL.setVisibility(LinearLayout.GONE);
                 s3LL.setVisibility(LinearLayout.GONE);
+                stylesPrompt.setVisibility(LinearLayout.GONE);
                 stylesFab.setVisibility(FloatingActionButton.GONE);
                 finalisedTop.setImageBitmap(convertToBitmap(finalClothesList.get(0).getImage()));
                 finalisedBottom.setImageBitmap(convertToBitmap(finalClothesList.get(1).getImage()));
@@ -178,6 +197,65 @@ public class StylesFragment extends Fragment {
 
         return BitmapFactory.decodeByteArray(b, 0, b.length);
 
+    }
+
+    private void popUpWindow(View v){
+        try{
+            LayoutInflater layoutInflater = (LayoutInflater)getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View layout = layoutInflater.inflate(R.layout.calendar, (ViewGroup) v.findViewById(R.id.calendar) );
+
+            final PopupWindow popWindow = new PopupWindow(layout, 1000, 1500, true);
+            popWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+            final FrameLayout layout_main = (FrameLayout) v.findViewById(R.id.finalOutfitFrame);
+            layout_main.getForeground().setAlpha(220); // set foreground colour
+
+            final CalendarView calendar = (CalendarView) layout.findViewById(R.id.calendar);
+
+            // sets the first day of week according to Calendar.
+            // here we set Monday as the first day of the Calendar
+            calendar.setFirstDayOfWeek(1);
+
+
+
+
+            TextView cancel = (TextView) layout.findViewById(R.id.cancelText);
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    layout_main.getForeground().setAlpha(0); //remove foreground
+                    popWindow.dismiss();
+                }
+            });
+
+            TextView okButton = (TextView) layout.findViewById(R.id.okText);
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    TextView dateText = (TextView) v.findViewById(R.id.calendarText);
+                    if(dateText.getText().toString().equals(getResources().getString(R.string.SaveForAnotherDay))){
+                        dateText.setText("Save this for: Today");
+                    }
+                    layout_main.getForeground().setAlpha(0); //remove foreground
+                    popWindow.dismiss();
+                }
+            });
+
+            final TextView dateText = (TextView) v.findViewById(R.id.calendarText);
+            final String[] dateSelcted = new String[1];
+            //sets the listener to be notified upon selected date change.
+            calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+                @Override
+                public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                    dateSelcted[0] = dayOfMonth + "/" + month + "/" + year;
+                    dateText.setText("Save this for: " + dateSelcted[0]);
+                }
+            });
+        }
+
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event

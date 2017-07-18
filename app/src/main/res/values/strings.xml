@@ -42,7 +42,10 @@
     <string name="SuggestionPrompt">Droby can give you some suggestions!</string>
     <string name="Planner">planner</string>
     <string name="RecommendMe">Recommend</string>
-
+    <string name="StyleSelectionPrompt">Have a certain style in mind?</string>
+    <string name="SelectStyle">Select your preferred style for today here!</string>
+    <string name="StylesText">Styles</string>
+    <string name="CurrentSuggestions">use current suggestions!</string>
     <!--final outfit strings-->
     <string name="SaveForAnotherDay">Save this for another day...</string>
 </resources>
