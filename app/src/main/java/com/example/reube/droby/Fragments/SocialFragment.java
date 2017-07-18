@@ -104,15 +104,7 @@ public class SocialFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                Button button = (Button) v.findViewById(R.id.add_image);
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), AddImageTestActivity.class);
-                        startActivity(intent);
 
-                    }
-                });
             }
 
             @Override
@@ -125,6 +117,7 @@ public class SocialFragment extends Fragment {
 
             }
         });
+
         return v;
     }
     public class PagerAdapter extends FragmentStatePagerAdapter {

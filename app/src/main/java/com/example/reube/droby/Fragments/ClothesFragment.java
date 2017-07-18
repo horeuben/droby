@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.ClothesDescription;
+import com.example.reube.droby.Activities.MainActivity;
 import com.example.reube.droby.Adapters.ClothesAdapter;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
@@ -83,10 +84,11 @@ public class ClothesFragment extends Fragment {
                 //adapter.removeAllChecks(container);
             }
         });
+        Toast.makeText(getActivity().getApplicationContext(),"user_id is:"+MainActivity.user.getId() , Toast.LENGTH_SHORT).show();
 
         mDbHelper = new DatabaseHandler(getActivity());
 
-        clothes = mDbHelper.getAllClothesTest();
+        clothes = mDbHelper.getAllClothes(MainActivity.user,"Top");//.getAllClothesTest();
 
         adapter = new ClothesAdapter(getActivity(), clothes);
 

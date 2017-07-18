@@ -13,6 +13,7 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -42,7 +43,7 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 public class MainActivity extends AppCompatActivity implements SocialFragment.OnFragmentInteractionListener, StylesFragment.OnFragmentInteractionListener,WardrobeFragment.OnFragmentInteractionListener,MeFragment.OnFragmentInteractionListener,TrendingFragment.OnFragmentInteractionListener,FriendsFragment.OnFragmentInteractionListener,FashionFragment.OnFragmentInteractionListener{
 
     private TextView mTextMessage;
-    ProgressDialog pd;
+    private DatabaseHandler db;
     public static User user;
     public static int i1;
     public static int i2;
@@ -117,13 +118,18 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        String email = getIntent().getStringExtra("email");
-        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-        user = db.getUser(email);
+
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         disableShiftMode(navigation);
+        //has clothes that needs editing
+        if (checkIfClothesNeedEditing(user).size() > 0) {
+            Intent i = new Intent();
+           // i.setClass(MainActivity.this,EditClothesActivity.this);
+            i.putExtra("clothes_ids",checkIfClothesNeedEditing(user));
+            startActivity(i);
+        }
 
 
         db = new DatabaseHandler(this);
@@ -135,18 +141,6 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         i2 = r.nextInt(max - min) + min;
         i3 = r.nextInt(max - min) + min;
 
-
-        //new TestDatabase().execute("SELECT * FROM Category");
-//        FloatingActionButton addclothes_button = (FloatingActionButton) findViewById(R.id.addClothesButton);
-//        addclothes_button.setOnClickListener(new Button.OnClickListener(){
-//            public void onClick(View v) {
-//                Intent intent=new Intent();
-//                intent.setClass(MainActivity.this, ClothesBasketActivity.class);
-//                startActivity(intent);
-//                //    SplashActivity.this.finish();
-//            }
-//
-//        });
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -219,33 +213,18 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
             Log.e("BNVHelper", "Unable to change value of shift mode", e);
         }
     }
-    //IT WORKS!!!!!!
-    private class TestDatabase extends AsyncTask<String, String, String> {
 
-        @Override
-        protected String doInBackground(String... params) {
-
-            return DatabaseUtilities.getResult(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (pd.isShowing()) {
-                pd.dismiss();
+    protected ArrayList<Integer> checkIfClothesNeedEditing(User user){
+        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+        ArrayList<Clothes> clothes = db.getAllClothes(user);
+        ArrayList<Integer> clothes_ids = new ArrayList<>();
+        for (int i = 0; i<clothes.size();i++){
+            if (TextUtils.isEmpty(clothes.get(i).getDescription())){
+                clothes_ids.add(clothes.get(i).getId());
             }
-            mTextMessage.setText(result);
         }
-
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pd = new ProgressDialog(MainActivity.this);
-            pd.setMessage("Please wait");
-            pd.setCancelable(false);
-            pd.show();
-        }
+        return clothes_ids;
     }
+
 }
 

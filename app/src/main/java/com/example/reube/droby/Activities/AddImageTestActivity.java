@@ -64,7 +64,7 @@ public class AddImageTestActivity extends AppCompatActivity {
         List<String> list = new ArrayList<String>();
         list.add("Top");
         list.add("Bottom");
-        //list.add("");
+        list.add("Outerwear");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -201,10 +201,11 @@ public class AddImageTestActivity extends AppCompatActivity {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put("user_id",MainActivity.user.getId());
         values.put(DatabaseHandler.KEY_DESCRIPTION, des);
         values.put(DatabaseHandler.KEY_IMAGE_BLOB, profileImage(bp));
         values.put("category_id", spinner.getSelectedItem().toString());
         long newRowId = db.insert(DatabaseHandler.TABLE_CLOTHES, null, values);
-        Toast.makeText(getApplicationContext(),"Added data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"Added data, user_id is:"+MainActivity.user.getId() , Toast.LENGTH_SHORT).show();
     }
 }
