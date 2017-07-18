@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.Database.User;
 import com.example.reube.droby.Fragments.ClothesFragment;
@@ -32,7 +33,10 @@ import com.example.reube.droby.R;
 import com.example.reube.droby.Database.DatabaseUtilities;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Random;
 
+import static android.R.attr.max;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 public class MainActivity extends AppCompatActivity implements SocialFragment.OnFragmentInteractionListener, StylesFragment.OnFragmentInteractionListener,WardrobeFragment.OnFragmentInteractionListener,MeFragment.OnFragmentInteractionListener,TrendingFragment.OnFragmentInteractionListener,FriendsFragment.OnFragmentInteractionListener,FashionFragment.OnFragmentInteractionListener{
@@ -40,6 +44,11 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
     private TextView mTextMessage;
     ProgressDialog pd;
     public static User user;
+    public static int i1;
+    public static int i2;
+    public static int i3;
+    public static ArrayList<Clothes> AllClothes = new ArrayList<Clothes>();
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -117,6 +126,16 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         disableShiftMode(navigation);
 
 
+        db = new DatabaseHandler(this);
+        AllClothes = db.getAllClothesTest();
+        Random r = new Random();
+        int min = 0;
+        int max = AllClothes.size();
+        i1 = r.nextInt(max - min) + min;
+        i2 = r.nextInt(max - min) + min;
+        i3 = r.nextInt(max - min) + min;
+
+
         //new TestDatabase().execute("SELECT * FROM Category");
 //        FloatingActionButton addclothes_button = (FloatingActionButton) findViewById(R.id.addClothesButton);
 //        addclothes_button.setOnClickListener(new Button.OnClickListener(){
@@ -173,8 +192,12 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         }
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+//        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+//        startActivity(intent);
+    }
 
     //Method to disable the bottom navigation view from screwing up haha
     private void disableShiftMode(BottomNavigationView view) {

@@ -30,7 +30,7 @@
                 android:outlineProvider="bounds">
 
                 <ImageView
-                    android:id="@+id/botom"
+                    android:id="@+id/bottomClothing"
                     android:layout_width="131dp"
                     android:layout_height="187dp"
                     android:src="@drawable/blue_jeans"

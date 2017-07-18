@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +26,8 @@ import java.util.ArrayList;
 
 import static android.R.attr.data;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
+import static com.example.reube.droby.Adapters.ClothesAdapter.clothes_basket_cart;
+import static com.example.reube.droby.Fragments.ClothesFragment.adapter;
 import static com.example.reube.droby.Fragments.ClothesFragment.clothes;
 
 
@@ -34,11 +37,13 @@ import static com.example.reube.droby.Fragments.ClothesFragment.clothes;
 
 public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
 
-    public static ArrayList<Clothes> adapterList = new ArrayList<Clothes>();
+    public static ArrayList<Clothes> adapterList;
+    public static ArrayList<String> finalOutfitList = new ArrayList<String>();
 
     public ClothesBasketAdapter(Activity context, ArrayList<Clothes> clothesBasket) {
 
         super(context,0,clothesBasket);
+        this.adapterList = clothesBasket;
     }
 
     @Override
@@ -59,10 +64,13 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
             listItemView.setTag(R.id.trash, viewHolder.discard);
             listItemView.setTag(R.id.boxx, viewHolder.check);
             listItemView.setTag(R.id.selected_clothes_descr, viewHolder.description_clothes);
+
         }
         else{
             viewHolder = (ViewHolder) listItemView.getTag();
         }
+
+
 
         final ViewHolder finalViewHolder = viewHolder;
         viewHolder.discard.setOnClickListener(new View.OnClickListener() {
@@ -72,25 +80,58 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
                 finalViewHolder.check.setChecked(false);
                 for (int i=0; i<ClothesFragment.clothes.size(); i++){
                     if (ClothesFragment.clothes.get(i).getId()== ClothesBasket.basketList.get(position).getId()){
-                        //ClothesFragment.clothes.get(i).setDescription("Discarded");
                         ClothesFragment.clothes.get(i).setSelected(false);
                     }
-
                 }
 
                 ClothesBasket.basketList.remove(position);
-                ClothesAdapter.clothes_basket_cart.remove(position);
+                clothes_basket_cart.remove(position);
 
                 notifyDataSetChanged();
-                ClothesFragment.adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        viewHolder.check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int getPosition = (Integer) buttonView.getTag();  // Here we get the position that we have set for the checkbox using setTag.
+                adapterList.get(getPosition).setSelected(buttonView.isChecked()); // Set the value of checkbox to maintain its state.
+
+                CheckBox checkbox = (CheckBox) buttonView;
+                Clothes item = getItem(position);
+
+                if(checkbox.isChecked()){
+
+                    if(finalOutfitList.contains(item)){
+                        Toast.makeText(getContext(),"Already Selected",Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        if(finalOutfitList.size()>=3){
+                            checkbox.setChecked(false);
+                            Toast.makeText(getContext(),"3 pieces selected already!",Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            finalOutfitList.add(Integer.toString(item.getId()));
+                            //Toast.makeText(getContext(), Integer.toString(finalOutfitList.size()), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                }
+                else{
+                    finalOutfitList.remove(Integer.toString(item.getId()));
+
+
+                }
+                ClothesBasket.basketAdapter.notifyDataSetChanged();
+
             }
         });
 
 
 
-
-
-
+        viewHolder.check.setTag(position); // This line is important.
+        viewHolder.check.setChecked(adapterList.get(position).isSelected());
         viewHolder.clothes_image.setImageBitmap(convertToBitmap(getItem(position).getImage()));
         viewHolder.description_clothes.setText(getItem(position).getDescription());
 

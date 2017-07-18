@@ -4,7 +4,9 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -53,6 +55,7 @@ public class ClothesFragment extends Fragment {
     private GridView gridView;
     public static ClothesAdapter adapter;
     private DatabaseHandler mDbHelper;
+    private static Parcelable state;
 
 
     @Override
@@ -78,8 +81,6 @@ public class ClothesFragment extends Fragment {
                 clothesBasketIntent.putExtra("StringList", clothesBasketCart);
                 startActivity(clothesBasketIntent);
                 //adapter.removeAllChecks(container);
-
-
             }
         });
 
@@ -111,22 +112,35 @@ public class ClothesFragment extends Fragment {
 
         });
 
+
+
         setHasOptionsMenu(true);
 
         return rootView;
     }
 
+    @Override
+    public void onPause() {
+        state = gridView.onSaveInstanceState();    //saves current gridview scrolled state
+        super.onPause();
 
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        if(state!=null){
+            gridView.onRestoreInstanceState(state); //restores gridview scrolled state
+        }
+        super.onViewCreated(view, savedInstanceState);
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-
 //        gridView.setAdapter(adapter);
 //        adapter.notifyDataSetChanged();
-
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

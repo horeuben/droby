@@ -2,6 +2,8 @@ package com.example.reube.droby.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,17 +11,23 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.FinalOutfitActivity;
+import com.example.reube.droby.Database.Clothes;
+import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
+import java.util.Random;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static com.example.reube.droby.Activities.MainActivity.AllClothes;
+import static com.example.reube.droby.Activities.MainActivity.i1;
+import static com.example.reube.droby.Activities.MainActivity.i2;
+import static com.example.reube.droby.Activities.MainActivity.i3;
 import static com.example.reube.droby.Fragments.ClothesFragment.adapter;
 import static com.example.reube.droby.R.id.StylesFab;
 
@@ -33,9 +41,15 @@ import static com.example.reube.droby.R.id.StylesFab;
  */
 public class StylesFragment extends Fragment {
 
+    private ArrayList<String> outfitFinalList = new ArrayList<String>();
+    private  ArrayList<Clothes> finalClothesList = new ArrayList<Clothes>();
+    private ArrayList<String> suggestedOutfitList = new ArrayList<String>();
+    DatabaseHandler db;
+//    private static ArrayList<Clothes> AllClothes = new ArrayList<Clothes>();
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    // TODO: Rename and change types of parameters
+
     private String mParam1;
     private String mParam2;
 
@@ -69,7 +83,7 @@ public class StylesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_outfit, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_styles, container, false);
         // Inflate the layout for this fragment
         getActivity().setTitle("Style Recommendation");
 
@@ -79,19 +93,43 @@ public class StylesFragment extends Fragment {
             public void onClick(View v) {
 
                 ArrayList<String> extraStrings = new ArrayList<String>();
-                extraStrings = ClothesFragment.adapter.clothes_basket_cart;
+                extraStrings = adapter.clothes_basket_cart;
                 Intent clothesBasketIntent2 = new Intent(getActivity(), ClothesBasket.class);
                 clothesBasketIntent2.putExtra("StringList", extraStrings);
                 startActivity(clothesBasketIntent2);
             }
         });
 
+        //Suggestion 1 random    generator
+//        db = new DatabaseHandler(getActivity());
+//        AllClothes = db.getAllClothesTest();
+//        int min = 0;
+//        int max = AllClothes.size();
+
+
+//        Random r = new Random();
+//        int i1 = r.nextInt(max - min) + min;
+//        int i2 = r.nextInt(max - min) + min;
+//        int i3 = r.nextInt(max - min) + min;
+        ImageView s1ImageTop = (ImageView) rootView.findViewById(R.id.s1Top);
+        ImageView s1ImageBottom = (ImageView) rootView.findViewById(R.id.s1Bottom);
+        ImageView s1ImageOuter = (ImageView) rootView.findViewById(R.id.s1Outerwear);
+        s1ImageTop.setImageBitmap(convertToBitmap(AllClothes.get(i1).getImage()));
+        s1ImageBottom.setImageBitmap(convertToBitmap(AllClothes.get(i2).getImage()));
+        s1ImageOuter.setImageBitmap(convertToBitmap(AllClothes.get(i3).getImage()));
+        suggestedOutfitList.add(Integer.toString(AllClothes.get(i1).getId()));
+        suggestedOutfitList.add(Integer.toString(AllClothes.get(i2).getId()));
+        suggestedOutfitList.add(Integer.toString(AllClothes.get(i3).getId()));
+
+
+
         TextView wears1 = (TextView) rootView.findViewById(R.id.wearText1);
         wears1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent wears1Intent = new Intent(getActivity(), FinalOutfitActivity.class);
-                startActivity(wears1Intent);
+                Intent pick1Intent = new Intent(getActivity(), FinalOutfitActivity.class);
+                pick1Intent.putExtra("OutfitList", suggestedOutfitList);
+                startActivity(pick1Intent);
             }
         });
 
@@ -102,9 +140,12 @@ public class StylesFragment extends Fragment {
         LinearLayout s2LL = (LinearLayout) rootView.findViewById(R.id.suggestion2LL);
         LinearLayout s3LL = (LinearLayout) rootView.findViewById(R.id.suggestion3LL);
         FloatingActionButton stylesFab = (FloatingActionButton) rootView.findViewById(R.id.StylesFab);
+        ImageView finalisedTop = (ImageView) rootView.findViewById(R.id.fTop);
+        ImageView finalisedBottom = (ImageView) rootView.findViewById(R.id.fBottom);
+        ImageView finalisedOuterwear = (ImageView) rootView.findViewById(R.id.fOuterwear);
 
         if(intent != null){
-            String string = intent.getStringExtra("test");
+            String string = intent.getStringExtra("test");  //check if intent comes from FinalOutfitActivity
             if(string == null){
                 finalLL.setVisibility(LinearLayout.GONE);
                 promptLL.setVisibility(LinearLayout.GONE);
@@ -114,17 +155,29 @@ public class StylesFragment extends Fragment {
                 stylesFab.setVisibility(FloatingActionButton.VISIBLE);
             }
             else if(string.equals(string)){
+                outfitFinalList = (ArrayList<String>)intent.getExtras().getSerializable("outfitClothes");
+                db = new DatabaseHandler(getActivity());
+                finalClothesList = db.getSelectedClothesIdTest(outfitFinalList);
                 finalLL.setVisibility(LinearLayout.VISIBLE);
                 promptLL.setVisibility(LinearLayout.VISIBLE);
                 s1LL.setVisibility(LinearLayout.GONE);
                 s2LL.setVisibility(LinearLayout.GONE);
                 s3LL.setVisibility(LinearLayout.GONE);
                 stylesFab.setVisibility(FloatingActionButton.GONE);
+                finalisedTop.setImageBitmap(convertToBitmap(finalClothesList.get(0).getImage()));
+                finalisedBottom.setImageBitmap(convertToBitmap(finalClothesList.get(1).getImage()));
+                finalisedOuterwear.setImageBitmap(convertToBitmap(finalClothesList.get(2).getImage()));
             }
 
         }
 
         return rootView;
+    }
+
+    private Bitmap convertToBitmap(byte[] b){
+
+        return BitmapFactory.decodeByteArray(b, 0, b.length);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

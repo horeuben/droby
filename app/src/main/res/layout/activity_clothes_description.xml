@@ -12,11 +12,46 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white">
-
-        <ImageView
-            android:id="@+id/clothes_image"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/clothes_image"
+                android:layout_width="match_parent"
+                android:layout_height="400dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edit Clothes"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="center"/>
+
+                <ImageView
+                    android:id="@+id/idIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_mode_edit_black_24dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"/>
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -73,7 +108,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:scaleType="fitStart"
-                android:src="@drawable/white_office_jacket"/>
+                tools:src="@drawable/white_office_jacket"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

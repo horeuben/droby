@@ -12,9 +12,13 @@ import android.widget.Toast;
 import com.example.reube.droby.Adapters.ClothesBasketAdapter;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
+import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
+
+import static com.example.reube.droby.Fragments.ClothesFragment.adapter;
+import static java.security.AccessController.getContext;
 
 /**
  * Created by Family on 14/6/2017.
@@ -25,6 +29,8 @@ public class ClothesBasket extends AppCompatActivity{
     public static ArrayList<Clothes> clothes_basket_list = new ArrayList<Clothes>();
     public static ArrayList<Clothes> basketList;
     private DatabaseHandler dbHelper;
+    public static ClothesBasketAdapter basketAdapter;
+    private ArrayList<String> StringList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,19 +46,23 @@ public class ClothesBasket extends AppCompatActivity{
 
         basketList = dbHelper.getSelectedClothesIdTest(list);
 
-        final ClothesBasketAdapter basketAdapter = new ClothesBasketAdapter(this, basketList);
+        basketAdapter = new ClothesBasketAdapter(this, basketList);
 
         final ListView listView = (ListView) findViewById(R.id.basket_list);
 
         listView.setAdapter(basketAdapter);
 
-        Button empty = (Button) findViewById(R.id.empty);
+        Button empty = (Button) findViewById(R.id.emptyAll);
         empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 basketList.clear();
-                final ClothesBasketAdapter basketAdapter2 = new ClothesBasketAdapter(ClothesBasket.this, basketList);
-                listView.setAdapter(basketAdapter2);
+                adapter.clothes_basket_cart.clear();
+                basketAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
+//                final ClothesBasketAdapter basketAdapter2 = new ClothesBasketAdapter(ClothesBasket.this, basketList);
+//                listView.setAdapter(basketAdapter2);
+
 
             }
         });
@@ -61,7 +71,9 @@ public class ClothesBasket extends AppCompatActivity{
         styleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                StringList = ClothesBasketAdapter.finalOutfitList;
                 Intent intent = new Intent(ClothesBasket.this, FinalOutfitActivity.class);
+                intent.putExtra("OutfitList", StringList);
                 startActivity(intent);
             }
         });
@@ -84,7 +96,15 @@ public class ClothesBasket extends AppCompatActivity{
     public void onBackPressed()
     {
         super.onBackPressed();
-        Toast.makeText(this,"test",Toast.LENGTH_SHORT);
+        if (adapter.clothes_basket_cart.isEmpty()){
+            for (int i=0; i<ClothesFragment.clothes.size(); i++){
+                ClothesFragment.clothes.get(i).setSelected(false);
+            }
+        }
+        ClothesBasketAdapter.finalOutfitList.clear();
+        if(adapter!=null){
+            adapter.notifyDataSetChanged();
+        }
         finish();
 
     }
