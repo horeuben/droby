@@ -13,11 +13,13 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.Database.User;
 import com.example.reube.droby.Fragments.ClothesFragment;
@@ -32,14 +34,22 @@ import com.example.reube.droby.R;
 import com.example.reube.droby.Database.DatabaseUtilities;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Random;
 
+import static android.R.attr.max;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 public class MainActivity extends AppCompatActivity implements SocialFragment.OnFragmentInteractionListener, StylesFragment.OnFragmentInteractionListener,WardrobeFragment.OnFragmentInteractionListener,MeFragment.OnFragmentInteractionListener,TrendingFragment.OnFragmentInteractionListener,FriendsFragment.OnFragmentInteractionListener,FashionFragment.OnFragmentInteractionListener{
 
     private TextView mTextMessage;
-    ProgressDialog pd;
+    private DatabaseHandler db;
     public static User user;
+    public static int i1;
+    public static int i2;
+    public static int i3;
+    public static ArrayList<Clothes> AllClothes = new ArrayList<Clothes>();
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -108,26 +118,29 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        String email = getIntent().getStringExtra("email");
-        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-        user = db.getUser(email);
+
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         disableShiftMode(navigation);
+        //has clothes that needs editing
+        if (checkIfClothesNeedEditing(user).size() > 0) {
+            Intent i = new Intent();
+           // i.setClass(MainActivity.this,EditClothesActivity.this);
+            i.putExtra("clothes_ids",checkIfClothesNeedEditing(user));
+            startActivity(i);
+        }
 
 
-        //new TestDatabase().execute("SELECT * FROM Category");
-//        FloatingActionButton addclothes_button = (FloatingActionButton) findViewById(R.id.addClothesButton);
-//        addclothes_button.setOnClickListener(new Button.OnClickListener(){
-//            public void onClick(View v) {
-//                Intent intent=new Intent();
-//                intent.setClass(MainActivity.this, ClothesBasketActivity.class);
-//                startActivity(intent);
-//                //    SplashActivity.this.finish();
-//            }
-//
-//        });
+        db = new DatabaseHandler(this);
+        AllClothes = db.getAllClothesTest();
+        Random r = new Random();
+        int min = 0;
+        int max = AllClothes.size();
+        i1 = r.nextInt(max - min) + min;
+        i2 = r.nextInt(max - min) + min;
+        i3 = r.nextInt(max - min) + min;
+
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -173,8 +186,12 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         }
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+//        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+//        startActivity(intent);
+    }
 
     //Method to disable the bottom navigation view from screwing up haha
     private void disableShiftMode(BottomNavigationView view) {
@@ -196,33 +213,18 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
             Log.e("BNVHelper", "Unable to change value of shift mode", e);
         }
     }
-    //IT WORKS!!!!!!
-    private class TestDatabase extends AsyncTask<String, String, String> {
 
-        @Override
-        protected String doInBackground(String... params) {
-
-            return DatabaseUtilities.getResult(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (pd.isShowing()) {
-                pd.dismiss();
+    protected ArrayList<Integer> checkIfClothesNeedEditing(User user){
+        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+        ArrayList<Clothes> clothes = db.getAllClothes(user);
+        ArrayList<Integer> clothes_ids = new ArrayList<>();
+        for (int i = 0; i<clothes.size();i++){
+            if (TextUtils.isEmpty(clothes.get(i).getDescription())){
+                clothes_ids.add(clothes.get(i).getId());
             }
-            mTextMessage.setText(result);
         }
-
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pd = new ProgressDialog(MainActivity.this);
-            pd.setMessage("Please wait");
-            pd.setCancelable(false);
-            pd.show();
-        }
+        return clothes_ids;
     }
+
 }
 

@@ -13,7 +13,17 @@ public class Outfit {
     private int clothes_id;
     private String name;
     private boolean isDeleted;
-//set isdeleted to true to delete the outfit
+    private String category_id;
+
+    public String getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(String category_id) {
+        this.category_id = category_id;
+    }
+
+    //set isdeleted to true to delete the outfit
     public boolean isDeleted() {
         return isDeleted;
     }

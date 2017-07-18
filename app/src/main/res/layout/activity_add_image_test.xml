@@ -47,5 +47,11 @@
         android:id="@+id/displayinfo"
         android:text="TEST"/>
 
+    <Spinner
+        android:id="@+id/spinner2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         />
+
 
 </LinearLayout>

@@ -11,10 +11,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import com.example.reube.droby.R;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.R.attr.button;
 
@@ -43,7 +46,7 @@ public class AddImageTestActivity extends AppCompatActivity {
     private Bitmap bp;
     private byte[] photo;
     private ArrayList<Clothes> clothesList;
-
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,15 @@ public class AddImageTestActivity extends AppCompatActivity {
 
         TextView text = (TextView) findViewById(R.id.displayinfo);
         text.setText(mDbHelper.getClothes());
+        spinner = (Spinner) findViewById(R.id.spinner2);
+        List<String> list = new ArrayList<String>();
+        list.add("Top");
+        list.add("Bottom");
+        list.add("Outerwear");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
 
         Button button = (Button) findViewById(R.id.save);
         button.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +80,7 @@ public class AddImageTestActivity extends AppCompatActivity {
                     AddClothes();
                     TextView text = (TextView) findViewById(R.id.displayinfo);
                     text.setText(mDbHelper.getClothes());
+
                 }
 
             }
@@ -188,10 +201,11 @@ public class AddImageTestActivity extends AppCompatActivity {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put("user_id",MainActivity.user.getId());
         values.put(DatabaseHandler.KEY_DESCRIPTION, des);
         values.put(DatabaseHandler.KEY_IMAGE_BLOB, profileImage(bp));
-
+        values.put("category_id", spinner.getSelectedItem().toString());
         long newRowId = db.insert(DatabaseHandler.TABLE_CLOTHES, null, values);
-        Toast.makeText(getApplicationContext(),"Added data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"Added data, user_id is:"+MainActivity.user.getId() , Toast.LENGTH_SHORT).show();
     }
 }

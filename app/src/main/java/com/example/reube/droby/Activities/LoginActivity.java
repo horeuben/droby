@@ -8,12 +8,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.Database.User;
 import com.example.reube.droby.R;
 
-public class LoginActivity extends AppCompatActivity {
+import java.util.ArrayList;
 
+public class LoginActivity extends AppCompatActivity {
+    private DatabaseHandler db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v) {
                 //TODO: logic to query database to see if user is valid, and then set current User to this login id, before changing new screen for login
-                DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                db = new DatabaseHandler(getApplicationContext());
                 User user = db.getUser(email.getText().toString(),password.getText().toString());
                 if (user!=null){
                     //login successfully!
@@ -44,4 +47,5 @@ public class LoginActivity extends AppCompatActivity {
 
         });
     }
+
 }
