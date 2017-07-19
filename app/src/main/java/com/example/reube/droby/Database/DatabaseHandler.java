@@ -62,7 +62,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_PASSWORD = "password";
     // get arraylist of all clothes
 
-    // Category Table Column names all common
 
     // Clothes Table Column names
     private static final String KEY_IMAGE_ID = "image_id";
@@ -71,8 +70,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_FREQUENCY = "frequency";
     private static final String KEY_LOCATION = "location";
     // get arraylist of tags that a clothes have
-
-    // Image Table Column names
     public static final String KEY_IMAGE_BLOB = "image_blob";
 
     // Outfit Table Column names
