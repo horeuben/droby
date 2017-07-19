@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
     private TextView mTextMessage;
     private DatabaseHandler db;
     public static User user;
-    public static int i1;
-    public static int i2;
-    public static int i3;
+    public static int i1 = -1;
+    public static int i2 = -1;
+    public static int i3 = -1;
     public static ArrayList<Clothes> AllClothes = new ArrayList<Clothes>();
 
 
@@ -134,12 +134,15 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
 
         db = new DatabaseHandler(this);
         AllClothes = db.getAllClothesTest();
-        Random r = new Random();
-        int min = 0;
-        int max = AllClothes.size();
-        i1 = r.nextInt(max - min) + min;
-        i2 = r.nextInt(max - min) + min;
-        i3 = r.nextInt(max - min) + min;
+        if (AllClothes.size()>2){
+            Random r = new Random();
+            int min = 0;
+            int max = AllClothes.size();
+            i1 = r.nextInt(max - min) + min;
+            i2 = r.nextInt(max - min) + min;
+            i3 = r.nextInt(max - min) + min;
+
+        }
 
 
         // Check that the activity is using the layout version with

@@ -17,8 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reube.droby.Adapters.ClothesBasketAdapter;
+import com.example.reube.droby.Database.Clothes;
+import com.example.reube.droby.Database.DatabaseHandler;
+import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,6 +31,10 @@ import java.util.List;
  */
 
 public class ClothesDescription extends AppCompatActivity {
+    DatabaseHandler db = new DatabaseHandler(this);
+    ArrayList<String> singleItem = new ArrayList<String>();
+    boolean editOn = false;
+    private static ArrayList<String> l = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,20 +45,18 @@ public class ClothesDescription extends AppCompatActivity {
 
         ImageView imageView = (ImageView) findViewById(R.id.clothes_image);
 
-        TextView textView = (TextView) findViewById(R.id.clothes_description);
+        final TextView textView = (TextView) findViewById(R.id.clothes_description);
 
-        //int image_Id = getIntent().getIntExtra("imageId",0);
-        byte[] image_Id = getIntent().getByteArrayExtra("imageId");
-        String description = getIntent().getStringExtra("imageDescription");
-        imageView.setImageBitmap(convertToBitmap(image_Id));
-        textView.setText(description);
+        final int clothes_id = getIntent().getIntExtra("clothesID",0);
+        singleItem.add(Integer.toString(clothes_id));
+        ArrayList<Clothes> item = db.getAllClothes(MainActivity.user, singleItem);
+        imageView.setImageBitmap(convertToBitmap(item.get(0).getImage()));
+        textView.setText(item.get(0).getDescription());
 
-
-
-        LinearLayout layout = (LinearLayout) this.findViewById(R.id.tagslayout);
-        List<String> l = Arrays.asList("Dress","Bright Coloured","Comfortable","item4","item5","item6","item7","item8");
+        final LinearLayout layout = (LinearLayout) this.findViewById(R.id.tagslayout);
+        List<String> l = Arrays.asList("Dress","Bright Coloured","Comfortable","item4","item5","item6","item7","item8","item9","item10");
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,    LinearLayout.LayoutParams.WRAP_CONTENT);
-        TextView[] views = new TextView[l.size()];
+        final TextView[] views = new TextView[l.size()];
         for (int list= 0; list<l.size(); list++ ){
             views[list] = new TextView(this);
             views[list].setText(l.get(list));
@@ -58,11 +64,67 @@ public class ClothesDescription extends AppCompatActivity {
             views[list].setLayoutParams(lp);
             views[list].setBackgroundResource(R.drawable.rounded_corner);
             views[list].setPadding(40,20,40,20);
+        }
+        populateText(layout, views, this );
 
+        final ImageView editClothesItem = (ImageView) findViewById(R.id.editIcon);
+        final TextView editDescription = (TextView) findViewById(R.id.clothes_description);
+        final TextView saveChanges = (TextView) findViewById(R.id.saveChanges);
+        final TextView clickTagsMsg = (TextView) findViewById(R.id.clickTagsMsg);
+
+
+//        editDescription.setOnClickListener(new View.OnClickListener() { //set blinking cursor to ON only when keyboard is displayed
+//            @Override
+//            public void onClick(View v) {
+//                if (v.getId() == editDescription.getId())
+//                {
+//                    editDescription.setCursorVisible(true);
+//                }
+//            }
+//        });
+
+        editClothesItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editDescription.setEnabled(true);
+                saveChanges.setVisibility(View.VISIBLE);
+                editClothesItem.setVisibility(View.GONE);
+                clickTagsMsg.setVisibility(View.VISIBLE);
+            }
+        });
+
+        saveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editDescription.setEnabled(false);
+                textView.setText(editDescription.getText());
+                ClothesFragment.clothes.get(clothes_id-1).setDescription(editDescription.getText().toString());
+                saveChanges.setVisibility(View.GONE);
+                editClothesItem.setVisibility(View.VISIBLE);
+                clickTagsMsg.setVisibility(View.GONE);
+                db.updateClothes(ClothesFragment.clothes.get(clothes_id-1));
+                ClothesFragment.clothes = db.getAllClothes(MainActivity.user);
+                //ClothesFragment.adapter.notifyDataSetChanged();
+            }
+        });
+
+        for(int i =0; i<views.length; i++){
+            final int finalI = i;
+            views[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //l.remove(finalI);
+                    Toast.makeText(getApplicationContext(), "PRESSED",Toast.LENGTH_SHORT).show();
+                    //populateText(layout, views, getApplicationContext());
+                }
+            });
         }
 
 
-        populateText(layout, views, this );
+
+
+
+
 
     }
 
@@ -84,7 +146,7 @@ public class ClothesDescription extends AppCompatActivity {
         newLL.setGravity(Gravity.LEFT);
         newLL.setOrientation(LinearLayout.HORIZONTAL);
 
-        int widthSoFar = 0;
+        int widthSoFar = 140; //including margins
 
         for (int i = 0 ; i < views.length ; i++ ){
             LinearLayout LL = new LinearLayout(mContext);
@@ -96,7 +158,7 @@ public class ClothesDescription extends AppCompatActivity {
             views[i].measure(0,0);
             params = new LinearLayout.LayoutParams(views[i].getMeasuredWidth(),
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(20, 20, 0, 0);
+            params.setMargins(10, 20, 0, 0);
 
             LL.addView(views[i], params);
             LL.measure(0, 0);

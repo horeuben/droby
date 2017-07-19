@@ -25,6 +25,7 @@ import com.example.reube.droby.R;
 import java.util.ArrayList;
 
 import static android.R.attr.data;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 import static com.example.reube.droby.Adapters.ClothesAdapter.clothes_basket_cart;
 import static com.example.reube.droby.Fragments.ClothesFragment.adapter;
@@ -92,6 +93,7 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
             }
         });
 
+
         viewHolder.check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -100,21 +102,22 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
 
                 CheckBox checkbox = (CheckBox) buttonView;
                 Clothes item = getItem(position);
-
                 if(checkbox.isChecked()){
 
-                    if(finalOutfitList.contains(item)){
+                    if(finalOutfitList.contains(item.getId())){
                         Toast.makeText(getContext(),"Already Selected",Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        if(finalOutfitList.size()>=3){
-                            checkbox.setChecked(false);
-                            Toast.makeText(getContext(),"3 pieces selected already!",Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            finalOutfitList.add(Integer.toString(item.getId()));
-                            //Toast.makeText(getContext(), Integer.toString(finalOutfitList.size()), Toast.LENGTH_SHORT).show();
-                        }
+                        finalOutfitList.add(Integer.toString(item.getId()));
+//                        if(finalOutfitList.size()>=3){
+//                            checkbox.setChecked(false);
+//                            //Toast.makeText(getContext(),"3 pieces selected already!",Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getContext(),finalOutfitList.get(0)+finalOutfitList.get(1)+finalOutfitList.get(2),Toast.LENGTH_SHORT).show();
+//                        }
+//                        else{
+//                            finalOutfitList.add(Integer.toString(item.getId()));
+//                            //Toast.makeText(getContext(), Integer.toString(finalOutfitList.size()), Toast.LENGTH_SHORT).show();
+//                        }
                     }
 
                 }
@@ -123,7 +126,7 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
 
 
                 }
-                ClothesBasket.basketAdapter.notifyDataSetChanged();
+                notifyDataSetChanged();
 
             }
         });
