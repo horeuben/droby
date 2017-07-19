@@ -19,6 +19,15 @@
     </item>
 
     <item
+        android:id="@+id/newIte"
+        android:title="newItem"
+        android:icon="@drawable/ic_1_new_clothes"
+        android:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always">
+
+    </item>
+<!--
+    <item
         android:id="@+id/option1"
         android:title="Option 1"
         app:showAsAction="never" />
@@ -26,6 +35,7 @@
     <item
         android:id="@+id/option2"
         android:title="Option 2"
-        app:showAsAction="never" />
+        app:showAsAction="never" /> -->
+
 
 </menu>
