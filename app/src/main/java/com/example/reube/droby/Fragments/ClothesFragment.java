@@ -84,11 +84,10 @@ public class ClothesFragment extends Fragment {
                 //adapter.removeAllChecks(container);
             }
         });
-        Toast.makeText(getActivity().getApplicationContext(),"user_id is:"+MainActivity.user.getId() , Toast.LENGTH_SHORT).show();
 
         mDbHelper = new DatabaseHandler(getActivity());
 
-        clothes = mDbHelper.getAllClothes(MainActivity.user,"Top");//.getAllClothesTest();
+        clothes = mDbHelper.getAllClothes(MainActivity.user);//.getAllClothesTest();
 
         adapter = new ClothesAdapter(getActivity(), clothes);
 
@@ -101,15 +100,15 @@ public class ClothesFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener()  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(getActivity(), "Item #" + position + " clicked", Toast.LENGTH_SHORT).show();
-                Clothes pos = clothes.get(position);
-                byte[] image_id = pos.getImage();
-                String clothes_description = pos.getDescription();
-
+                int clothesID = clothes.get(position).getId();
                 Intent clothesIntent = new Intent(getActivity(), ClothesDescription.class);
-                clothesIntent.putExtra("imageId",image_id);
-                clothesIntent.putExtra("imageDescription", clothes_description);
+                clothesIntent.putExtra("clothesID",clothesID);
                 startActivity(clothesIntent);
+//                Intent test = new Intent(getActivity(), ClothesDescription.class);
+//                ArrayList<String> i = new ArrayList<String>();
+//                i.add("0");
+//                test.putExtra("clothesID",4);
+//                startActivity(test);
             }
 
         });
@@ -161,14 +160,25 @@ public class ClothesFragment extends Fragment {
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(spinnerAdapter);
+        final String[] filterLabels = getResources().getStringArray(R.array.spinner_data);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                if(selectedItem.equals("Formal")){
-                    Toast.makeText(getActivity(), "Formal selected", Toast.LENGTH_SHORT).show();
+                if(selectedItem.equals(filterLabels[0])){
+                    adapter.filterByCategory(0);
                 }
+                else if(selectedItem.equals(filterLabels[1])){
+                    adapter.filterByCategory(1);
+                }
+                else if(selectedItem.equals(filterLabels[2])){
+                    adapter.filterByCategory(2);
+                }
+                else if(selectedItem.equals(filterLabels[3])){
+                    adapter.filterByCategory(3);
+                }
+
             }
 
             @Override
@@ -240,14 +250,14 @@ public class ClothesFragment extends Fragment {
             return true;
         }
 
-        switch (item.getItemId()) {
-            case R.id.option1:
-                Toast.makeText(getActivity(), "Option 1 selected", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.option2:
-                Toast.makeText(getActivity(), "Option 2 selected", Toast.LENGTH_SHORT).show();
-                return true;
-        }
+//        switch (item.getItemId()) {
+//            case R.id.option1:
+//                Toast.makeText(getActivity(), "Option 1 selected", Toast.LENGTH_SHORT).show();
+//                return true;
+//            case R.id.option2:
+//                Toast.makeText(getActivity(), "Option 2 selected", Toast.LENGTH_SHORT).show();
+//                return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

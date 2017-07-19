@@ -20,43 +20,16 @@
                 android:id="@+id/clothes_image"
                 android:layout_width="match_parent"
                 android:layout_height="400dp" />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_alignParentRight="true">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Edit Clothes"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_gravity="center"/>
-
-                <ImageView
-                    android:id="@+id/idIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_mode_edit_black_24dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center"/>
-
-
-            </LinearLayout>
-
 
         </RelativeLayout>
 
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp">
 
-            <TextView
+            <EditText
                 android:id="@+id/clothes_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -64,7 +37,9 @@
                 android:textSize="25sp"
                 android:gravity="left"
                 android:paddingLeft="16dp"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:enabled="false"
+                android:cursorVisible="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -77,20 +52,58 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/clickTagsMsg"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Tags:"
-            android:textSize="20sp"
-            android:gravity="center"
-            android:background="@android:color/white"/>
+            android:layout_height="wrap_content"
+            android:text="Click on Tags to delete"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/tagslayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp">
 
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Added on 14/05/2017"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="16dp"
+                android:layout_centerVertical="true"/>
+
+            <ImageView
+                android:id="@+id/editIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_mode_edit_black_24dp"
+                android:layout_marginRight="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:id="@+id/saveChanges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save Changes"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:padding="4dp"
+                android:visibility="gone"
+                android:textStyle="bold"/>
+
+
+        </RelativeLayout>
+
+
 
         <TextView
             android:layout_width="wrap_content"

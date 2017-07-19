@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.transition.Transition;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.FinalOutfitActivity;
@@ -120,12 +122,16 @@ public class StylesFragment extends Fragment {
         ImageView s1ImageTop = (ImageView) rootView.findViewById(R.id.s1Top);
         ImageView s1ImageBottom = (ImageView) rootView.findViewById(R.id.s1Bottom);
         ImageView s1ImageOuter = (ImageView) rootView.findViewById(R.id.s1Outerwear);
-        s1ImageTop.setImageBitmap(convertToBitmap(AllClothes.get(i1).getImage()));
-        s1ImageBottom.setImageBitmap(convertToBitmap(AllClothes.get(i2).getImage()));
-        s1ImageOuter.setImageBitmap(convertToBitmap(AllClothes.get(i3).getImage()));
-        suggestedOutfitList.add(Integer.toString(AllClothes.get(i1).getId()));
-        suggestedOutfitList.add(Integer.toString(AllClothes.get(i2).getId()));
-        suggestedOutfitList.add(Integer.toString(AllClothes.get(i3).getId()));
+        if (i1>0){
+
+            s1ImageTop.setImageBitmap(convertToBitmap(AllClothes.get(i1).getImage()));
+            s1ImageBottom.setImageBitmap(convertToBitmap(AllClothes.get(i2).getImage()));
+            s1ImageOuter.setImageBitmap(convertToBitmap(AllClothes.get(i3).getImage()));
+            suggestedOutfitList.add(Integer.toString(AllClothes.get(i1).getId()));
+            suggestedOutfitList.add(Integer.toString(AllClothes.get(i2).getId()));
+            suggestedOutfitList.add(Integer.toString(AllClothes.get(i3).getId()));
+        }
+
 
 
         //Clicking suggestion 1 wear text
@@ -202,55 +208,31 @@ public class StylesFragment extends Fragment {
     private void popUpWindow(View v){
         try{
             LayoutInflater layoutInflater = (LayoutInflater)getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View layout = layoutInflater.inflate(R.layout.calendar, (ViewGroup) v.findViewById(R.id.calendar) );
+            View layout = layoutInflater.inflate(R.layout.styles_pop_up, (ViewGroup) v.findViewById(R.id.stylesFrameLayout) );
 
-            final PopupWindow popWindow = new PopupWindow(layout, 1000, 1500, true);
+            final PopupWindow popWindow = new PopupWindow(layout, 800, 1200, true);
+            popWindow.setAnimationStyle(-1);
+            popWindow.setElevation(5);
             popWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
-            final FrameLayout layout_main = (FrameLayout) v.findViewById(R.id.finalOutfitFrame);
-            layout_main.getForeground().setAlpha(220); // set foreground colour
-
-            final CalendarView calendar = (CalendarView) layout.findViewById(R.id.calendar);
-
-            // sets the first day of week according to Calendar.
-            // here we set Monday as the first day of the Calendar
-            calendar.setFirstDayOfWeek(1);
+            final FrameLayout layout_main = (FrameLayout) v.findViewById(R.id.stylesFrameLayout);
 
 
-
-
-            TextView cancel = (TextView) layout.findViewById(R.id.cancelText);
+            TextView cancel = (TextView) layout.findViewById(R.id.cancelButton);
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    layout_main.getForeground().setAlpha(0); //remove foreground
                     popWindow.dismiss();
                 }
             });
 
-            TextView okButton = (TextView) layout.findViewById(R.id.okText);
+            TextView okButton = (TextView) layout.findViewById(R.id.okButton);
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    TextView dateText = (TextView) v.findViewById(R.id.calendarText);
-                    if(dateText.getText().toString().equals(getResources().getString(R.string.SaveForAnotherDay))){
-                        dateText.setText("Save this for: Today");
-                    }
-                    layout_main.getForeground().setAlpha(0); //remove foreground
                     popWindow.dismiss();
                 }
             });
 
-            final TextView dateText = (TextView) v.findViewById(R.id.calendarText);
-            final String[] dateSelcted = new String[1];
-            //sets the listener to be notified upon selected date change.
-            calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-                @Override
-                public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                    dateSelcted[0] = dayOfMonth + "/" + month + "/" + year;
-                    dateText.setText("Save this for: " + dateSelcted[0]);
-                }
-            });
         }
 
         catch (Exception e) {

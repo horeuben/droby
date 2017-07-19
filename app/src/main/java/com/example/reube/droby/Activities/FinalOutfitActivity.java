@@ -97,14 +97,14 @@ public class FinalOutfitActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        if (ClothesBasket.basketList!=null){
+            for (int i=0; i<ClothesBasket.basketList.size(); i++){
+                ClothesBasket.basketList.get(i).setSelected(true);
+                ClothesBasket.basketList.get(i).setSelected(false);
+            }
 
-        for (int i=0; i<ClothesBasket.basketList.size(); i++){
-            ClothesBasket.basketList.get(i).setSelected(true);
-            ClothesBasket.basketList.get(i).setSelected(false);
+            ClothesBasket.basketAdapter.notifyDataSetChanged();
         }
-
-        ClothesBasket.basketAdapter.notifyDataSetChanged();
-
     }
 
     private void popUpWindow(View v){
@@ -117,6 +117,7 @@ public class FinalOutfitActivity extends AppCompatActivity {
 
             final PopupWindow popWindow = new PopupWindow(layout, 1000, 1500, true);
             popWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+            popWindow.setElevation(5);
             final FrameLayout layout_main = (FrameLayout) findViewById(R.id.finalOutfitFrame);
             layout_main.getForeground().setAlpha(220); // set foreground colour
 
