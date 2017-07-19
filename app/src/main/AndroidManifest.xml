@@ -46,6 +46,7 @@
         <activity android:name=".Activities.ClothesDescription"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden"
             />
         <activity android:name=".Activities.AddImageTestActivity"
             android:screenOrientation="portrait"

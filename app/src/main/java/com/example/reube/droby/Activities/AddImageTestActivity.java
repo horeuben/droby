@@ -135,7 +135,7 @@ public class AddImageTestActivity extends AppCompatActivity {
 
                     if (choosenImage != null) {
 
-                        bp = decodeUri(choosenImage, 150);
+                        bp = decodeUri(choosenImage, 200);
                         pic.setImageBitmap(bp);
                     }
                 }
