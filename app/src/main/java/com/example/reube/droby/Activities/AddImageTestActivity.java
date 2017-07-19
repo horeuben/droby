@@ -206,6 +206,6 @@ public class AddImageTestActivity extends AppCompatActivity {
         values.put(DatabaseHandler.KEY_IMAGE_BLOB, profileImage(bp));
         values.put("category_id", spinner.getSelectedItem().toString());
         long newRowId = db.insert(DatabaseHandler.TABLE_CLOTHES, null, values);
-        Toast.makeText(getApplicationContext(),"Added data, user_id is:"+MainActivity.user.getId() , Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),"Added data, user_id is:"+MainActivity.user.getId() , Toast.LENGTH_SHORT).show();
     }
 }

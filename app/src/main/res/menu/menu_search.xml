@@ -19,7 +19,7 @@
     </item>
 
     <item
-        android:id="@+id/newIte"
+        android:id="@+id/newItem"
         android:title="newItem"
         android:icon="@drawable/ic_1_new_clothes"
         android:actionViewClass="android.widget.SearchView"

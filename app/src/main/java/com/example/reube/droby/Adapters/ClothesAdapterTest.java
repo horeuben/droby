@@ -22,7 +22,6 @@ import java.util.Locale;
 /**
  * Created by Family on 19/7/2017.
  */
-
 public class ClothesAdapterTest extends ArrayAdapter<Clothes> {
 
     public ArrayList<Clothes> clothes_cart = new ArrayList<Clothes>();
@@ -75,12 +74,11 @@ public class ClothesAdapterTest extends ArrayAdapter<Clothes> {
                 if(checkbox.isChecked()){
 
                     if(clothes_cart.contains(item)){
-
                         Toast.makeText(getContext(),"Already Selected",Toast.LENGTH_SHORT);
                     }
                     else{
-                        clothes_basket_cart.add(Integer.toString(item.getId()));
                         clothes_cart.add(item);
+                        clothes_basket_cart.add(Integer.toString(item.getId()));
                         Toast.makeText(getContext(), getItem(position).getDescription() + " selected", Toast.LENGTH_SHORT).show();
                     }
 
@@ -121,7 +119,7 @@ public class ClothesAdapterTest extends ArrayAdapter<Clothes> {
         CheckBox button;
     }
 
-    private Bitmap convertToBitmap(byte[] b){
+    private Bitmap convertToBitmap(byte[] b) {
 
         return BitmapFactory.decodeByteArray(b, 0, b.length);
 

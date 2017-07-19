@@ -38,7 +38,6 @@ import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.ClothesDescription;
 import com.example.reube.droby.Activities.MainActivity;
 import com.example.reube.droby.Adapters.ClothesAdapter;
-import com.example.reube.droby.Adapters.ClothesAdapterTest;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.R;
@@ -55,7 +54,7 @@ public class ClothesFragment extends Fragment {
 
     public static ArrayList<Clothes> clothes = new ArrayList<Clothes>();
     private GridView gridView;
-    public static ClothesAdapterTest adapter;
+    public static ClothesAdapter adapter;
     private DatabaseHandler mDbHelper;
     private static Parcelable state;
 
@@ -90,7 +89,7 @@ public class ClothesFragment extends Fragment {
 
         clothes = mDbHelper.getAllClothes(MainActivity.user);//.getAllClothesTest();
 
-        adapter = new ClothesAdapterTest(getActivity(), clothes);
+        adapter = new ClothesAdapter(getActivity(), clothes);
 
         gridView = (GridView) rootView.findViewById(R.id.clothes_list);
 
@@ -163,30 +162,30 @@ public class ClothesFragment extends Fragment {
         spinner.setAdapter(spinnerAdapter);
         final String[] filterLabels = getResources().getStringArray(R.array.spinner_data);
 
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                String selectedItem = parent.getItemAtPosition(position).toString();
-//                if(selectedItem.equals(filterLabels[0])){
-//                    adapter.filterByCategory(0);
-//                }
-//                else if(selectedItem.equals(filterLabels[1])){
-//                    adapter.filterByCategory(1);
-//                }
-//                else if(selectedItem.equals(filterLabels[2])){
-//                    adapter.filterByCategory(2);
-//                }
-//                else if(selectedItem.equals(filterLabels[3])){
-//                    adapter.filterByCategory(3);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                if(selectedItem.equals(filterLabels[0])){
+                    adapter.filterByCategory(0);
+                }
+                else if(selectedItem.equals(filterLabels[1])){
+                    adapter.filterByCategory(1);
+                }
+                else if(selectedItem.equals(filterLabels[2])){
+                    adapter.filterByCategory(2);
+                }
+                else if(selectedItem.equals(filterLabels[3])){
+                    adapter.filterByCategory(3);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
         // modifying the text inside edittext component
@@ -216,7 +215,7 @@ public class ClothesFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String searchQuery) {
 
-//                adapter.filter(searchQuery.toString().trim());
+                adapter.filter(searchQuery.toString().trim());
                 gridView.invalidate();
                 return true;
             }

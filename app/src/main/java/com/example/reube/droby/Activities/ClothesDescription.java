@@ -104,7 +104,7 @@ public class ClothesDescription extends AppCompatActivity {
                 clickTagsMsg.setVisibility(View.GONE);
                 db.updateClothes(ClothesFragment.clothes.get(clothes_id-1));
                 ClothesFragment.clothes = db.getAllClothes(MainActivity.user);
-                //ClothesFragment.adapter.notifyDataSetChanged();
+                ClothesFragment.adapter.notifyDataSetChanged();
             }
         });
 
