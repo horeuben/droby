@@ -86,7 +86,7 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
                 }
 
                 ClothesBasket.basketList.remove(position);
-                clothes_basket_cart.remove(position);
+                ClothesFragment.adapter.clothes_basket_cart.remove(position);
 
                 notifyDataSetChanged();
                 adapter.notifyDataSetChanged();

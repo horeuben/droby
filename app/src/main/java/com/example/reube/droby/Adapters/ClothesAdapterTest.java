@@ -17,7 +17,6 @@ import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * Created by Family on 19/7/2017.
@@ -26,15 +25,15 @@ public class ClothesAdapterTest extends ArrayAdapter<Clothes> {
 
     public ArrayList<Clothes> clothes_cart = new ArrayList<Clothes>();
     private ArrayList<Clothes> clothes;
-    private ArrayList<Clothes> filteredClothes;
+    private ArrayList<Clothes> clothesCopy;
     public static ArrayList<String> clothes_basket_cart = new ArrayList<String>();
 
     public ClothesAdapterTest(Activity context, ArrayList<Clothes> clothes) {
 
         super(context,0,clothes);
         this.clothes = clothes;
-        filteredClothes = new ArrayList<Clothes>();
-        filteredClothes.addAll(clothes);
+        clothesCopy = new ArrayList<Clothes>();
+        clothesCopy.addAll(clothes);
 
     }
 
@@ -48,8 +47,8 @@ public class ClothesAdapterTest extends ArrayAdapter<Clothes> {
             convertView = inflater.inflate(R.layout.clothes_item, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.title = (TextView) convertView.findViewById(R.id.description);
-            //viewHolder.thumbnail = (ImageView) convertView.findViewById(R.id.add_to_cart);
             viewHolder.button = (CheckBox) convertView.findViewById(R.id.btn1);
+            viewHolder.image_clothes = (ImageView) convertView.findViewById(R.id.clothes_image);
             convertView.setTag(viewHolder);
             convertView.setTag(R.id.description, viewHolder.title);
             convertView.setTag(R.id.btn1, viewHolder.button);
@@ -69,8 +68,7 @@ public class ClothesAdapterTest extends ArrayAdapter<Clothes> {
 
                 CheckBox checkbox = (CheckBox) buttonView;
                 Clothes item = getItem(position);
-                //clothes_cart.add(item);
-                //Toast.makeText(getContext(), "position " + position , Toast.LENGTH_SHORT).show();
+
                 if(checkbox.isChecked()){
 
                     if(clothes_cart.contains(item)){
@@ -79,7 +77,6 @@ public class ClothesAdapterTest extends ArrayAdapter<Clothes> {
                     else{
                         clothes_cart.add(item);
                         clothes_basket_cart.add(Integer.toString(item.getId()));
-                        Toast.makeText(getContext(), getItem(position).getDescription() + " selected", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -114,7 +111,7 @@ public class ClothesAdapterTest extends ArrayAdapter<Clothes> {
 
     public class ViewHolder {
 
-        ImageView thumbnail;
+        ImageView image_clothes;
         TextView title;
         CheckBox button;
     }

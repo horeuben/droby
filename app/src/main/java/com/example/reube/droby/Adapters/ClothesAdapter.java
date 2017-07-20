@@ -94,7 +94,6 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
                     clothes_cart.remove(item);
 
                 }
-                notifyDataSetChanged();
             }
 
         });

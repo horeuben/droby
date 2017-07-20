@@ -65,6 +65,11 @@
             android:theme="@style/AppTheme"
             android:label="Editing"
             />
+        <activity android:name=".Activities.NewClothesActivity"
+            android:theme="@style/AppTheme"
+            android:label="New Clothes"
+            android:windowSoftInputMode="stateHidden"
+            />
     </application>
 
 

@@ -38,6 +38,7 @@ import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.ClothesDescription;
 import com.example.reube.droby.Activities.MainActivity;
 import com.example.reube.droby.Adapters.ClothesAdapter;
+import com.example.reube.droby.Adapters.ClothesAdapterTest;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.R;
@@ -103,6 +104,7 @@ public class ClothesFragment extends Fragment {
                 int clothesID = clothes.get(position).getId();
                 Intent clothesIntent = new Intent(getActivity(), ClothesDescription.class);
                 clothesIntent.putExtra("clothesID",clothesID);
+                clothesIntent.putExtra("positionID",position);
                 startActivity(clothesIntent);
 //                Intent test = new Intent(getActivity(), ClothesDescription.class);
 //                ArrayList<String> i = new ArrayList<String>();
@@ -137,9 +139,9 @@ public class ClothesFragment extends Fragment {
 
     @Override
     public void onResume() {
+
         super.onResume();
-//        gridView.setAdapter(adapter);
-//        adapter.notifyDataSetChanged();
+
     }
 
 

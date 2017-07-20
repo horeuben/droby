@@ -123,16 +123,22 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         disableShiftMode(navigation);
+
         //has clothes that needs editing
-        if (checkIfClothesNeedEditing(user).size() > 0) {
-            Intent i = new Intent();
-           // i.setClass(MainActivity.this,EditClothesActivity.this);
-            i.putExtra("clothes_ids",checkIfClothesNeedEditing(user));
-            startActivity(i);
+        db = new DatabaseHandler(this);
+        ArrayList<Clothes> editList = new ArrayList<Clothes>();
+        editList = db.getAllClothes(user, checkIfClothesNeedEditing(user));
+        if (editList.size() > 0) {
+
+            for(int i=0;i<editList.size();i++){
+                Intent editClothesIntent = new Intent(MainActivity.this, NewClothesActivity.class);
+                editClothesIntent.putExtra("clothesID",editList.get(i).getId());
+                startActivity(editClothesIntent);
+            }
         }
 
 
-        db = new DatabaseHandler(this);
+
         AllClothes = db.getAllClothesTest();
         if (AllClothes.size()>2){
             Random r = new Random();
@@ -217,13 +223,13 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         }
     }
 
-    protected ArrayList<Integer> checkIfClothesNeedEditing(User user){
+    protected ArrayList<String> checkIfClothesNeedEditing(User user){
         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
         ArrayList<Clothes> clothes = db.getAllClothes(user);
-        ArrayList<Integer> clothes_ids = new ArrayList<>();
+        ArrayList<String> clothes_ids = new ArrayList<>();
         for (int i = 0; i<clothes.size();i++){
             if (TextUtils.isEmpty(clothes.get(i).getDescription())){
-                clothes_ids.add(clothes.get(i).getId());
+                clothes_ids.add(Integer.toString(clothes.get(i).getId()));
             }
         }
         return clothes_ids;

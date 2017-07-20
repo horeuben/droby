@@ -35,6 +35,7 @@ public class ClothesDescription extends AppCompatActivity {
     ArrayList<String> singleItem = new ArrayList<String>();
     boolean editOn = false;
     private static ArrayList<String> l = new ArrayList<String>();
+    ArrayList<String> tagsList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class ClothesDescription extends AppCompatActivity {
         final TextView textView = (TextView) findViewById(R.id.clothes_description);
 
         final int clothes_id = getIntent().getIntExtra("clothesID",0);
+        //final int position_id = getIntent().getIntExtra("positionID",0);
         singleItem.add(Integer.toString(clothes_id));
         ArrayList<Clothes> item = db.getAllClothes(MainActivity.user, singleItem);
         imageView.setImageBitmap(convertToBitmap(item.get(0).getImage()));
@@ -55,15 +57,17 @@ public class ClothesDescription extends AppCompatActivity {
 
         final LinearLayout layout = (LinearLayout) this.findViewById(R.id.tagslayout);
         List<String> l = Arrays.asList("Dress","Bright Coloured","Comfortable","item4","item5","item6","item7","item8","item9","item10");
+        tagsList.addAll(l);
+
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,    LinearLayout.LayoutParams.WRAP_CONTENT);
-        final TextView[] views = new TextView[l.size()];
-        for (int list= 0; list<l.size(); list++ ){
-            views[list] = new TextView(this);
-            views[list].setText(l.get(list));
-            views[list].setTextSize(15);
-            views[list].setLayoutParams(lp);
-            views[list].setBackgroundResource(R.drawable.rounded_corner);
-            views[list].setPadding(40,20,40,20);
+        TextView[] views = new TextView[l.size()];
+        for (int i= 0; i<l.size(); i++ ){
+            views[i] = new TextView(this);
+            views[i].setText(l.get(i));
+            views[i].setTextSize(15);
+            views[i].setLayoutParams(lp);
+            views[i].setBackgroundResource(R.drawable.rounded_corner);
+            views[i].setPadding(40,20,40,20);
         }
         populateText(layout, views, this );
 
@@ -99,12 +103,11 @@ public class ClothesDescription extends AppCompatActivity {
                 editDescription.setEnabled(false);
                 textView.setText(editDescription.getText());
                 ClothesFragment.clothes.get(clothes_id-1).setDescription(editDescription.getText().toString());
+                ClothesFragment.adapter.notifyDataSetChanged();
                 saveChanges.setVisibility(View.GONE);
                 editClothesItem.setVisibility(View.VISIBLE);
                 clickTagsMsg.setVisibility(View.GONE);
                 db.updateClothes(ClothesFragment.clothes.get(clothes_id-1));
-                ClothesFragment.clothes = db.getAllClothes(MainActivity.user);
-                ClothesFragment.adapter.notifyDataSetChanged();
             }
         });
 
@@ -113,18 +116,23 @@ public class ClothesDescription extends AppCompatActivity {
             views[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //l.remove(finalI);
+                    List<String> l2 = Arrays.asList("Bright Coloured","Comfortable","item4","item5","item6","item7","item8","item9","item10");
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,    LinearLayout.LayoutParams.WRAP_CONTENT);
+                    TextView[] views = new TextView[l2.size()];
+                    for (int i= 0; i<l2.size(); i++ ){
+                        views[i] = new TextView(getApplicationContext());
+                        views[i].setText(l2.get(i));
+                        views[i].setTextSize(15);
+                        views[i].setLayoutParams(lp);
+                        views[i].setBackgroundResource(R.drawable.rounded_corner);
+                        views[i].setPadding(40,20,40,20);
+                    }
+                    populateText(layout, views, getApplicationContext() );
                     Toast.makeText(getApplicationContext(), "PRESSED",Toast.LENGTH_SHORT).show();
                     //populateText(layout, views, getApplicationContext());
                 }
             });
         }
-
-
-
-
-
-
 
     }
 
