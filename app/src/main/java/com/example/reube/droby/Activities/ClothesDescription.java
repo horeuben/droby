@@ -12,17 +12,23 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reube.droby.Adapters.ClothesBasketAdapter;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
+import com.example.reube.droby.Database.Tag;
 import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.R;
+import com.pchmn.materialchips.ChipsInput;
+import com.pchmn.materialchips.model.Chip;
+import com.pchmn.materialchips.model.ChipInterface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,16 +42,40 @@ public class ClothesDescription extends AppCompatActivity {
     DatabaseHandler db = new DatabaseHandler(this);
     ArrayList<String> singleItem = new ArrayList<String>();
     boolean editOn = false;
-    private static ArrayList<String> l = new ArrayList<String>();
-    ArrayList<String> tagsList = new ArrayList<String>();
-
+    private ChipsInput tagLayout;
+    private ArrayList<Tag> allTags;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Details");
-
         setContentView(R.layout.activity_clothes_description);
 
+        tagLayout = (ChipsInput)findViewById(R.id.tagsLayout);
+        tagLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        tagLayout.addChipsListener(new ChipsInput.ChipsListener() {
+            @Override
+            public void onChipAdded(ChipInterface chip, int newSize) {
+                // chip added
+                // newSize is the size of the updated selected chip list
+            }
+
+            @Override
+            public void onChipRemoved(ChipInterface chip, int newSize) {
+                // chip removed
+                // newSize is the size of the updated selected chip list
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text) {
+                // text changed
+                if (text.toString().contains(" ") && text.toString().length()>1) {
+                    String tag = text.toString().replaceAll(" ","");
+                    tagLayout.addChip(tag,null);
+
+                }
+            }
+
+        });
         ImageView imageView = (ImageView) findViewById(R.id.clothes_image);
 
         final TextView textView = (TextView) findViewById(R.id.clothes_description);
@@ -56,23 +86,12 @@ public class ClothesDescription extends AppCompatActivity {
         final ArrayList<Clothes> item = db.getAllClothes(MainActivity.user, singleItem);
         imageView.setImageBitmap(convertToBitmap(item.get(0).getImage()));
         textView.setText(item.get(0).getDescription());
-
-        final LinearLayout layout = (LinearLayout) this.findViewById(R.id.tagslayout);
-        List<String> l = Arrays.asList("Dress","Bright Coloured","Comfortable","item4","item5","item6","item7","item8","item9","item10");
-        tagsList.addAll(l);
-
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,    LinearLayout.LayoutParams.WRAP_CONTENT);
-        TextView[] views = new TextView[l.size()];
-        for (int i= 0; i<l.size(); i++ ){
-            views[i] = new TextView(this);
-            views[i].setText(l.get(i));
-            views[i].setTextSize(15);
-            views[i].setLayoutParams(lp);
-            views[i].setBackgroundResource(R.drawable.rounded_corner);
-            views[i].setPadding(40,20,40,20);
+        allTags = item.get(0).getTags();
+        if (allTags.size()>0){
+            for (int i=0;i<allTags.size();i++){
+                tagLayout.addChip(allTags.get(i).getName(),null);
+            }
         }
-        populateText(layout, views, this );
-
         final ImageView editClothesItem = (ImageView) findViewById(R.id.editIcon);
         final TextView editDescription = (TextView) findViewById(R.id.clothes_description);
         final TextView saveChanges = (TextView) findViewById(R.id.saveChanges);
@@ -96,6 +115,8 @@ public class ClothesDescription extends AppCompatActivity {
                 saveChanges.setVisibility(View.VISIBLE);
                 editClothesItem.setVisibility(View.GONE);
                 clickTagsMsg.setVisibility(View.VISIBLE);
+                tagLayout.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+                tagLayout.setChipDeletable(true);
             }
         });
 
@@ -103,38 +124,30 @@ public class ClothesDescription extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 editDescription.setEnabled(false);
+                tagLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+                tagLayout.setChipDeletable(false);
                 textView.setText(editDescription.getText());
                 ClothesFragment.clothes.get(position_id).setDescription(editDescription.getText().toString());
+                textView.setFocusableInTouchMode(true);
+                textView.setFocusable(true);
                 saveChanges.setVisibility(View.GONE);
                 editClothesItem.setVisibility(View.VISIBLE);
                 clickTagsMsg.setVisibility(View.GONE);
+                List<Chip> tags = (List<Chip>) tagLayout.getSelectedChipList();
+                allTags = new ArrayList<Tag>();
+                for(int i =0; i<tags.size();i++){
+                    Tag tag = new Tag();
+                    tag.setName(tags.get(i).getLabel());
+                    tag.setUser_id(MainActivity.user.getId());
+                    tag.setClothes_id( ClothesFragment.clothes.get(position_id).getId());
+                    allTags.add(tag);
+                }
+                ClothesFragment.clothes.get(position_id).setTags(allTags);
                 db.updateClothes(ClothesFragment.clothes.get(position_id));
                 ClothesFragment.adapter.notifyDataSetChanged();
             }
         });
 
-        for(int i =0; i<views.length; i++){
-            final int finalI = i;
-            views[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    List<String> l2 = Arrays.asList("Bright Coloured","Comfortable","item4","item5","item6","item7","item8","item9","item10");
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,    LinearLayout.LayoutParams.WRAP_CONTENT);
-                    TextView[] views = new TextView[l2.size()];
-                    for (int i= 0; i<l2.size(); i++ ){
-                        views[i] = new TextView(getApplicationContext());
-                        views[i].setText(l2.get(i));
-                        views[i].setTextSize(15);
-                        views[i].setLayoutParams(lp);
-                        views[i].setBackgroundResource(R.drawable.rounded_corner);
-                        views[i].setPadding(40,20,40,20);
-                    }
-                    populateText(layout, views, getApplicationContext() );
-                    Toast.makeText(getApplicationContext(), "PRESSED",Toast.LENGTH_SHORT).show();
-                    //populateText(layout, views, getApplicationContext());
-                }
-            });
-        }
 
     }
 
@@ -144,54 +157,6 @@ public class ClothesDescription extends AppCompatActivity {
 
     }
 
-    private void populateText(LinearLayout ll, View[] views , Context mContext) {
-        Display display = getWindowManager().getDefaultDisplay();
-        ll.removeAllViews();
-        int maxWidth = display.getWidth() - 20;
-
-        LinearLayout.LayoutParams params;
-        LinearLayout newLL = new LinearLayout(mContext);
-        newLL.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
-        newLL.setGravity(Gravity.LEFT);
-        newLL.setOrientation(LinearLayout.HORIZONTAL);
-
-        int widthSoFar = 140; //including margins
-
-        for (int i = 0 ; i < views.length ; i++ ){
-            LinearLayout LL = new LinearLayout(mContext);
-            LL.setOrientation(LinearLayout.HORIZONTAL);
-            LL.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-            LL.setLayoutParams(new ListView.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-            views[i].measure(0,0);
-            params = new LinearLayout.LayoutParams(views[i].getMeasuredWidth(),
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 20, 0, 0);
-
-            LL.addView(views[i], params);
-            LL.measure(0, 0);
-            widthSoFar += views[i].getMeasuredWidth();// YOU MAY NEED TO ADD THE MARGINS
-            if (widthSoFar >= maxWidth) {
-                ll.addView(newLL);
-
-                newLL = new LinearLayout(mContext);
-                newLL.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.FILL_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
-                newLL.setOrientation(LinearLayout.HORIZONTAL);
-                newLL.setGravity(Gravity.LEFT);
-                params = new LinearLayout.LayoutParams(LL
-                        .getMeasuredWidth(), LL.getMeasuredHeight());
-                newLL.addView(LL, params);
-                widthSoFar = LL.getMeasuredWidth();
-            } else {
-                newLL.addView(LL);
-            }
-        }
-        ll.addView(newLL);
-    }
 
     @Override
     public void onBackPressed() {

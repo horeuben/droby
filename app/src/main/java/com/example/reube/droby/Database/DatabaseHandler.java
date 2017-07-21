@@ -36,7 +36,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     private MobileServiceSyncTable<Clothes> clothesMobileServiceSyncTable;
     // Database Name
     private static final String DATABASE_NAME = "droby_database";
@@ -94,7 +94,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT,"+ KEY_PASSWORD + " TEXT,"+ KEY_EMAIL + " TEXT" + ")";
         String CREATE_CLOTHES_TABLE = "CREATE TABLE " + TABLE_CLOTHES + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_USER_ID + " INTEGER," + KEY_CATEGORY_ID + " TEXT," + KEY_IMAGE_BLOB + " BLOB,"  + KEY_NAME + " TEXT,"+ KEY_DESCRIPTION + " TEXT,"+ KEY_CREATED_DATE + " DATETIME," + KEY_LOCATION+" INTEGER"+")";
         String CREATE_OUTFIT_TABLE = "CREATE TABLE " + TABLE_OUTFIT + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ KEY_OUTFIT_ID + " INTEGER, " + KEY_USER_ID + " INTEGER, "+ KEY_CLOTHES_ID + " INTEGER, "+ KEY_CATEGORY_ID + " TEXT, "+ KEY_NAME+" TEXT, " + KEY_IS_DELETED + " BOOLEAN " + ")";
-        String CREATE_TAG_TABLE = "CREATE TABLE " + TABLE_TAG + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT,"+ KEY_USER_ID + " INTEGER," + KEY_CLOTHES_ID + " INTEGER," + KEY_IS_DELETED + " BOOLEAN "+ ")";
+        String CREATE_TAG_TABLE = "CREATE TABLE " + TABLE_TAG + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT,"+ KEY_USER_ID + " INTEGER," + KEY_CLOTHES_ID + " INTEGER," + KEY_IS_DELETED + " TEXT "+ ")";
         String CREATE_FREQUENCY_TABLE = "CREATE TABLE " + TABLE_FREQUENCY + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_CLOTHES_ID + " INTEGER,"+ KEY_DATE_WORN + " DATETIME "+ ")";
 
         db.execSQL(CREATE_USER_TABLE);
@@ -220,7 +220,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 clothes.setDescription(c.getString((c.getColumnIndex(KEY_DESCRIPTION))));
                 clothes.setId(c.getInt((c.getColumnIndex(KEY_ID))));
                 clothes.setCategory_id(c.getString(c.getColumnIndex(KEY_CATEGORY_ID)));
-                clothesList += clothes.getDescription() +" "+ clothes.getId() +" "+clothes.getCategory_id()+ "\n";
+                clothes.setTags(this.getTags(clothes));
+                String a ="";
+                for(int i =0;i<clothes.getTags().size();i++){
+                    a+= clothes.getTags().get(i).getName()+" ";
+                }
+                clothesList += clothes.getDescription() +" "+ clothes.getId() +" "+clothes.getCategory_id()+" "+a+ "lol\n";
 
             } while (c.moveToNext());
         }
@@ -441,9 +446,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addedTags.addAll(newTags);
         addedTags.removeAll(oldTags);
         for (int i =0; i <removedTags.size();i++){
+            //remove all unwanted tags
             this.deleteTag(removedTags.get(i));
         }
         for (int i = 0; i<addedTags.size();i++){
+            //add new tags
             this.createTag(addedTags.get(i));
         }
         db.close();
@@ -491,7 +498,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // NOTE: DO NOT USE THIS METHOD AS ITS MEANT TO BE USED IN GETCLOTHES
     public ArrayList<Tag> getTags(Clothes clothes){
         ArrayList<Tag> tags = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + TABLE_TAG + " WHERE "+ KEY_CLOTHES_ID + " = '"+ clothes.getId()+"' AND "+KEY_IS_DELETED+ " = '"+false+"'";
+        String selectQuery = "SELECT  * FROM " + TABLE_TAG + " WHERE "+ KEY_CLOTHES_ID + " = '"+ clothes.getId()+"'";// AND "+KEY_IS_DELETED+ " = '"+false+"'";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -515,11 +522,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        //values.put(KEY_ID, category.getId());
         values.put(KEY_NAME, tag.getName());
         values.put(KEY_USER_ID, tag.getUser_id());
         values.put(KEY_CLOTHES_ID, tag.getClothes_id());
-
+        values.put(KEY_IS_DELETED, false);
         // insert row
         db.insert(TABLE_TAG, null, values);
         db.close();
@@ -527,12 +533,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // NOTE: DO NOT USE THIS METHOD AS ITS MEANT TO BE USED WITHIN UPDATECLOTHES
     public void deleteTag(Tag tag){
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_IS_DELETED, tag.isDeleted());
-        db.update(TABLE_TAG, values, KEY_ID + " = ?",
+//        ContentValues values = new ContentValues();
+//        values.put(KEY_IS_DELETED, "true");
+//        db.update(TABLE_TAG, values, KEY_ID + " = ?",
+          //      new String[] { String.valueOf(tag.getId()) });
+        db.delete(TABLE_TAG, KEY_ID + " = ?",
                 new String[] { String.valueOf(tag.getId()) });
-       // db.delete(TABLE_TAG, KEY_ID + " = ?",
-         //       new String[] { String.valueOf(tag.getId()) });
         db.close();
     }
 
@@ -544,7 +550,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
       // then need to select clothes where clothes_id = ? from table_clothes and add to the arraylist in an outfit
       // i can already get all clothes, so juz need the clothes_id then
       ArrayList<Clothes> clothes = this.getAllClothes(user);
-      String selectQuery = "SELECT  * FROM " + TABLE_OUTFIT + " WHERE "+ KEY_USER_ID + " = '"+ user.getId() + "' AND " + KEY_IS_DELETED + " = '" + false + "' ORDER BY "+ KEY_OUTFIT_ID+" ASC";
+      String selectQuery = "SELECT  * FROM " + TABLE_OUTFIT + " WHERE "+ KEY_USER_ID + " = '"+ user.getId() + "'"/** AND " + KEY_IS_DELETED + " = '" + false **/+ " ORDER BY "+ KEY_OUTFIT_ID+" ASC";
 
       SQLiteDatabase db = this.getWritableDatabase();
       Cursor c = db.rawQuery(selectQuery, null);
@@ -592,7 +598,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
           values.put(KEY_OUTFIT_ID, count );
           values.put(KEY_CLOTHES_ID, outfit.getClothes().get(i).getId());
           values.put(KEY_CATEGORY_ID, outfit.getCategory_id());
-          values.put(KEY_IS_DELETED, outfit.isDeleted());
+        //  values.put(KEY_IS_DELETED, outfit.isDeleted());
           // insert row
           db.insert(TABLE_OUTFIT, null, values);
       }}
@@ -602,14 +608,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
   public void deleteOutfit(Outfit outfit){
       SQLiteDatabase db = this.getWritableDatabase();
-      ContentValues values = new ContentValues();
-      values.put(KEY_IS_DELETED, outfit.isDeleted());
-      db.update(TABLE_OUTFIT, values, KEY_ID + " = ?",
-              new String[] { String.valueOf(outfit.getId()) });
-//      db.delete(TABLE_OUTFIT, KEY_OUTFIT_ID+ " = ?",
-//              new String[] { String.valueOf(outfit.getOutfit_id()) });
+//      ContentValues values = new ContentValues();
+//      values.put(KEY_IS_DELETED, outfit.isDeleted());
+//      db.update(TABLE_OUTFIT, values, KEY_ID + " = ?",
+//              new String[] { String.valueOf(outfit.getId()) });
+      db.delete(TABLE_OUTFIT, KEY_OUTFIT_ID+ " = ?",
+              new String[] { String.valueOf(outfit.getOutfit_id()) });
       db.close();
   }
+
 // NOTE: WE WILL ONLY BE USING syncCLothes() on app start to get the clothes from database
   // For use in syncing with online database
   // Use DatabaseUtilities to interface with cloud database

@@ -37,7 +37,7 @@ public class SignupActivity extends AppCompatActivity {
                         int id = (int)db.createUser(user);
                         user.setId(id);
                         Toast.makeText(getApplicationContext(),"User created! " ,Toast.LENGTH_SHORT).show();
-                        MainActivity.user = user;
+                        MainActivity.user = db.getUser(email.getText().toString());
                         Intent intent=new Intent();
                         //intent.putExtra("email", email.getText().toString());
                         intent.setClass(SignupActivity.this, MainActivity.class);
