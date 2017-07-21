@@ -57,25 +57,71 @@ public class FinalOutfitActivity extends AppCompatActivity {
         FrameLayout layout_main = (FrameLayout) findViewById(R.id.finalOutfitFrame);
         layout_main.getForeground().setAlpha(0); // remove foreground colour
 
-        ImageView clothingTop = (ImageView) findViewById(R.id.top);
-        ImageView clothingBottom = (ImageView) findViewById(R.id.bottomClothing);
-        ImageView clothingOuterwear = (ImageView) findViewById(R.id.outerwear);
+        final ImageView clothingTop = (ImageView) findViewById(R.id.top);
+        final ImageView clothingBottom = (ImageView) findViewById(R.id.bottomClothing);
+        final ImageView clothingOuterwear = (ImageView) findViewById(R.id.outerwear);
+        final TextView msg_top = (TextView) findViewById(R.id.msgTop);
+        final TextView msg_bottom = (TextView) findViewById(R.id.msgBottom);
+        final TextView msg_outer = (TextView) findViewById(R.id.msgOuter);
+        final TextView recommend_top = (TextView) findViewById(R.id.recommendTop);
+        final TextView recommend_bottom = (TextView) findViewById(R.id.recommendBottom);
+        final TextView recommend_outer = (TextView) findViewById(R.id.recommendOuter);
 
+        //Onclick behaviour for recommend buttons
+        recommend_top.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Clothes> tops = mDbHelper.getAllClothes(MainActivity.user, "Top");
+                clothingTop.setImageBitmap(convertToBitmap(tops.get(0).getImage()));
+                msg_top.setVisibility(View.GONE);
+                recommend_top.setVisibility(View.GONE);
+            }
+        });
+
+        recommend_bottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Clothes> bottoms = mDbHelper.getAllClothes(MainActivity.user, "Bottom");
+                clothingBottom.setImageBitmap(convertToBitmap(bottoms.get(0).getImage()));
+                msg_bottom.setVisibility(View.GONE);
+                recommend_bottom.setVisibility(View.GONE);
+            }
+        });
+
+        recommend_outer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Clothes> outers = mDbHelper.getAllClothes(MainActivity.user, "Outerwear");
+                clothingOuterwear.setImageBitmap(convertToBitmap(outers.get(0).getImage()));
+                msg_outer.setVisibility(View.GONE);
+                recommend_outer.setVisibility(View.GONE);
+            }
+        });
+
+        //setting clothing based on clothes basket selection
         clothesListId = (ArrayList<String>)getIntent().getExtras().getSerializable("OutfitList");
         mDbHelper = new DatabaseHandler(this);
         outfitClothes = mDbHelper.getSelectedClothesIdTest(clothesListId);
         for(int i=0; i<outfitClothes.size();i++){
             if (outfitClothes.get(i).getCategory_id().equals("Top")){
                 clothingTop.setImageBitmap(convertToBitmap(outfitClothes.get(i).getImage()));
+                msg_top.setVisibility(View.GONE);
+                recommend_top.setVisibility(View.GONE);
             }
             else if(outfitClothes.get(i).getCategory_id().equals("Bottom")){
                 clothingBottom.setImageBitmap(convertToBitmap(outfitClothes.get(i).getImage()));
+                msg_bottom.setVisibility(View.GONE);
+                recommend_bottom.setVisibility(View.GONE);
             }
             else if(outfitClothes.get(i).getCategory_id().equals("Outerwear")){
                 clothingOuterwear.setImageBitmap(convertToBitmap(outfitClothes.get(i).getImage()));
+                msg_outer.setVisibility(View.GONE);
+                recommend_outer.setVisibility(View.GONE);
+
             }
         }
 
+        //choose button
         TextView textChoose = (TextView) findViewById(R.id.text_choose);
         textChoose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +135,7 @@ public class FinalOutfitActivity extends AppCompatActivity {
             }
         });
 
+        //calendar popup
         ImageView calenderImage = (ImageView) findViewById(R.id.calenderIcon);
         calenderImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +144,7 @@ public class FinalOutfitActivity extends AppCompatActivity {
             }
         });
 
+        //switch on-of behaviours
         Switch viewSwitch = (Switch) findViewById(R.id.view_switch);
         viewSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -118,6 +166,7 @@ public class FinalOutfitActivity extends AppCompatActivity {
             }
         });
 
+        //cancel button
         TextView cancel_button = (TextView) findViewById(R.id.text_cancel);
         cancel_button.setOnClickListener(new View.OnClickListener() {
             @Override

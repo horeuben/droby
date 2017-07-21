@@ -29,6 +29,7 @@
                 style="@style/BorderMargins"
                 android:outlineProvider="bounds">
 
+                <!-- Bottom clothing-->
                 <ImageView
                     android:id="@+id/bottomClothing"
                     android:layout_width="147dp"
@@ -41,7 +42,29 @@
                     app:layout_constraintVertical_bias="0.0"
                     android:layout_marginLeft="30dp"
                     app:layout_constraintLeft_toLeftOf="parent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No bottom selected"
+                    app:layout_constraintBottom_toBottomOf="@+id/bottomClothing"
+                    android:layout_marginBottom="100dp"
+                    android:layout_marginRight="10dp"
+                    app:layout_constraintRight_toRightOf="@+id/bottomClothing"
+                    android:id="@+id/msgBottom" />
+                <TextView
+                    android:id="@+id/recommendBottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recommend"
+                    android:textSize="8sp"
+                    android:padding="5dp"
+                    android:background="@drawable/background_styles_fragment"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/msgBottom"
+                    android:layout_marginRight="37dp"
+                    app:layout_constraintRight_toRightOf="@+id/msgBottom" />
 
+                <!-- Top clothing-->
                 <ImageView
                     android:id="@+id/top"
                     android:layout_width="146dp"
@@ -51,6 +74,29 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="30dp"
                     app:layout_constraintLeft_toLeftOf="parent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No top selected"
+                    app:layout_constraintBottom_toBottomOf="@+id/top"
+                    android:layout_marginBottom="99dp"
+                    android:layout_marginRight="21dp"
+                    app:layout_constraintRight_toRightOf="@+id/top"
+                    android:id="@+id/msgTop" />
+                <TextView
+                    android:id="@+id/recommendTop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recommend"
+                    android:textSize="8sp"
+                    android:padding="5dp"
+                    android:background="@drawable/background_styles_fragment"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/msgTop"
+                    android:layout_marginRight="24dp"
+                    app:layout_constraintRight_toRightOf="@+id/msgTop" />
+
+                <!-- Outer clothing-->
                 <ImageView
                     android:id="@+id/outerwear"
                     android:layout_width="144dp"
@@ -62,6 +108,30 @@
                     android:layout_marginTop="55dp"
                     android:layout_marginRight="15dp"
                     app:layout_constraintRight_toRightOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No outerwear selected"
+                    app:layout_constraintBottom_toBottomOf="@+id/outerwear"
+                    android:layout_marginBottom="72dp"
+                    android:layout_marginRight="0dp"
+                    app:layout_constraintRight_toRightOf="@+id/outerwear"
+                    android:id="@+id/msgOuter" />
+
+                <TextView
+                    android:id="@+id/recommendOuter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recommend"
+                    android:textSize="8sp"
+                    android:padding="5dp"
+                    android:background="@drawable/background_styles_fragment"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/msgOuter"
+                    android:layout_marginRight="41dp"
+                    app:layout_constraintRight_toRightOf="@+id/msgOuter" />
+
 
             </android.support.constraint.ConstraintLayout>
             <LinearLayout
