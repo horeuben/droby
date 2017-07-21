@@ -195,6 +195,15 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
                 clothes.addAll(filteredClothes);
             }
         }
+        else if (arrayPosition == 4) {
+            for (int i = 0; i < clothesCopy.size(); i++) {
+                if (clothesCopy.get(i).getCategory_id().equals("Onepiece")) {
+                    clothes.add(clothesCopy.get(i));
+                }
+                clothes.addAll(filteredClothes);
+            }
+        }
+
         notifyDataSetChanged();
     }
 

@@ -65,6 +65,7 @@ public class AddImageTestActivity extends AppCompatActivity {
         list.add("Top");
         list.add("Bottom");
         list.add("Outerwear");
+        list.add("Onepiece");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
