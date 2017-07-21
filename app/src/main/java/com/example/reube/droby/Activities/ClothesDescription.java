@@ -1,9 +1,11 @@
 package com.example.reube.droby.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.Gravity;
@@ -49,9 +51,9 @@ public class ClothesDescription extends AppCompatActivity {
         final TextView textView = (TextView) findViewById(R.id.clothes_description);
 
         final int clothes_id = getIntent().getIntExtra("clothesID",0);
-        //final int position_id = getIntent().getIntExtra("positionID",0);
+        final int position_id = getIntent().getIntExtra("positionID",0);
         singleItem.add(Integer.toString(clothes_id));
-        ArrayList<Clothes> item = db.getAllClothes(MainActivity.user, singleItem);
+        final ArrayList<Clothes> item = db.getAllClothes(MainActivity.user, singleItem);
         imageView.setImageBitmap(convertToBitmap(item.get(0).getImage()));
         textView.setText(item.get(0).getDescription());
 
@@ -102,12 +104,12 @@ public class ClothesDescription extends AppCompatActivity {
             public void onClick(View v) {
                 editDescription.setEnabled(false);
                 textView.setText(editDescription.getText());
-                ClothesFragment.clothes.get(clothes_id-1).setDescription(editDescription.getText().toString());
-                ClothesFragment.adapter.notifyDataSetChanged();
+                ClothesFragment.clothes.get(position_id).setDescription(editDescription.getText().toString());
                 saveChanges.setVisibility(View.GONE);
                 editClothesItem.setVisibility(View.VISIBLE);
                 clickTagsMsg.setVisibility(View.GONE);
-                db.updateClothes(ClothesFragment.clothes.get(clothes_id-1));
+                db.updateClothes(ClothesFragment.clothes.get(position_id));
+                ClothesFragment.adapter.notifyDataSetChanged();
             }
         });
 
@@ -191,4 +193,29 @@ public class ClothesDescription extends AppCompatActivity {
         ll.addView(newLL);
     }
 
+    @Override
+    public void onBackPressed() {
+        ImageView editClothesItem = (ImageView) findViewById(R.id.editIcon);
+        if(editClothesItem.getVisibility()==View.GONE){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Your changes are not yet saved!\nAre you sure you want to exit?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            ClothesDescription.this.finish();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+        else{
+            super.onBackPressed();
+        }
+
+    }
 }

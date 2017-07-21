@@ -40,6 +40,9 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
 
     public static ArrayList<Clothes> adapterList;
     public static ArrayList<String> finalOutfitList = new ArrayList<String>();
+    public static ArrayList<Clothes> singleTop = new ArrayList<Clothes>();
+    public static ArrayList<Clothes> singleBottom = new ArrayList<Clothes>();
+    public static ArrayList<Clothes> singleOuter = new ArrayList<Clothes>();
 
     public ClothesBasketAdapter(Activity context, ArrayList<Clothes> clothesBasket) {
 
@@ -102,13 +105,34 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
 
                 CheckBox checkbox = (CheckBox) buttonView;
                 Clothes item = getItem(position);
+
                 if(checkbox.isChecked()){
 
                     if(finalOutfitList.contains(item.getId())){
                         Toast.makeText(getContext(),"Already Selected",Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        finalOutfitList.add(Integer.toString(item.getId()));
+                        if(item.getCategory_id().equals("Top")){
+                            if(!singleTop.contains(item)){
+                                singleTop.add(item);
+                                finalOutfitList.add(Integer.toString(item.getId()));
+                            }
+                        }
+
+                        else if(item.getCategory_id().equals("Bottom")){
+                            if(!singleBottom.contains(item)){
+                                singleBottom.add(item);
+                                finalOutfitList.add(Integer.toString(item.getId()));
+                            }
+                        }
+
+                        else if(item.getCategory_id().equals("Outerwear")){
+                            if(!singleOuter.contains(item)){
+                                singleOuter.add(item);
+                                finalOutfitList.add(Integer.toString(item.getId()));
+                            }
+                        }
+//                        finalOutfitList.add(Integer.toString(item.getId()));
 //                        if(finalOutfitList.size()>=3){
 //                            checkbox.setChecked(false);
 //                            //Toast.makeText(getContext(),"3 pieces selected already!",Toast.LENGTH_SHORT).show();
@@ -122,6 +146,18 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
 
                 }
                 else{
+                    if(item.getCategory_id().equals("Top")){
+                        singleTop.remove(item);
+
+                    }
+                    else if(item.getCategory_id().equals("Bottom")){
+                        singleBottom.remove(item);
+                    }
+                    else if(item.getCategory_id().equals("Outerwear")){
+                        singleOuter.remove(item);
+                        Toast.makeText(getContext(), Integer.toString(singleOuter.size()),Toast.LENGTH_SHORT).show();
+                    }
+
                     finalOutfitList.remove(Integer.toString(item.getId()));
 
 

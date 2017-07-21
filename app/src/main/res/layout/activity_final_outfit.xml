@@ -31,9 +31,9 @@
 
                 <ImageView
                     android:id="@+id/bottomClothing"
-                    android:layout_width="131dp"
-                    android:layout_height="187dp"
-                    android:src="@drawable/blue_jeans"
+                    android:layout_width="147dp"
+                    android:layout_height="196dp"
+                    tools:src="@drawable/blue_jeans"
                     android:layout_marginTop="0dp"
                     app:layout_constraintTop_toBottomOf="@+id/top"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -44,9 +44,9 @@
 
                 <ImageView
                     android:id="@+id/top"
-                    android:layout_width="131dp"
-                    android:layout_height="182dp"
-                    android:src="@drawable/pink_tshirt"
+                    android:layout_width="146dp"
+                    android:layout_height="200dp"
+                    tools:src="@drawable/pink_tshirt"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="30dp"
@@ -55,12 +55,12 @@
                     android:id="@+id/outerwear"
                     android:layout_width="144dp"
                     android:layout_height="222dp"
-                    android:src="@drawable/white_office_jacket"
+                    tools:src="@drawable/white_office_jacket"
                     app:layout_constraintLeft_toRightOf="@+id/top"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="20dp"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="55dp"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="15dp"
                     app:layout_constraintRight_toRightOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
@@ -72,7 +72,8 @@
                 style="@style/BorderMargins"
                 android:background="@drawable/background_final_outfit"
                 android:outlineProvider="bounds"
-                android:layout_weight="0">
+                android:layout_weight="0"
+                android:layout_marginBottom="6dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -123,7 +124,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_toRightOf="@id/blankIcon"
-                            android:text="Add to collection only"
+                            android:text="Add to collections"
                             style="@style/finalOutfitSideMargins"/>
 
                         <TextView
@@ -151,9 +152,11 @@
 
 
                 <RelativeLayout
+                    android:id="@+id/relative1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/finalOutfitTopMargins">
+                    style="@style/finalOutfitTopMargins"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/categoriseIcon"
@@ -193,9 +196,11 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/relative2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/finalOutfitTopMargins">
+                    style="@style/finalOutfitTopMargins"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/reminderIcon"
@@ -235,9 +240,11 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/relative3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/finalOutfitTopMargins">
+                    style="@style/finalOutfitTopMargins"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/descriptionIcon"
@@ -265,6 +272,7 @@
                     style="@style/finalOutfitTopMargins">
 
                     <TextView
+                        android:id="@+id/text_cancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="cancel"

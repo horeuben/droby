@@ -23,11 +23,17 @@
 
         </RelativeLayout>
 
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add a description to your new clothing:"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:textStyle="italic"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="8dp">
 
             <EditText
                 android:id="@+id/clothesDescription"
@@ -48,8 +54,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Current Tags:"
+            android:textStyle="italic"
             android:layout_marginLeft="16dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="8dp"
             android:visibility="visible"/>
 
         <LinearLayout
@@ -61,25 +68,6 @@
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="5dp">
-
-            <ImageView
-                android:id="@+id/editIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_mode_edit_black_24dp"
-                android:layout_marginRight="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:visibility="gone"/>
-
-
-
-        </RelativeLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -123,8 +111,8 @@
             android:text="Save Changes"
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
             android:padding="8dp"
             android:visibility="visible"
             android:textStyle="bold"

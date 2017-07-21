@@ -8,7 +8,7 @@
         android:title="ActionBar Spinner"
         app:actionViewClass="android.widget.Spinner"
         android:background="#ff00"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item android:id="@+id/menuSearch"
         android:title="Search"
@@ -18,14 +18,6 @@
 
     </item>
 
-    <item
-        android:id="@+id/newItem"
-        android:title="newItem"
-        android:icon="@drawable/ic_1_new_clothes"
-        android:actionViewClass="android.widget.SearchView"
-        app:showAsAction="always">
-
-    </item>
 <!--
     <item
         android:id="@+id/option1"
