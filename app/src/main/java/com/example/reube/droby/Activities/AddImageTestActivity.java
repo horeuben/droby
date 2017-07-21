@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.ScrollView;
@@ -57,7 +58,8 @@ public class AddImageTestActivity extends AppCompatActivity {
     private ArrayList<Clothes> clothesList;
     private Spinner spinner;
     private ChipsInput chipsInput;
-    private ScrollView scrollView;
+    private LinearLayout parentlayout;
+    private boolean chipDeletable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,23 +68,14 @@ public class AddImageTestActivity extends AppCompatActivity {
 //        chiptextview.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 //        chiptextview.setAdapter(new BaseRecipientAdapter(this));
         mDbHelper = new DatabaseHandler(this);
-
+        parentlayout = (LinearLayout)findViewById(R.id.parentlayout);
         pic = (ImageView) findViewById(R.id.pic);
         description = (EditText) findViewById(R.id.txt1);
         chipsInput = (ChipsInput)findViewById(R.id.chips_input);
         chipsInput.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
-        chipsInput.setActivated(false);
-        chipsInput.addChip("test",null);
-        chipsInput.addChip("test1",null);
-        chipsInput.addChip("test2",null);
-        chipsInput.addChip("test3",null);
-        chipsInput.addChip("test5",null);
-        chipsInput.addChip("te3st",null);
-        chipsInput.addChip("tes2t",null);
-        chipsInput.addChip("test1",null);
-        chipsInput.addChip("test7",null);
-        chipsInput.addChip("tes1t",null);
-        chipsInput.addChip("te1st",null);
+        chipDeletable = false;
+        chipsInput.setChipDeletable(chipDeletable);
+
 
         chipsInput.addChipsListener(new ChipsInput.ChipsListener() {
             @Override
@@ -126,9 +119,22 @@ public class AddImageTestActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddClothes();
-                TextView text = (TextView) findViewById(R.id.displayinfo);
-                text.setText(mDbHelper.getClothes());
+//                AddClothes();
+//                TextView text = (TextView) findViewById(R.id.displayinfo);
+//                text.setText(mDbHelper.getClothes());
+                if (chipDeletable == false){
+                    chipDeletable = true;
+                    chipsInput.setVisibility(View.VISIBLE);
+                    chipsInput.setChipDeletable(chipDeletable);
+                }
+                else{
+                    chipDeletable = false;
+                    chipsInput.setChipDeletable(chipDeletable);
+                    chipsInput.setVisibility(View.GONE);
+                }
+
+               // Toast.makeText(getApplicationContext(),"it is "+ chipDeletable,Toast.LENGTH_SHORT).show();
+
 //                if (description.getText().toString().trim().equals("")) {
 //                    Toast.makeText(getApplicationContext(), "Name edit text is empty, Enter name", Toast.LENGTH_LONG).show();
 //                } else {
@@ -139,6 +145,8 @@ public class AddImageTestActivity extends AppCompatActivity {
 //                }
             }
         });
+
+
         ImageView imageView = (ImageView) findViewById(R.id.pic);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override

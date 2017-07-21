@@ -59,7 +59,12 @@ public class SplashActivity extends AppCompatActivity {
 
         }
     }
-
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+//        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+//        startActivity(intent);
+    }
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
