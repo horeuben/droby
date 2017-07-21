@@ -10,12 +10,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +25,11 @@ import android.widget.Toast;
 import com.example.reube.droby.Adapters.ClothesAdapter;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
+import com.example.reube.droby.Database.Tag;
 import com.example.reube.droby.R;
+import com.pchmn.materialchips.ChipsInput;
+import com.pchmn.materialchips.model.Chip;
+import com.pchmn.materialchips.model.ChipInterface;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -47,16 +53,44 @@ public class AddImageTestActivity extends AppCompatActivity {
     private byte[] photo;
     private ArrayList<Clothes> clothesList;
     private Spinner spinner;
-
+    private ChipsInput chipsInput;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_image_test);
-
+//        chiptextview = (RecipientEditTextView)findViewById(R.id.testview);
+//        chiptextview.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+//        chiptextview.setAdapter(new BaseRecipientAdapter(this));
         mDbHelper = new DatabaseHandler(this);
 
         pic = (ImageView) findViewById(R.id.pic);
         description = (EditText) findViewById(R.id.txt1);
+        chipsInput = (ChipsInput)findViewById(R.id.chips_input);
+
+        chipsInput.addChipsListener(new ChipsInput.ChipsListener() {
+            @Override
+            public void onChipAdded(ChipInterface chip, int newSize) {
+                // chip added
+                // newSize is the size of the updated selected chip list
+            }
+
+            @Override
+            public void onChipRemoved(ChipInterface chip, int newSize) {
+                // chip removed
+                // newSize is the size of the updated selected chip list
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text) {
+                // text changed
+                if (text.toString().contains(" ")) {
+                    String tag = text.toString().replaceAll(" ","");
+                    chipsInput.addChip(tag,null);
+
+                }
+            }
+
+        });
 
         TextView text = (TextView) findViewById(R.id.displayinfo);
         text.setText(mDbHelper.getClothes());
@@ -199,13 +233,22 @@ public class AddImageTestActivity extends AppCompatActivity {
         getValues();
         // Gets the database in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put("user_id",MainActivity.user.getId());
         values.put(DatabaseHandler.KEY_DESCRIPTION, des);
         values.put(DatabaseHandler.KEY_IMAGE_BLOB, profileImage(bp));
         values.put("category_id", spinner.getSelectedItem().toString());
         long newRowId = db.insert(DatabaseHandler.TABLE_CLOTHES, null, values);
+
+        List<Chip> tags = (List<Chip>) chipsInput.getSelectedChipList();
+        for(int i =0; i <tags.size();i++){
+            Tag tag = new Tag();
+            tag.setUser_id(MainActivity.user.getId());
+            tag.setName(tags.get(i).getLabel());
+            tag.setClothes_id((int)newRowId);
+            mDbHelper.createTag(tag);
+        }
+
         //Toast.makeText(getApplicationContext(),"Added data, user_id is:"+MainActivity.user.getId() , Toast.LENGTH_SHORT).show();
     }
 }
