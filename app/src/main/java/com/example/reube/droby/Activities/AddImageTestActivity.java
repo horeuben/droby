@@ -2,6 +2,7 @@ package com.example.reube.droby.Activities;
 
 import android.annotation.TargetApi;
 import android.content.ContentValues;
+
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -12,12 +13,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +57,7 @@ public class AddImageTestActivity extends AppCompatActivity {
     private ArrayList<Clothes> clothesList;
     private Spinner spinner;
     private ChipsInput chipsInput;
+    private ScrollView scrollView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +70,19 @@ public class AddImageTestActivity extends AppCompatActivity {
         pic = (ImageView) findViewById(R.id.pic);
         description = (EditText) findViewById(R.id.txt1);
         chipsInput = (ChipsInput)findViewById(R.id.chips_input);
+        chipsInput.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+        chipsInput.setActivated(false);
+        chipsInput.addChip("test",null);
+        chipsInput.addChip("test1",null);
+        chipsInput.addChip("test2",null);
+        chipsInput.addChip("test3",null);
+        chipsInput.addChip("test5",null);
+        chipsInput.addChip("te3st",null);
+        chipsInput.addChip("tes2t",null);
+        chipsInput.addChip("test1",null);
+        chipsInput.addChip("test7",null);
+        chipsInput.addChip("tes1t",null);
+        chipsInput.addChip("te1st",null);
 
         chipsInput.addChipsListener(new ChipsInput.ChipsListener() {
             @Override
@@ -83,7 +100,7 @@ public class AddImageTestActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence text) {
                 // text changed
-                if (text.toString().contains(" ")) {
+                if (text.toString().contains(" ") && text.toString().length()>1) {
                     String tag = text.toString().replaceAll(" ","");
                     chipsInput.addChip(tag,null);
 
