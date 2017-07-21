@@ -13,9 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +49,10 @@ public class FinalOutfitActivity extends AppCompatActivity {
         setTitle("Outfit of the Day");
         setContentView(R.layout.activity_final_outfit);
 
-        ClothesBasketAdapter.finalOutfitList.clear(); //clear list from clothes basket
+        ClothesBasketAdapter.finalOutfitList.clear(); //clear lists from clothes basket
+        ClothesBasketAdapter.singleTop.clear();
+        ClothesBasketAdapter.singleBottom.clear();
+        ClothesBasketAdapter.singleOuter.clear();
 
         FrameLayout layout_main = (FrameLayout) findViewById(R.id.finalOutfitFrame);
         layout_main.getForeground().setAlpha(0); // remove foreground colour
@@ -58,10 +64,17 @@ public class FinalOutfitActivity extends AppCompatActivity {
         clothesListId = (ArrayList<String>)getIntent().getExtras().getSerializable("OutfitList");
         mDbHelper = new DatabaseHandler(this);
         outfitClothes = mDbHelper.getSelectedClothesIdTest(clothesListId);
-        clothingTop.setImageBitmap(convertToBitmap(outfitClothes.get(0).getImage()));
-//        Toast.makeText(getApplicationContext(), Integer.toString(outfitClothes.size()), Toast.LENGTH_SHORT).show();
-        clothingBottom.setImageBitmap(convertToBitmap(outfitClothes.get(1).getImage()));
-        clothingOuterwear.setImageBitmap(convertToBitmap(outfitClothes.get(2).getImage()));
+        for(int i=0; i<outfitClothes.size();i++){
+            if (outfitClothes.get(i).getCategory_id().equals("Top")){
+                clothingTop.setImageBitmap(convertToBitmap(outfitClothes.get(i).getImage()));
+            }
+            else if(outfitClothes.get(i).getCategory_id().equals("Bottom")){
+                clothingBottom.setImageBitmap(convertToBitmap(outfitClothes.get(i).getImage()));
+            }
+            else if(outfitClothes.get(i).getCategory_id().equals("Outerwear")){
+                clothingOuterwear.setImageBitmap(convertToBitmap(outfitClothes.get(i).getImage()));
+            }
+        }
 
         TextView textChoose = (TextView) findViewById(R.id.text_choose);
         textChoose.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +97,42 @@ public class FinalOutfitActivity extends AppCompatActivity {
             }
         });
 
+        Switch viewSwitch = (Switch) findViewById(R.id.view_switch);
+        viewSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                RelativeLayout r1 = (RelativeLayout)findViewById(R.id.relative1);
+                RelativeLayout r2 = (RelativeLayout)findViewById(R.id.relative2);
+                RelativeLayout r3 = (RelativeLayout)findViewById(R.id.relative3);
+                if(isChecked){
+                    r1.setVisibility(RelativeLayout.VISIBLE);
+                    r2.setVisibility(RelativeLayout.VISIBLE);
+                    r3.setVisibility(RelativeLayout.VISIBLE);
+                }
+                else{
+                    r1.setVisibility(RelativeLayout.GONE);
+                    r2.setVisibility(RelativeLayout.GONE);
+                    r3.setVisibility(RelativeLayout.GONE);
+                }
+
+            }
+        });
+
+        TextView cancel_button = (TextView) findViewById(R.id.text_cancel);
+        cancel_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ClothesBasket.basketList!=null){
+                    for (int i=0; i<ClothesBasket.basketList.size(); i++){
+                        ClothesBasket.basketList.get(i).setSelected(true);
+                        ClothesBasket.basketList.get(i).setSelected(false);
+                    }
+
+                    ClothesBasket.basketAdapter.notifyDataSetChanged();
+                }
+                finish();
+            }
+        });
 
 
     }
@@ -96,17 +145,18 @@ public class FinalOutfitActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        if (ClothesBasket.basketList!=null){
-            for (int i=0; i<ClothesBasket.basketList.size(); i++){
-                ClothesBasket.basketList.get(i).setSelected(true);
-                ClothesBasket.basketList.get(i).setSelected(false);
-            }
-
-            ClothesBasket.basketAdapter.notifyDataSetChanged();
-        }
+//        super.onBackPressed();
+//        if (ClothesBasket.basketList!=null){
+//            for (int i=0; i<ClothesBasket.basketList.size(); i++){
+//                ClothesBasket.basketList.get(i).setSelected(true);
+//                ClothesBasket.basketList.get(i).setSelected(false);
+//            }
+//
+//            ClothesBasket.basketAdapter.notifyDataSetChanged();
+//        }
     }
 
+    //calendar pop-up
     private void popUpWindow(View v){
         try{
             LayoutInflater inflater = (LayoutInflater) FinalOutfitActivity.this

@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.R.attr.action;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 import static com.example.reube.droby.R.id.clothes_description;
 import static com.example.reube.droby.R.id.spinner;
 
@@ -154,7 +155,7 @@ public class ClothesFragment extends Fragment {
         //setting up spinner
 
         MenuItem item = menu.findItem(R.id.spinner);
-        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+        final Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
 
 
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
@@ -226,12 +227,14 @@ public class ClothesFragment extends Fragment {
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                spinner.setVisibility(View.VISIBLE);
                 // Do something when collapsed
                 return true;  // Return true to collapse action view
             }
 
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                spinner.setVisibility(View.GONE);
                 // Do something when expanded
                 return true;  // Return true to expand action view
             }

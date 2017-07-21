@@ -71,10 +71,25 @@ public class ClothesBasket extends AppCompatActivity{
         styleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StringList = ClothesBasketAdapter.finalOutfitList;
-                Intent intent = new Intent(ClothesBasket.this, FinalOutfitActivity.class);
-                intent.putExtra("OutfitList", StringList);
-                startActivity(intent);
+                if(basketAdapter.singleTop.size()>1 || basketAdapter.singleBottom.size()>1||basketAdapter.singleOuter.size()>1){
+                    if (basketAdapter.singleTop.size()>1){
+                        Toast.makeText(getApplicationContext(), "More than 1 top selected!", Toast.LENGTH_SHORT).show();
+                    }
+                    if (basketAdapter.singleBottom.size()>1){
+                        Toast.makeText(getApplicationContext(), "More than 1 bottom selected!", Toast.LENGTH_SHORT).show();
+                    }
+                    if (basketAdapter.singleOuter.size()>1){
+                        Toast.makeText(getApplicationContext(), "More than 1 outer wear selected!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                else{
+                    StringList = ClothesBasketAdapter.finalOutfitList;
+                    Intent intent = new Intent(ClothesBasket.this, FinalOutfitActivity.class);
+                    intent.putExtra("OutfitList", StringList);
+                    startActivity(intent);
+                }
+
             }
         });
 
@@ -102,6 +117,9 @@ public class ClothesBasket extends AppCompatActivity{
             }
         }
         ClothesBasketAdapter.finalOutfitList.clear();
+        ClothesBasketAdapter.singleTop.clear();
+        ClothesBasketAdapter.singleBottom.clear();
+        ClothesBasketAdapter.singleOuter.clear();
         if(adapter!=null){
             adapter.notifyDataSetChanged();
         }

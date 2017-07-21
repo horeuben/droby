@@ -125,15 +125,17 @@ public class AddImageTestActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (description.getText().toString().trim().equals("")) {
-                    Toast.makeText(getApplicationContext(), "Name edit text is empty, Enter name", Toast.LENGTH_LONG).show();
-                } else {
-                    AddClothes();
-                    TextView text = (TextView) findViewById(R.id.displayinfo);
-                    text.setText(mDbHelper.getClothes());
-
-                }
-
+                AddClothes();
+                TextView text = (TextView) findViewById(R.id.displayinfo);
+                text.setText(mDbHelper.getClothes());
+//                if (description.getText().toString().trim().equals("")) {
+//                    Toast.makeText(getApplicationContext(), "Name edit text is empty, Enter name", Toast.LENGTH_LONG).show();
+//                } else {
+//                    AddClothes();
+//                    TextView text = (TextView) findViewById(R.id.displayinfo);
+//                    text.setText(mDbHelper.getClothes());
+//
+//                }
             }
         });
         ImageView imageView = (ImageView) findViewById(R.id.pic);

@@ -1,10 +1,14 @@
 package com.example.reube.droby.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.Gravity;
@@ -43,14 +47,25 @@ public class NewClothesActivity extends AppCompatActivity {
 
         final int singleClothesId = getIntent().getIntExtra("clothesID",0);
         newItem.add(Integer.toString(singleClothesId));
-        ArrayList<Clothes> clothesItem = dbHelper.getAllClothes(MainActivity.user, newItem);
+        final ArrayList<Clothes> clothesItem = dbHelper.getAllClothes(MainActivity.user, newItem);
         imageView.setImageBitmap(convertToBitmap(clothesItem.get(0).getImage()));
         textView.setText(clothesItem.get(0).getDescription());
 
-        EditText editDescription = (EditText) findViewById(R.id.clothesDescription);
+        final EditText editDescription = (EditText) findViewById(R.id.clothesDescription);
         EditText addTag = (EditText) findViewById(R.id.input_tag);
         ImageView addTagButton = (ImageView) findViewById(R.id.addButton);
         TextView saveChanges = (TextView) findViewById(R.id.save_changes);
+
+        saveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clothesItem.get(0).setDescription(editDescription.getText().toString());
+                dbHelper.updateClothes(clothesItem.get(0));
+                finish();
+//                Intent exit = new Intent(getApplicationContext(), MainActivity.class);
+//                startActivity(exit);
+            }
+        });
 
         addTagButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,5 +144,22 @@ public class NewClothesActivity extends AppCompatActivity {
         ll.addView(newLL);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        NewClothesActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 }

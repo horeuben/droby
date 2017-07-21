@@ -78,7 +78,6 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
                 Clothes item = getItem(position);
 
                 if (checkbox.isChecked()) {
-
                     if (clothes_cart.contains(item)) {
                         Toast.makeText(getContext(), "Already Selected", Toast.LENGTH_SHORT);
                     } else {
