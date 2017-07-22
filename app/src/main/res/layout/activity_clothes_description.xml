@@ -63,24 +63,23 @@
             android:id="@+id/tagsNoEditLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:chip_backgroundColor="@color/colorPrimary"
+            app:chip_backgroundColor="@color/colorPrimaryDark"
             app:chip_hasAvatarIcon="false"
             app:chip_labelColor="@color/white"
             app:chip_deletable="false"
             app:hint="Enter a tag"
-            app:maxRows="3"
+
             app:showChipDetailed="false" />
 
         <com.pchmn.materialchips.ChipsInput
             android:id="@+id/tagsEditLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:chip_backgroundColor="@color/colorPrimary"
+            app:chip_backgroundColor="@color/colorPrimaryDark"
             app:chip_hasAvatarIcon="false"
             app:chip_labelColor="@color/white"
             app:chip_deletable="true"
             app:hint="Enter a tag"
-            app:maxRows="3"
             app:showChipDetailed="false" />
 
         <RelativeLayout
@@ -101,20 +100,22 @@
                 android:id="@+id/editIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_mode_edit_black_24dp"
-                android:layout_marginRight="15dp"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_mode_edit_black_24dp" />
+
             <TextView
                 android:id="@+id/saveChanges"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save Changes"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="15dp"
-                android:padding="4dp"
-                android:visibility="gone"
-                android:textStyle="bold"/>
+                android:padding="5dp"
+                android:text="Save Changes"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
 
         </RelativeLayout>

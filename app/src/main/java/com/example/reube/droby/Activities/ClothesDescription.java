@@ -89,7 +89,7 @@ public class ClothesDescription extends AppCompatActivity {
         final TextView editDescription = (TextView) findViewById(R.id.clothes_description);
         final TextView saveChanges = (TextView) findViewById(R.id.saveChanges);
         final TextView clickTagsMsg = (TextView) findViewById(R.id.clickTagsMsg);
-        
+
         editClothesItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
