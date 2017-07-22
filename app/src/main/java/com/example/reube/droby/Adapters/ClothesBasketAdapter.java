@@ -43,6 +43,7 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
     public static ArrayList<Clothes> singleTop = new ArrayList<Clothes>();
     public static ArrayList<Clothes> singleBottom = new ArrayList<Clothes>();
     public static ArrayList<Clothes> singleOuter = new ArrayList<Clothes>();
+    public static ArrayList<Clothes> singleOnepiece = new ArrayList<Clothes>();
 
     public ClothesBasketAdapter(Activity context, ArrayList<Clothes> clothesBasket) {
 
@@ -132,6 +133,13 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
                                 finalOutfitList.add(Integer.toString(item.getId()));
                             }
                         }
+                        else if(item.getCategory_id().equals("Onepiece")){
+                            if(!singleOnepiece.contains(item)){
+                                singleOnepiece.add(item);
+                                Toast.makeText(getContext(), Integer.toString(singleOnepiece.size()), Toast.LENGTH_SHORT).show();
+                                finalOutfitList.add(Integer.toString(item.getId()));
+                            }
+                        }
 //                        finalOutfitList.add(Integer.toString(item.getId()));
 //                        if(finalOutfitList.size()>=3){
 //                            checkbox.setChecked(false);
@@ -155,7 +163,9 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
                     }
                     else if(item.getCategory_id().equals("Outerwear")){
                         singleOuter.remove(item);
-                        Toast.makeText(getContext(), Integer.toString(singleOuter.size()),Toast.LENGTH_SHORT).show();
+                    }
+                    else if(item.getCategory_id().equals("Onepiece")){
+                        singleOnepiece.remove(item);
                     }
 
                     finalOutfitList.remove(Integer.toString(item.getId()));

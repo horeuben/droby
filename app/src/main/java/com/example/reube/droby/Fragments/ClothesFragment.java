@@ -1,10 +1,6 @@
 package com.example.reube.droby.Fragments;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -13,9 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 
 
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,32 +17,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.GridView;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 
 import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.ClothesDescription;
 import com.example.reube.droby.Activities.MainActivity;
 import com.example.reube.droby.Adapters.ClothesAdapter;
-import com.example.reube.droby.Adapters.ClothesAdapterTest;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static android.R.attr.action;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
-import static com.example.reube.droby.R.id.clothes_description;
-import static com.example.reube.droby.R.id.spinner;
 
 
 public class ClothesFragment extends Fragment {
@@ -180,6 +162,9 @@ public class ClothesFragment extends Fragment {
                 }
                 else if(selectedItem.equals(filterLabels[3])){
                     adapter.filterByCategory(3);
+                }
+                else if(selectedItem.equals(filterLabels[4])){
+                    adapter.filterByCategory(4);
                 }
 
             }
