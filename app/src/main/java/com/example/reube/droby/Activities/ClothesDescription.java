@@ -1,26 +1,18 @@
 package com.example.reube.droby.Activities;
 
-import android.content.Context;
+
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.reube.droby.Adapters.ClothesBasketAdapter;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.Database.Tag;
@@ -31,7 +23,6 @@ import com.pchmn.materialchips.model.Chip;
 import com.pchmn.materialchips.model.ChipInterface;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,8 +32,7 @@ import java.util.List;
 public class ClothesDescription extends AppCompatActivity {
     DatabaseHandler db = new DatabaseHandler(this);
     ArrayList<String> singleItem = new ArrayList<String>();
-    boolean editOn = false;
-    private ChipsInput tagLayout;
+    private ChipsInput tagNoEditLayout,tagEditLayout;
     private ArrayList<Tag> allTags;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +40,11 @@ public class ClothesDescription extends AppCompatActivity {
         setTitle("Details");
         setContentView(R.layout.activity_clothes_description);
 
-        tagLayout = (ChipsInput)findViewById(R.id.tagsLayout);
-        tagLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-        tagLayout.addChipsListener(new ChipsInput.ChipsListener() {
+        tagNoEditLayout = (ChipsInput)findViewById(R.id.tagsNoEditLayout);
+        tagEditLayout = (ChipsInput) findViewById(R.id.tagsEditLayout) ;
+        tagEditLayout.setVisibility(View.GONE);
+        tagNoEditLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        tagEditLayout.addChipsListener(new ChipsInput.ChipsListener() {
             @Override
             public void onChipAdded(ChipInterface chip, int newSize) {
                 // chip added
@@ -70,7 +62,7 @@ public class ClothesDescription extends AppCompatActivity {
                 // text changed
                 if (text.toString().contains(" ") && text.toString().length()>1) {
                     String tag = text.toString().replaceAll(" ","");
-                    tagLayout.addChip(tag,null);
+                    tagEditLayout.addChip(tag,null);
 
                 }
             }
@@ -89,25 +81,15 @@ public class ClothesDescription extends AppCompatActivity {
         allTags = item.get(0).getTags();
         if (allTags.size()>0){
             for (int i=0;i<allTags.size();i++){
-                tagLayout.addChip(allTags.get(i).getName(),null);
+                tagNoEditLayout.addChip(allTags.get(i).getName(),null);
+                tagEditLayout.addChip(allTags.get(i).getName(),null);
             }
         }
         final ImageView editClothesItem = (ImageView) findViewById(R.id.editIcon);
         final TextView editDescription = (TextView) findViewById(R.id.clothes_description);
         final TextView saveChanges = (TextView) findViewById(R.id.saveChanges);
         final TextView clickTagsMsg = (TextView) findViewById(R.id.clickTagsMsg);
-
-
-//        editDescription.setOnClickListener(new View.OnClickListener() { //set blinking cursor to ON only when keyboard is displayed
-//            @Override
-//            public void onClick(View v) {
-//                if (v.getId() == editDescription.getId())
-//                {
-//                    editDescription.setCursorVisible(true);
-//                }
-//            }
-//        });
-
+        
         editClothesItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,8 +97,12 @@ public class ClothesDescription extends AppCompatActivity {
                 saveChanges.setVisibility(View.VISIBLE);
                 editClothesItem.setVisibility(View.GONE);
                 clickTagsMsg.setVisibility(View.VISIBLE);
-                tagLayout.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
-                tagLayout.setChipDeletable(true);
+                tagNoEditLayout.setVisibility(View.GONE);
+                tagEditLayout.setVisibility(View.VISIBLE);
+                List<Chip> removedTags = (List<Chip>) tagNoEditLayout.getSelectedChipList();
+                for (int i = removedTags.size()-1; i>=0;i--){
+                    tagNoEditLayout.removeChipByLabel(removedTags.get(i).getLabel());
+                }
             }
         });
 
@@ -124,20 +110,22 @@ public class ClothesDescription extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 editDescription.setEnabled(false);
-                tagLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-                tagLayout.setChipDeletable(false);
                 textView.setText(editDescription.getText());
                 ClothesFragment.clothes.get(position_id).setDescription(editDescription.getText().toString());
-                textView.setFocusableInTouchMode(true);
-                textView.setFocusable(true);
+
                 saveChanges.setVisibility(View.GONE);
                 editClothesItem.setVisibility(View.VISIBLE);
-                clickTagsMsg.setVisibility(View.GONE);
-                List<Chip> tags = (List<Chip>) tagLayout.getSelectedChipList();
+                clickTagsMsg.setVisibility(View.INVISIBLE);
+                tagNoEditLayout.setVisibility(View.VISIBLE);
+                tagEditLayout.setVisibility(View.GONE);
+                List<Chip> tags = (List<Chip>) tagEditLayout.getSelectedChipList();
                 allTags = new ArrayList<Tag>();
-                for(int i =0; i<tags.size();i++){
+                int length = tags.size();
+                for(int i =0; i<length;i++){
+                    String name = tags.get(i).getLabel();
+                    tagNoEditLayout.addChip(name,null);
                     Tag tag = new Tag();
-                    tag.setName(tags.get(i).getLabel());
+                    tag.setName(name);
                     tag.setUser_id(MainActivity.user.getId());
                     tag.setClothes_id( ClothesFragment.clothes.get(position_id).getId());
                     allTags.add(tag);
@@ -145,6 +133,7 @@ public class ClothesDescription extends AppCompatActivity {
                 ClothesFragment.clothes.get(position_id).setTags(allTags);
                 db.updateClothes(ClothesFragment.clothes.get(position_id));
                 ClothesFragment.adapter.notifyDataSetChanged();
+
             }
         });
 
