@@ -60,6 +60,7 @@ public class FinalOutfitActivity extends AppCompatActivity {
         final ImageView clothingTop = (ImageView) findViewById(R.id.top);
         final ImageView clothingBottom = (ImageView) findViewById(R.id.bottomClothing);
         final ImageView clothingOuterwear = (ImageView) findViewById(R.id.outerwear);
+        final ImageView clothingOnepiece = (ImageView) findViewById(R.id.onepiece);
         final TextView msg_top = (TextView) findViewById(R.id.msgTop);
         final TextView msg_bottom = (TextView) findViewById(R.id.msgBottom);
         final TextView msg_outer = (TextView) findViewById(R.id.msgOuter);
@@ -67,36 +68,6 @@ public class FinalOutfitActivity extends AppCompatActivity {
         final TextView recommend_bottom = (TextView) findViewById(R.id.recommendBottom);
         final TextView recommend_outer = (TextView) findViewById(R.id.recommendOuter);
 
-        //Onclick behaviour for recommend buttons
-        recommend_top.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<Clothes> tops = mDbHelper.getAllClothes(MainActivity.user, "Top");
-                clothingTop.setImageBitmap(convertToBitmap(tops.get(0).getImage()));
-                msg_top.setVisibility(View.GONE);
-                recommend_top.setVisibility(View.GONE);
-            }
-        });
-
-        recommend_bottom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<Clothes> bottoms = mDbHelper.getAllClothes(MainActivity.user, "Bottom");
-                clothingBottom.setImageBitmap(convertToBitmap(bottoms.get(0).getImage()));
-                msg_bottom.setVisibility(View.GONE);
-                recommend_bottom.setVisibility(View.GONE);
-            }
-        });
-
-        recommend_outer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<Clothes> outers = mDbHelper.getAllClothes(MainActivity.user, "Outerwear");
-                clothingOuterwear.setImageBitmap(convertToBitmap(outers.get(0).getImage()));
-                msg_outer.setVisibility(View.GONE);
-                recommend_outer.setVisibility(View.GONE);
-            }
-        });
 
         //setting clothing based on clothes basket selection
         clothesListId = (ArrayList<String>)getIntent().getExtras().getSerializable("OutfitList");
@@ -117,9 +88,52 @@ public class FinalOutfitActivity extends AppCompatActivity {
                 clothingOuterwear.setImageBitmap(convertToBitmap(outfitClothes.get(i).getImage()));
                 msg_outer.setVisibility(View.GONE);
                 recommend_outer.setVisibility(View.GONE);
-
+            }
+            else if(outfitClothes.get(i).getCategory_id().equals("Onepiece")){
+                clothingOnepiece.setImageBitmap(convertToBitmap(outfitClothes.get(i).getImage()));
+                clothingOnepiece.setVisibility(View.VISIBLE);
+                clothingTop.setVisibility(View.GONE);
+                clothingBottom.setVisibility(View.GONE);
+                msg_top.setVisibility(View.GONE);
+                recommend_top.setVisibility(View.GONE);
+                msg_bottom.setVisibility(View.GONE);
+                recommend_bottom.setVisibility(View.GONE);
             }
         }
+
+        //Onclick behaviour for recommend buttons
+        recommend_top.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Clothes> tops = mDbHelper.getAllClothes(MainActivity.user, "Top");
+                clothingTop.setImageBitmap(convertToBitmap(tops.get(0).getImage()));
+                msg_top.setVisibility(View.GONE);
+                recommend_top.setVisibility(View.GONE);
+                clothesListId.add(Integer.toString(tops.get(0).getId()));
+            }
+        });
+
+        recommend_bottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Clothes> bottoms = mDbHelper.getAllClothes(MainActivity.user, "Bottom");
+                clothingBottom.setImageBitmap(convertToBitmap(bottoms.get(0).getImage()));
+                msg_bottom.setVisibility(View.GONE);
+                recommend_bottom.setVisibility(View.GONE);
+                clothesListId.add(Integer.toString(bottoms.get(0).getId()));
+            }
+        });
+
+        recommend_outer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Clothes> outers = mDbHelper.getAllClothes(MainActivity.user, "Outerwear");
+                clothingOuterwear.setImageBitmap(convertToBitmap(outers.get(0).getImage()));
+                msg_outer.setVisibility(View.GONE);
+                recommend_outer.setVisibility(View.GONE);
+                clothesListId.add(Integer.toString(outers.get(0).getId()));
+            }
+        });
 
         //choose button
         TextView textChoose = (TextView) findViewById(R.id.text_choose);
