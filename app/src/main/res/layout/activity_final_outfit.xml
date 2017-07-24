@@ -116,8 +116,8 @@
                     android:layout_height="wrap_content"
                     android:text="No outerwear selected"
                     app:layout_constraintBottom_toBottomOf="@+id/outerwear"
-                    android:layout_marginBottom="95dp"
-                    android:layout_marginRight="11dp"
+                    android:layout_marginBottom="96dp"
+                    android:layout_marginRight="1dp"
                     app:layout_constraintRight_toRightOf="@+id/outerwear"
                     android:id="@+id/msgOuter" />
 

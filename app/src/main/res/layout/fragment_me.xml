@@ -28,8 +28,15 @@
             <ImageView
                 android:id="@+id/imageView4"
                 android:layout_width="match_parent"
-                android:layout_height="145dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 app:srcCompat="@drawable/stats" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Collections"
+                android:textSize="25sp"/>
 
             <ImageButton
                 android:id="@+id/collectionButton"

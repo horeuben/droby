@@ -119,9 +119,9 @@ public class AddImageTestActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                AddClothes();
-//                TextView text = (TextView) findViewById(R.id.displayinfo);
-//                text.setText(mDbHelper.getClothes());
+                AddClothes();
+                TextView text = (TextView) findViewById(R.id.displayinfo);
+                text.setText(mDbHelper.getClothes());
                 if (chipDeletable == false){
                     chipDeletable = true;
                     chipsInput.setVisibility(View.VISIBLE);
@@ -197,7 +197,7 @@ public class AddImageTestActivity extends AppCompatActivity {
 
                     if (choosenImage != null) {
 
-                        bp = decodeUri(choosenImage, 200);
+                        bp = decodeUri(choosenImage, 400);
                         pic.setImageBitmap(bp);
                     }
                 }
