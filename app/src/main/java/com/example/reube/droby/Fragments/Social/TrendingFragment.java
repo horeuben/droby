@@ -1,15 +1,24 @@
 package com.example.reube.droby.Fragments.Social;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.R;
+
+import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,7 +35,7 @@ public class TrendingFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     public static final String ARG_PAGE = "ARG_PAGE";
-
+    private ImageView iv;
     private int mPage;
     private OnFragmentInteractionListener mListener;
 
@@ -56,6 +65,18 @@ public class TrendingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_trending, container, false);
+        iv = (ImageView)getActivity().findViewById(R.id.imageView3);
+//        DatabaseHandler db = new DatabaseHandler(getContext());
+//        ArrayList<byte[]> test = db.syncTest();
+//        for(int i = 0;i<test.size();i++){
+//            byte [] imgBytes = test.get(i);
+//
+//            for (int l = 0; l<imgBytes.length;l++){
+//                Log.v(TAG,"HI IM HERE "+imgBytes[i]);
+//            }
+//            Bitmap bitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
+//            iv.setImageBitmap(bitmap);
+//        }
 
         return view;
     }
