@@ -136,7 +136,6 @@ public class ClothesBasketAdapter extends ArrayAdapter<Clothes>  {
                         else if(item.getCategory_id().equals("Onepiece")){
                             if(!singleOnepiece.contains(item)){
                                 singleOnepiece.add(item);
-                                Toast.makeText(getContext(), Integer.toString(singleOnepiece.size()), Toast.LENGTH_SHORT).show();
                                 finalOutfitList.add(Integer.toString(item.getId()));
                             }
                         }

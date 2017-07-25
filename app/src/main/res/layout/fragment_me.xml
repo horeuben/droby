@@ -28,53 +28,119 @@
             <ImageView
                 android:id="@+id/imageView4"
                 android:layout_width="match_parent"
-                android:layout_height="145dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 app:srcCompat="@drawable/stats" />
 
-            <ImageButton
-                android:id="@+id/collectionButton"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@android:color/white"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/collection_button" />
+                android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/friendsButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@android:color/white"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/friends_button" />
+                <ImageButton
+                    android:id="@+id/collectionButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/white"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/collections" />
 
-            <ImageButton
-                android:id="@+id/plannerButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@android:color/white"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/planner_button" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Collections"
+                    android:textSize="24sp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:layout_alignParentBottom="true"
+                    android:paddingRight="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:background="#66000000"/>
+            </RelativeLayout>
 
-            <ImageButton
-                android:id="@+id/statisticButton"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@android:color/white"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/statistic_button" />
+                android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/settingsButton"
+                <ImageButton
+                    android:id="@+id/friendsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/white"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/friends" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Friends"
+                    android:textSize="24sp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:layout_alignParentBottom="true"
+                    android:paddingRight="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:background="#66000000"/>
+            </RelativeLayout>
+
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@android:color/white"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/settings_button" />
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/plannerButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/white"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/planner" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Planner"
+                    android:textSize="24sp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:layout_alignParentBottom="true"
+                    android:paddingRight="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:background="#66000000"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/settingsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="@android:color/white"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/settings" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Settings"
+                    android:textSize="24sp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="right"
+                    android:layout_alignParentBottom="true"
+                    android:paddingRight="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:background="#66000000"/>
+            </RelativeLayout>
+
 
         </LinearLayout>
     </ScrollView>

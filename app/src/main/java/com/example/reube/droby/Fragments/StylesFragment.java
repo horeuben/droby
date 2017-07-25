@@ -1,36 +1,39 @@
 package com.example.reube.droby.Fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.transition.Transition;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.FinalOutfitActivity;
+import com.example.reube.droby.Activities.TakeClothesFromWardrobe;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import static com.example.reube.droby.Activities.MainActivity.AllClothes;
 import static com.example.reube.droby.Activities.MainActivity.i1;
@@ -38,6 +41,8 @@ import static com.example.reube.droby.Activities.MainActivity.i2;
 import static com.example.reube.droby.Activities.MainActivity.i3;
 import static com.example.reube.droby.Fragments.ClothesFragment.adapter;
 import static com.example.reube.droby.R.id.StylesFab;
+import static com.example.reube.droby.R.id.style;
+import static com.example.reube.droby.R.id.stylePromptLL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,8 +57,10 @@ public class StylesFragment extends Fragment {
     private ArrayList<String> outfitFinalList = new ArrayList<String>();
     private  ArrayList<Clothes> finalClothesList = new ArrayList<Clothes>();
     private ArrayList<String> suggestedOutfitList = new ArrayList<String>();
+    private ArrayList<String> chosenStyle = new ArrayList<String>();
     DatabaseHandler db;
 //    private static ArrayList<Clothes> AllClothes = new ArrayList<Clothes>();
+
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -94,6 +101,19 @@ public class StylesFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_styles, container, false);
         // Inflate the layout for this fragment
         getActivity().setTitle("Style Recommendation");
+
+        Intent intent = getActivity().getIntent();
+        LinearLayout finalLL = (LinearLayout) rootView.findViewById(R.id.finalisedOutfitLL);
+        LinearLayout promptLL = (LinearLayout) rootView.findViewById(R.id.plannerPromptLL);
+        LinearLayout s1LL = (LinearLayout) rootView.findViewById(R.id.suggestion1LL);
+        LinearLayout s2LL = (LinearLayout) rootView.findViewById(R.id.suggestion2LL);
+        LinearLayout s3LL = (LinearLayout) rootView.findViewById(R.id.suggestion3LL);
+        final LinearLayout stylesPrompt = (LinearLayout) rootView.findViewById(R.id.stylePromptLL);
+        FloatingActionButton stylesFab = (FloatingActionButton) rootView.findViewById(R.id.StylesFab);
+        ImageView finalisedTop = (ImageView) rootView.findViewById(R.id.fTop);
+        ImageView finalisedBottom = (ImageView) rootView.findViewById(R.id.fBottom);
+        ImageView finalisedOuterwear = (ImageView) rootView.findViewById(R.id.fOuterwear);
+        ImageView finalisedOnepiece = (ImageView) rootView.findViewById(R.id.fOnepiece);
 
         FloatingActionButton stylesFloatingButton = (FloatingActionButton) rootView.findViewById(StylesFab);
         stylesFloatingButton.setOnClickListener(new View.OnClickListener() {
@@ -151,24 +171,14 @@ public class StylesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 popUpWindow(v);
-
             }
         });
 
-        Intent intent = getActivity().getIntent();
-        LinearLayout finalLL = (LinearLayout) rootView.findViewById(R.id.finalisedOutfitLL);
-        LinearLayout promptLL = (LinearLayout) rootView.findViewById(R.id.plannerPromptLL);
-        LinearLayout s1LL = (LinearLayout) rootView.findViewById(R.id.suggestion1LL);
-        LinearLayout s2LL = (LinearLayout) rootView.findViewById(R.id.suggestion2LL);
-        LinearLayout s3LL = (LinearLayout) rootView.findViewById(R.id.suggestion3LL);
-        LinearLayout stylesPrompt = (LinearLayout) rootView.findViewById(R.id.stylePromptLL);
-        FloatingActionButton stylesFab = (FloatingActionButton) rootView.findViewById(R.id.StylesFab);
-        ImageView finalisedTop = (ImageView) rootView.findViewById(R.id.fTop);
-        ImageView finalisedBottom = (ImageView) rootView.findViewById(R.id.fBottom);
-        ImageView finalisedOuterwear = (ImageView) rootView.findViewById(R.id.fOuterwear);
 
+
+        //check if intent comes from FinalOutfitActivity
         if(intent != null){
-            String string = intent.getStringExtra("test");  //check if intent comes from FinalOutfitActivity
+            String string = intent.getStringExtra("test");
             if(string == null){
                 finalLL.setVisibility(LinearLayout.GONE);
                 promptLL.setVisibility(LinearLayout.GONE);
@@ -189,10 +199,63 @@ public class StylesFragment extends Fragment {
                 s3LL.setVisibility(LinearLayout.GONE);
                 stylesPrompt.setVisibility(LinearLayout.GONE);
                 stylesFab.setVisibility(FloatingActionButton.GONE);
-                finalisedTop.setImageBitmap(convertToBitmap(finalClothesList.get(0).getImage()));
-                finalisedBottom.setImageBitmap(convertToBitmap(finalClothesList.get(1).getImage()));
-                finalisedOuterwear.setImageBitmap(convertToBitmap(finalClothesList.get(2).getImage()));
+
+                if(finalClothesList.size() ==1){
+                    finalisedOuterwear.setVisibility(View.GONE);
+                    finalisedTop.setVisibility(View.GONE);
+                    finalisedBottom.setVisibility(View.GONE);
+                    finalisedOnepiece.setImageBitmap(convertToBitmap(finalClothesList.get(0).getImage()));
+                }
+                else if (finalClothesList.size()==2){
+                    if(finalClothesList.get(0).getCategory_id().equals("Top")||finalClothesList.get(0).getCategory_id().equals("Bottom")){
+                        finalisedOuterwear.setVisibility(View.GONE);
+                        for (int i=0; i<finalClothesList.size();i++){
+                            if(finalClothesList.get(i).getCategory_id().equals("Top")){
+                                finalisedTop.setImageBitmap(convertToBitmap(finalClothesList.get(i).getImage()));
+                            }
+                            else{
+                                finalisedBottom.setImageBitmap(convertToBitmap(finalClothesList.get(i).getImage()));
+                            }
+                        }
+                    }
+                    else{
+                        for (int i=0; i<finalClothesList.size();i++){
+                            if(finalClothesList.get(i).getCategory_id().equals("Onepiece")){
+                                finalisedOnepiece.setImageBitmap(convertToBitmap(finalClothesList.get(i).getImage()));
+                            }
+                            else{
+                                finalisedOuterwear.setImageBitmap(convertToBitmap(finalClothesList.get(i).getImage()));
+                            }
+                        }
+                    }
+                }
+                else{
+                    for (int i=0; i<finalClothesList.size();i++){
+                        if(finalClothesList.get(i).getCategory_id().equals("Top")){
+                            finalisedTop.setImageBitmap(convertToBitmap(finalClothesList.get(i).getImage()));
+                        }
+                        else if(finalClothesList.get(i).getCategory_id().equals("Bottom")){
+                            finalisedBottom.setImageBitmap(convertToBitmap(finalClothesList.get(i).getImage()));
+                        }
+                        else{
+                            finalisedOuterwear.setImageBitmap(convertToBitmap(finalClothesList.get(i).getImage()));
+                        }
+                    }
+                }
             }
+
+            //wear now bluetooth connection onclicklistener
+            TextView sendBluetoothConnection = (TextView) rootView.findViewById(R.id.wearTextF);
+            sendBluetoothConnection.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Intent wearIntent = new Intent(getActivity(), TakeClothesFromWardrobe.class);
+                    wearIntent.putExtra("wearList", outfitFinalList);
+                    startActivity(wearIntent);
+                }
+            });
+
 
         }
 
@@ -207,10 +270,24 @@ public class StylesFragment extends Fragment {
 
     private void popUpWindow(View v){
         try{
+
             LayoutInflater layoutInflater = (LayoutInflater)getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View layout = layoutInflater.inflate(R.layout.styles_pop_up, (ViewGroup) v.findViewById(R.id.stylesFrameLayout) );
 
-            final PopupWindow popWindow = new PopupWindow(layout, 800, 1200, true);
+
+            final PopupWindow popWindow = new PopupWindow(layout, 900, 1200, true);
+            ListView lv = (ListView) popWindow.getContentView().findViewById(R.id.listview);
+            ArrayList<String> s = new ArrayList<String>();
+            s.add("Young/Preppy");
+            s.add("Chic");
+            s.add("Sexy");
+            s.add("Urban");
+            s.add("Outdoor");
+            s.add("Glamour/Black Tie");
+            s.add("Hippie/Bohochic");
+            s.add("Modern/Office");
+            StylesAdapter a = new StylesAdapter(getActivity(), s);
+            lv.setAdapter(a);
             popWindow.setAnimationStyle(-1);
             popWindow.setElevation(5);
             popWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
@@ -229,16 +306,79 @@ public class StylesFragment extends Fragment {
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    popWindow.dismiss();
+                    if(chosenStyle.size()<1){
+                        Toast.makeText(getContext(), "No style chosen", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(chosenStyle.size()>1){
+                        Toast.makeText(getContext(), "Choose only 1 style!", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        popWindow.dismiss();
+                        chosenStyle.clear();
+                    }
                 }
             });
-
         }
 
         catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public class StylesAdapter extends ArrayAdapter<String> {
+        ArrayList<String> styles = new ArrayList<String>();
+
+        public StylesAdapter(Activity context, ArrayList<String> styles) {
+            super(context,0,styles);
+            this.styles = styles;
+        }
+
+        @NonNull
+        @Override
+        public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            ViewHolder viewHolder = null;
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                convertView = inflater.inflate(R.layout.list_view_item, parent, false);
+                viewHolder = new ViewHolder();
+                viewHolder.title = (TextView) convertView.findViewById(R.id.styleText);
+                viewHolder.button = (CheckBox) convertView.findViewById(R.id.styleCheckBox);
+                convertView.setTag(viewHolder);
+                convertView.setTag(R.id.description, viewHolder.title);
+                convertView.setTag(R.id.btn1, viewHolder.button);
+
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            viewHolder.button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    CheckBox checkbox = (CheckBox) buttonView;
+                    if(checkbox.isChecked()){
+                        chosenStyle.add(styles.get(position));
+                    }
+                    else{
+
+                        chosenStyle.remove(styles.get(position));
+                    }
+                }
+            });
+//        viewHolder.button.setTag(position); // This line is important.
+//        viewHolder.button.setChecked(styles.get(position).isSelected());
+
+            viewHolder.title.setText(styles.get(position));
+
+            return convertView;
+        }
+
+        private class ViewHolder {
+
+            TextView title;
+            CheckBox button;
+        }
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -278,4 +418,5 @@ public class StylesFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

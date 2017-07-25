@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -53,6 +54,7 @@ public class FinalOutfitActivity extends AppCompatActivity {
         ClothesBasketAdapter.singleTop.clear();
         ClothesBasketAdapter.singleBottom.clear();
         ClothesBasketAdapter.singleOuter.clear();
+        ClothesBasketAdapter.singleOnepiece.clear();
 
         FrameLayout layout_main = (FrameLayout) findViewById(R.id.finalOutfitFrame);
         layout_main.getForeground().setAlpha(0); // remove foreground colour
@@ -140,12 +142,26 @@ public class FinalOutfitActivity extends AppCompatActivity {
         textChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClothesFragment.adapter.clothes_basket_cart.clear();
-                ClothesBasket.basketAdapter.finalOutfitList.clear();
-                Intent stylesFragIntent = new Intent(FinalOutfitActivity.this, MainActivity.class);
-                stylesFragIntent.putExtra("test", "Style");
-                stylesFragIntent.putExtra("outfitClothes", clothesListId);
-                startActivity(stylesFragIntent);
+                if(clothingTop.getDrawable() instanceof BitmapDrawable && clothingBottom.getDrawable() instanceof BitmapDrawable){
+                    ClothesFragment.adapter.clothes_basket_cart.clear();
+                    ClothesBasket.basketAdapter.finalOutfitList.clear();
+                    Intent stylesFragIntent = new Intent(FinalOutfitActivity.this, MainActivity.class);
+                    stylesFragIntent.putExtra("test", "Style");
+                    stylesFragIntent.putExtra("outfitClothes", clothesListId);
+                    startActivity(stylesFragIntent);
+                }
+                else if(clothingOnepiece.getDrawable() instanceof BitmapDrawable){
+                    ClothesFragment.adapter.clothes_basket_cart.clear();
+                    ClothesBasket.basketAdapter.finalOutfitList.clear();
+                    Intent stylesFragIntent = new Intent(FinalOutfitActivity.this, MainActivity.class);
+                    stylesFragIntent.putExtra("test", "Style");
+                    stylesFragIntent.putExtra("outfitClothes", clothesListId);
+                    startActivity(stylesFragIntent);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Top and Bottom must be selected!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
