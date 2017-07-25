@@ -26,7 +26,7 @@
                 android:layout_centerVertical="true"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
-                app:srcCompat="@drawable/trending" />
+                app:srcCompat="@drawable/social_trending" />
 
         </LinearLayout>
     </ScrollView>

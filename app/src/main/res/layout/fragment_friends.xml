@@ -34,7 +34,7 @@
                 android:adjustViewBounds="true"
                 android:cropToPadding="false"
                 android:scaleType="fitStart"
-                app:srcCompat="@drawable/friend1" />
+                app:srcCompat="@drawable/social_friends" />
 
         </RelativeLayout>
     </ScrollView>
