@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
@@ -88,9 +89,9 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             db = new DatabaseHandler(getApplicationContext());
-            db.syncClothes();
+            //db.syncClothes();
             db.close();
-            return "Success";
+            return "";
         }
 
         @Override
@@ -99,6 +100,7 @@ public class SplashActivity extends AppCompatActivity {
             if (pd.isShowing()) {
                 pd.dismiss();
             }
+            Toast.makeText(getApplicationContext(),"String is :"+result,Toast.LENGTH_SHORT).show();
 
         }
 
