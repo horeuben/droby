@@ -10,4 +10,5 @@
     <color name="texthint">#afded9</color>
     <color name="colorPrimaryFade">#80cbc4</color>
     <color name="bg">#ab000000</color>
+    <color name="filterGrey">#99000000</color>
 </resources>

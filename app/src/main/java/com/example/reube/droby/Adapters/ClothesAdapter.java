@@ -3,6 +3,9 @@ package com.example.reube.droby.Adapters;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.design.internal.ForegroundLinearLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +60,12 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
             viewHolder.title = (TextView) convertView.findViewById(R.id.description);
             viewHolder.button = (CheckBox) convertView.findViewById(R.id.btn1);
             viewHolder.image_clothes = (ImageView) convertView.findViewById(R.id.clothes_image);
+            viewHolder.image_filter = (ImageView) convertView.findViewById(R.id.blackFilter);
+            //viewHolder.image_clothes.getForeground().setAlpha(0);
             convertView.setTag(viewHolder);
             convertView.setTag(R.id.description, viewHolder.title);
             convertView.setTag(R.id.btn1, viewHolder.button);
+            convertView.setTag(R.id.blackFilter, viewHolder.image_filter);
 
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -83,9 +89,6 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
                     } else {
                         clothes_basket_cart.add(Integer.toString(item.getId()));
                         clothes_cart.add(item);
-                        //Toast.makeText(getContext(), getItem(position).getDescription() + " selected", Toast.LENGTH_SHORT).show();
-                        //clothes.get(position).setDescription("Selected");
-
                     }
 
                 } else {
@@ -97,12 +100,12 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
 
         });
 
-
         viewHolder.button.setTag(position); // This line is important.
         viewHolder.button.setChecked(clothes.get(position).isSelected());
 
         viewHolder.title.setText(clothes.get(position).getDescription());
         viewHolder.image_clothes.setImageBitmap(convertToBitmap(clothes.get(position).getImage()));
+        viewHolder.image_filter.setImageResource(clothes.get(position).getForegroundColour());
 
 
 //        Clothes currentClothe = getItem(position);
@@ -119,10 +122,10 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
 
 
     private class ViewHolder {
-
         TextView title;
         CheckBox button;
         ImageView image_clothes;
+        ImageView image_filter;
     }
 
     //recursive blind checks removal for everything inside a View
