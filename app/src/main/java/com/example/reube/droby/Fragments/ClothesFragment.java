@@ -1,7 +1,12 @@
 package com.example.reube.droby.Fragments;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -29,9 +34,11 @@ import android.widget.Toast;
 import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.ClothesDescription;
 import com.example.reube.droby.Activities.MainActivity;
+import com.example.reube.droby.Activities.SplashActivity;
 import com.example.reube.droby.Adapters.ClothesAdapter;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
+import com.example.reube.droby.Database.DatabaseUtilities;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
@@ -44,6 +51,7 @@ public class ClothesFragment extends Fragment {
     public static ClothesAdapter adapter;
     private DatabaseHandler mDbHelper;
     private static Parcelable state;
+    ProgressDialog pd;
 
 
     @Override
@@ -51,7 +59,11 @@ public class ClothesFragment extends Fragment {
                              Bundle savedInstanceState) {
         getActivity().setTitle("Wardrobe");
         View rootView = inflater.inflate(R.layout.clothes_list, container, false);
-        //((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("TEst");
+
+
+        if (isNetworkAvailable()){
+            new SyncLocation().execute();
+        }
 
 
 
@@ -72,9 +84,16 @@ public class ClothesFragment extends Fragment {
             }
         });
 
-        mDbHelper = new DatabaseHandler(getActivity());
 
+        mDbHelper = new DatabaseHandler(getActivity());
         clothes = mDbHelper.getAllClothes(MainActivity.user);//.getAllClothesTest();
+        for(int i = 0; i<clothes.size(); i++){                 //set grey out for items not in cupboard
+            if(clothes.get(i).getLocation()== -1){
+                clothes.get(i).setForegroundColour(R.color.filterGrey);
+                clothes.get(i).setCheckboxClickable(true);
+            }
+            else{clothes.get(i).setForegroundColour(0);}
+        }
 
         adapter = new ClothesAdapter(getActivity(), clothes);
 
@@ -106,17 +125,20 @@ public class ClothesFragment extends Fragment {
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                clothes = mDbHelper.getAllClothes(MainActivity.user);
-                clothes.get(1).setLocation(-1);
-                clothes.get(4).setLocation(-1);
-                for(int i = 0; i<clothes.size(); i++){
-                    if(clothes.get(i).getLocation()==-1){
-                        clothes.get(i).setForegroundColour(R.color.filterGrey);
+                if (isNetworkAvailable()){
+                    new SyncLocation().execute();
+                    clothes = mDbHelper.getAllClothes(MainActivity.user);
+                    for(int i = 0; i<clothes.size(); i++){
+                        if(clothes.get(i).getLocation()== -1){
+                            clothes.get(i).setForegroundColour(R.color.filterGrey);
+                            clothes.get(i).setCheckboxClickable(true);
+                        }
+                        else{clothes.get(i).setForegroundColour(0);}
                     }
-                    else{clothes.get(i).setForegroundColour(0);}
+                    adapter = new ClothesAdapter(getActivity(), clothes);
+                    gridView.setAdapter(adapter);
                 }
-                adapter = new ClothesAdapter(getActivity(), clothes);
-                gridView.setAdapter(adapter);
+                else{Toast.makeText(getContext(), "No Connection Found",Toast.LENGTH_SHORT).show();}
                 refresh.setRefreshing(false);
             }
 
@@ -289,6 +311,42 @@ public class ClothesFragment extends Fragment {
 //            mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
 //        }
 //    }
+
+    private class SyncLocation extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            mDbHelper = new DatabaseHandler(getActivity());
+            mDbHelper.syncLocation();
+            mDbHelper.close();
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+
+        }
+
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd = new ProgressDialog(getActivity());
+            pd.setMessage("Loading");
+            pd.setCancelable(false);
+            pd.show();
+        }
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
 
 }

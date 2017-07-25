@@ -3,9 +3,6 @@ package com.example.reube.droby.Adapters;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.design.internal.ForegroundLinearLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.reube.droby.Activities.MainActivity;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
-import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
@@ -89,6 +84,7 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
                     } else {
                         clothes_basket_cart.add(Integer.toString(item.getId()));
                         clothes_cart.add(item);
+                        Toast.makeText(getContext(), Integer.toString(item.getLocation()),Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
@@ -102,10 +98,12 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
 
         viewHolder.button.setTag(position); // This line is important.
         viewHolder.button.setChecked(clothes.get(position).isSelected());
+        viewHolder.button.setClickable(!clothes.get(position).getCheckboxClickable());
 
         viewHolder.title.setText(clothes.get(position).getDescription());
         viewHolder.image_clothes.setImageBitmap(convertToBitmap(clothes.get(position).getImage()));
         viewHolder.image_filter.setImageResource(clothes.get(position).getForegroundColour());
+
 
 
 //        Clothes currentClothe = getItem(position);
