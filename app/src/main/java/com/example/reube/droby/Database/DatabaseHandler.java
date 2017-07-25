@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -683,15 +684,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Get clothesid of colours from database
-    public ArrayList<String> syncColour(){
-        String statement = "colour";
+    public ArrayList<String> syncColour(int cloth_id){
+        String statement = "colour?id="+cloth_id;
         String result = DatabaseUtilities.getResult(statement);
         ArrayList<String> clothes_id = new ArrayList<>();
         if (result!=null){
             try{
                 JSONArray clothesid = new JSONArray(result);
                 for (int i = 0; i <clothesid.length();i++){
-                    //JSONObject u = clothesid..getJSONObject(i);
                     int clothe_id = clothesid.getInt(i);
                     // need tag to get what i wan
                     clothes_id.add(Integer.toString(clothe_id));
@@ -702,7 +702,37 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return clothes_id;
     }
-
+    //Get clothesid of styles from database, if field is empty do put in null
+    public ArrayList<String> syncStyles(String style, String weather){
+        String statement = "styles?";
+        if (style.equals(null) && weather.equals(null)) {
+            //statement is default
+        }
+        else if (!style.equals(null) && weather.equals(null)){
+            statement += "style="+style;
+        }
+        else if (style.equals(null) && !weather.equals(null)){
+            statement += "weather="+weather;
+        }
+        else if(!style.equals(null) && !weather.equals(null)){
+            statement += "style="+style+"&weather="+weather;
+        }
+        String result = DatabaseUtilities.getResult(statement);
+        ArrayList<String> clothes_id = new ArrayList<>();
+        if (result!=null){
+            try{
+                JSONArray clothesid = new JSONArray(result);
+                for (int i = 0; i <clothesid.length();i++){
+                    int clothe_id = clothesid.getInt(i);
+                    // need tag to get what i wan
+                    clothes_id.add(Integer.toString(clothe_id));
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+            }
+        }
+        return clothes_id;
+    }
     //get location of clothes from database
     public void syncLocation(){
         String statement = "select * from rfid";
@@ -813,6 +843,38 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             }
         }
+    }
+    // test to get image.... not working lol
+    public ArrayList<byte[]> syncTest(){
+        String statement = "Select * from TEST";
+        String result = DatabaseUtilities.getResult(statement);
+        ArrayList<byte[]> pics = new ArrayList<>();
+        if (result !=null){
+            try {
+                JSONArray tests = new JSONArray(result);
+                for (int i =0; i<tests.length();i++){
+                    JSONObject o = tests.getJSONObject(i);
+                    int id  = o.getInt("id");
+                    String pic = o.getString("pic");
+                    byte [] imgBytes = Base64.decode(pic, Base64.DEFAULT);;
+                    pics.add(imgBytes);
+                    //JSONArray picarray = o.getJSONArray("pic");
+                    //pics.add(picarray.toString().getBytes());
+//                    String hexIn = o.getString("pic");
+//
+//                    byte [] byteOut = new byte [hexIn.length() / 2];
+//                    int j = 0;
+//                    for (int k = 0; k < hexIn.length(); k += 2)
+//                    {
+//                        byteOut[j++] = Byte.parseByte(hexIn.substring(k, k + 2), 16);
+//                    }
+//                    pics.add(byteOut);
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+
+            }
+        } return pics;
     }
 
 }

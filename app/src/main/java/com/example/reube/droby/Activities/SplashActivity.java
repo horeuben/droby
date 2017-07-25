@@ -100,7 +100,7 @@ public class SplashActivity extends AppCompatActivity {
             if (pd.isShowing()) {
                 pd.dismiss();
             }
-            Toast.makeText(getApplicationContext(),"String is :"+result,Toast.LENGTH_SHORT).show();
+
 
         }
 
