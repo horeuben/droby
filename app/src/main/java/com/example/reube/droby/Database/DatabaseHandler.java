@@ -681,6 +681,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             }
         }
     }
+
+    //Get clothesid of colours from database
+    public void syncColour(){
+        String statement = "colour";
+        String result = DatabaseUtilities.getResult(statement);
+        if (result!=null){
+            try{
+                JSONArray clothesid = new JSONArray(result);
+                for (int i = 0; i <clothesid.length();i++){
+                    JSONObject u = clothesid.getJSONObject(i);
+
+
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+            }
+        }
+    }
   // Sync Outfit: update from phone to cloud, update/insert, then cloud to phone
   // outfit might need a deleted column, so all outfits are saved, but only show those with deleted column not true
     public void syncOutfit(){
