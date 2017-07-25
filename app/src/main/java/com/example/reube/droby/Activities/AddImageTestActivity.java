@@ -119,30 +119,15 @@ public class AddImageTestActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddClothes();
-                TextView text = (TextView) findViewById(R.id.displayinfo);
-                text.setText(mDbHelper.getClothes());
-                if (chipDeletable == false){
-                    chipDeletable = true;
-                    chipsInput.setVisibility(View.VISIBLE);
-                    chipsInput.setChipDeletable(chipDeletable);
-                }
-                else{
-                    chipDeletable = false;
-                    chipsInput.setChipDeletable(chipDeletable);
-                    chipsInput.setVisibility(View.GONE);
-                }
 
-               // Toast.makeText(getApplicationContext(),"it is "+ chipDeletable,Toast.LENGTH_SHORT).show();
+                if (description.getText().toString().trim().equals("")) {
+                    Toast.makeText(getApplicationContext(), "Name edit text is empty, Enter name", Toast.LENGTH_LONG).show();
+                } else {
+                    AddClothes();
+                    TextView text = (TextView) findViewById(R.id.displayinfo);
+                    text.setText(mDbHelper.getClothes());
 
-//                if (description.getText().toString().trim().equals("")) {
-//                    Toast.makeText(getApplicationContext(), "Name edit text is empty, Enter name", Toast.LENGTH_LONG).show();
-//                } else {
-//                    AddClothes();
-//                    TextView text = (TextView) findViewById(R.id.displayinfo);
-//                    text.setText(mDbHelper.getClothes());
-//
-//                }
+                }
             }
         });
 
