@@ -45,8 +45,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:button="@drawable/checkbox_selector"
-            android:paddingBottom="15dp"
-            android:paddingLeft="18dp"
+            android:paddingBottom="18dp"
+            android:paddingLeft="25dp"
             android:paddingTop="20dp" />
 
 

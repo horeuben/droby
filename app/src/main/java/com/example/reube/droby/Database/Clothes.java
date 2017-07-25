@@ -1,8 +1,8 @@
 package com.example.reube.droby.Database;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -122,6 +122,11 @@ public class Clothes implements Parcelable {
 
     public void setForegroundColour(int foregroundColour) {this.foregroundColour = foregroundColour;}
 
+    public boolean getCheckboxClickable() {return checkboxClickable;}
+
+    public void setCheckboxClickable(boolean checkboxClickable) {this.checkboxClickable = checkboxClickable;}
+
+
     private int id,user_id;
     private String name,description,category_id;
     private ArrayList<Tag> tags;
@@ -131,6 +136,7 @@ public class Clothes implements Parcelable {
     private byte[] image;
     private boolean selected;
     private int foregroundColour;
+    private boolean checkboxClickable;
 
 
 

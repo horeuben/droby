@@ -53,8 +53,8 @@ public class TakeClothesFromWardrobe extends AppCompatActivity {
         Intent intent = this.getIntent();
         wearList = (ArrayList<String>)intent.getExtras().getSerializable("wearList");
 
-        Button b = (Button) findViewById(R.id.connectButton);
-        b.setOnClickListener(new View.OnClickListener() {
+        Button connectButton = (Button) findViewById(R.id.connectButton);
+        connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 for (int i=0;i<wearList.size();i++){
@@ -65,10 +65,22 @@ public class TakeClothesFromWardrobe extends AppCompatActivity {
             }
         });
 
+        Button doneButton = (Button) findViewById(R.id.done_button);
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
 
         btAdapter=BluetoothAdapter.getDefaultAdapter();
         checkBTState();
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 
     @Override
