@@ -58,6 +58,7 @@ public class StylesFragment extends Fragment {
     private  ArrayList<Clothes> finalClothesList = new ArrayList<Clothes>();
     private ArrayList<String> suggestedOutfitList = new ArrayList<String>();
     private ArrayList<String> chosenStyle = new ArrayList<String>();
+    private ArrayList<String> locationList = new ArrayList<String>();
     DatabaseHandler db;
 //    private static ArrayList<Clothes> AllClothes = new ArrayList<Clothes>();
 
@@ -251,7 +252,10 @@ public class StylesFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent wearIntent = new Intent(getActivity(), TakeClothesFromWardrobe.class);
-                    wearIntent.putExtra("wearList", outfitFinalList);
+                    for (int i=0; i<finalClothesList.size(); i++){
+                        locationList.add(Integer.toString(finalClothesList.get(i).getLocation()));
+                    }
+                    wearIntent.putExtra("wearList", locationList);
                     startActivity(wearIntent);
                 }
             });
