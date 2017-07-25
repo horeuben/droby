@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.reube.droby.Activities.ClothesBasket;
 import com.example.reube.droby.Activities.FinalOutfitActivity;
+import com.example.reube.droby.Activities.MainActivity;
 import com.example.reube.droby.Activities.TakeClothesFromWardrobe;
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
@@ -56,6 +57,7 @@ public class StylesFragment extends Fragment {
 
     private ArrayList<String> outfitFinalList = new ArrayList<String>();
     private  ArrayList<Clothes> finalClothesList = new ArrayList<Clothes>();
+    private  ArrayList<Clothes> list = new ArrayList<Clothes>();
     private ArrayList<String> suggestedOutfitList = new ArrayList<String>();
     private ArrayList<String> chosenStyle = new ArrayList<String>();
     private ArrayList<String> locationList = new ArrayList<String>();
@@ -252,8 +254,9 @@ public class StylesFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent wearIntent = new Intent(getActivity(), TakeClothesFromWardrobe.class);
-                    for (int i=0; i<finalClothesList.size(); i++){
-                        locationList.add(Integer.toString(finalClothesList.get(i).getLocation()));
+                    list = db.getAllClothes(MainActivity.user,outfitFinalList);
+                    for (int i=0; i<list.size(); i++){
+                        locationList.add(Integer.toString(list.get(i).getLocation()));
                     }
                     wearIntent.putExtra("wearList", locationList);
                     startActivity(wearIntent);

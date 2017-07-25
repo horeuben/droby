@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 
+import static com.example.reube.droby.R.id.connectButton;
 import static java.security.AccessController.getContext;
 
 /**
@@ -53,6 +54,8 @@ public class TakeClothesFromWardrobe extends AppCompatActivity {
         Intent intent = this.getIntent();
         wearList = (ArrayList<String>)intent.getExtras().getSerializable("wearList");
 
+        final String[] s = {""};
+
         Button connectButton = (Button) findViewById(R.id.connectButton);
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +64,7 @@ public class TakeClothesFromWardrobe extends AppCompatActivity {
                     int num = Integer.parseInt(wearList.get(i))+96;
                     char first_item= (char) num;
                     sendData(Character.toString(first_item));
+                    s[ 0] += Character.toString(first_item);
                 }
             }
         });

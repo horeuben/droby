@@ -225,7 +225,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 for(int i =0;i<clothes.getTags().size();i++){
                     a+= clothes.getTags().get(i).getName()+" ";
                 }
-                clothesList += clothes.getDescription() +" "+ clothes.getId() +" "+clothes.getCategory_id()+" "+a+ "lol\n";
+                clothesList += clothes.getDescription() +" "+ clothes.getId() +" "+clothes.getCategory_id()+" "+a+ clothes.getLocation()+ "\n";
 
             } while (c.moveToNext());
         }
