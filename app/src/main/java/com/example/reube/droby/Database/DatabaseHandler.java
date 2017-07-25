@@ -683,16 +683,46 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Get clothesid of colours from database
-    public void syncColour(){
+    public ArrayList<String> syncColour(){
         String statement = "colour";
         String result = DatabaseUtilities.getResult(statement);
+        ArrayList<String> clothes_id = new ArrayList<>();
         if (result!=null){
             try{
                 JSONArray clothesid = new JSONArray(result);
                 for (int i = 0; i <clothesid.length();i++){
-                    JSONObject u = clothesid.getJSONObject(i);
+                    //JSONObject u = clothesid..getJSONObject(i);
+                    int clothe_id = clothesid.getInt(i);
+                    // need tag to get what i wan
+                    clothes_id.add(Integer.toString(clothe_id));
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+            }
+        }
+        return clothes_id;
+    }
 
+    //get location of clothes from database
+    public void syncLocation(){
+        String statement = "select * from rfid";
+        String result = DatabaseUtilities.getResult(statement);
+        if (result!=null){
+            try{
+                JSONArray locations = new JSONArray(result);
+                for (int i = 0; i <locations.length();i++){
+                    JSONObject cloth_location = locations.getJSONObject(i);
+                    int clothes_id = cloth_location.getInt("clothes_id");
+                    int location = cloth_location.getInt("location");
 
+                    ContentValues values = new ContentValues();
+                    values.put(KEY_LOCATION,  String.valueOf(location));
+
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    // updating row
+                    db.update(TABLE_CLOTHES, values, KEY_ID + " = ?",
+                            new String[] { String.valueOf(clothes_id) });
+                    db.close();
                 }
             } catch (JSONException e){
                 Log.e(TAG, "Json parsing error: " + e.getMessage());
