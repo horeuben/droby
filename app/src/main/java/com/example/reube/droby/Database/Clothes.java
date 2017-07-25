@@ -118,6 +118,10 @@ public class Clothes implements Parcelable {
         this.selected = selected;
     }
 
+    public int getForegroundColour() {return foregroundColour;}
+
+    public void setForegroundColour(int foregroundColour) {this.foregroundColour = foregroundColour;}
+
     private int id,user_id;
     private String name,description,category_id;
     private ArrayList<Tag> tags;
@@ -126,6 +130,7 @@ public class Clothes implements Parcelable {
     private int location;
     private byte[] image;
     private boolean selected;
+    private int foregroundColour;
 
 
 

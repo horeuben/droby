@@ -1,6 +1,7 @@
 package com.example.reube.droby.Fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +23,7 @@ import android.widget.GridView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.reube.droby.Activities.ClothesBasket;
@@ -98,6 +101,26 @@ public class ClothesFragment extends Fragment {
 
         });
 
+
+        final SwipeRefreshLayout refresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh);
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                clothes = mDbHelper.getAllClothes(MainActivity.user);
+                clothes.get(1).setLocation(-1);
+                clothes.get(4).setLocation(-1);
+                for(int i = 0; i<clothes.size(); i++){
+                    if(clothes.get(i).getLocation()==-1){
+                        clothes.get(i).setForegroundColour(R.color.filterGrey);
+                    }
+                    else{clothes.get(i).setForegroundColour(0);}
+                }
+                adapter = new ClothesAdapter(getActivity(), clothes);
+                gridView.setAdapter(adapter);
+                refresh.setRefreshing(false);
+            }
+
+        });
 
 
         setHasOptionsMenu(true);
