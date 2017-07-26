@@ -54,18 +54,21 @@ public class TakeClothesFromWardrobe extends AppCompatActivity {
         Intent intent = this.getIntent();
         wearList = (ArrayList<String>)intent.getExtras().getSerializable("wearList");
 
-        final String[] s = {""};
+
 
         Button connectButton = (Button) findViewById(R.id.connectButton);
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final String[] s = {""};
                 for (int i=0;i<wearList.size();i++){
                     int num = Integer.parseInt(wearList.get(i))+96;
                     char first_item= (char) num;
-                    sendData(Character.toString(first_item));
-                    s[ 0] += Character.toString(first_item);
+//                    sendData(Character.toString(first_item));
+                    s[0] += Character.toString(first_item);
                 }
+                sendData(s[0]);
+                Toast.makeText(getApplicationContext(), s[0], Toast.LENGTH_SHORT).show();
             }
         });
 

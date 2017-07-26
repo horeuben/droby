@@ -1,10 +1,14 @@
 package com.example.reube.droby.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,6 +34,7 @@ import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.R.attr.id;
 
@@ -42,6 +47,12 @@ public class FinalOutfitActivity extends AppCompatActivity {
     private ArrayList<Clothes> outfitClothes;
     private DatabaseHandler mDbHelper;
     private ArrayList<String> clothesListId = new ArrayList<String>();
+    String topID;
+    Clothes selectedTop = new Clothes();
+    Clothes selectedBottom = new Clothes();
+    Clothes selectedOuter = new Clothes();
+    ProgressDialog pd;
+    ArrayList<String> ID = new ArrayList<String>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,16 +91,19 @@ public class FinalOutfitActivity extends AppCompatActivity {
                 clothingTop.setImageBitmap(convertToBitmap(outfitClothes.get(i).getImage()));
                 msg_top.setVisibility(View.GONE);
                 recommend_top.setVisibility(View.GONE);
+                selectedTop = outfitClothes.get(i);
             }
             else if(outfitClothes.get(i).getCategory_id().equals("Bottom")){
                 clothingBottom.setImageBitmap(convertToBitmap(outfitClothes.get(i).getImage()));
                 msg_bottom.setVisibility(View.GONE);
                 recommend_bottom.setVisibility(View.GONE);
+                selectedBottom = outfitClothes.get(i);
             }
             else if(outfitClothes.get(i).getCategory_id().equals("Outerwear")){
                 clothingOuterwear.setImageBitmap(convertToBitmap(outfitClothes.get(i).getImage()));
                 msg_outer.setVisibility(View.GONE);
                 recommend_outer.setVisibility(View.GONE);
+                selectedOuter = outfitClothes.get(i);
             }
             else if(outfitClothes.get(i).getCategory_id().equals("Onepiece")){
                 clothingOnepiece.setImageBitmap(convertToBitmap(outfitClothes.get(i).getImage()));
@@ -107,7 +121,15 @@ public class FinalOutfitActivity extends AppCompatActivity {
         recommend_top.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Clothes> tops = mDbHelper.getAllClothes(MainActivity.user, "Top");
+                if (isNetworkAvailable()){
+                    try{
+                        ID = new SyncColour().execute(selectedBottom.getId()).get();
+                        Toast.makeText(getApplicationContext(), ID.get(0),Toast.LENGTH_SHORT).show();
+                    }
+                    catch (Exception e){
+                    }
+                }
+                ArrayList<Clothes> tops = mDbHelper.getAllClothes(MainActivity.user, ID);
                 clothingTop.setImageBitmap(convertToBitmap(tops.get(0).getImage()));
                 msg_top.setVisibility(View.GONE);
                 recommend_top.setVisibility(View.GONE);
@@ -118,11 +140,19 @@ public class FinalOutfitActivity extends AppCompatActivity {
         recommend_bottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Clothes> bottoms = mDbHelper.getAllClothes(MainActivity.user, "Bottom");
-                clothingBottom.setImageBitmap(convertToBitmap(bottoms.get(0).getImage()));
+                if (isNetworkAvailable()){
+                    try{
+                        ID = new SyncColour().execute(selectedTop.getId()).get();
+                        Toast.makeText(getApplicationContext(), ID.get(0),Toast.LENGTH_SHORT).show();
+                    }
+                    catch (Exception e){
+                    }
+                }
+                ArrayList<Clothes> bottoms = mDbHelper.getAllClothes(MainActivity.user, ID);
+                clothingBottom.setImageBitmap(convertToBitmap(bottoms.get(1).getImage()));
                 msg_bottom.setVisibility(View.GONE);
                 recommend_bottom.setVisibility(View.GONE);
-                clothesListId.add(Integer.toString(bottoms.get(0).getId()));
+                clothesListId.add(Integer.toString(bottoms.get(1).getId()));
             }
         });
 
@@ -130,10 +160,17 @@ public class FinalOutfitActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ArrayList<Clothes> outers = mDbHelper.getAllClothes(MainActivity.user, "Outerwear");
-                clothingOuterwear.setImageBitmap(convertToBitmap(outers.get(0).getImage()));
-                msg_outer.setVisibility(View.GONE);
-                recommend_outer.setVisibility(View.GONE);
-                clothesListId.add(Integer.toString(outers.get(0).getId()));
+                if(outers.size()==0){
+                    msg_outer.setVisibility(View.GONE);
+                    recommend_outer.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "No outerwear available",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    clothingOuterwear.setImageBitmap(convertToBitmap(outers.get(0).getImage()));
+                    msg_outer.setVisibility(View.GONE);
+                    recommend_outer.setVisibility(View.GONE);
+                    clothesListId.add(Integer.toString(outers.get(0).getId()));
+                }
             }
         });
 
@@ -293,10 +330,51 @@ public class FinalOutfitActivity extends AppCompatActivity {
                 }
             });
         }
-
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private class SyncColour extends AsyncTask<Integer, String, ArrayList<String>> {
+//        FinalOutfitActivity Activity;
+//        public SyncColour(FinalOutfitActivity Activity){
+//
+//        }
+        @Override
+        protected ArrayList<String> doInBackground(Integer... params) {
+            mDbHelper = new DatabaseHandler(getApplicationContext());
+            ArrayList<String> a = (mDbHelper.syncColour(params[0]));
+            mDbHelper.close();
+            return a;
+        }
+
+
+        @Override
+        protected void onPostExecute(ArrayList<String> result) {
+            super.onPostExecute(result);
+            if (pd.isShowing()) {
+                pd.dismiss();
+                topID = result.get(0);
+                Toast.makeText(getApplicationContext(),topID,Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd = new ProgressDialog(FinalOutfitActivity.this);
+            pd.setMessage("Loading");
+            pd.setCancelable(false);
+            pd.show();
+        }
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 }
