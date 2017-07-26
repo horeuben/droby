@@ -299,6 +299,7 @@
                 android:layout_marginTop="6dp">
 
                 <TextView
+                    android:id="@+id/s1Text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/Suggestion1"
@@ -306,13 +307,6 @@
                     style="@style/StylesFragSideMargins"
                     android:layout_marginTop="12dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Business, Formal"
-                    style="@style/StylesFragSideMargins"
-                    android:layout_marginTop="8dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
