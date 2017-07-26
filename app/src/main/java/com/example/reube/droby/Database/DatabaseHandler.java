@@ -702,7 +702,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return clothes_id;
     }
-    //Get clothesid of styles from database, if field is empty do put in null
+    //Get clothesid of styles from database, if field is empty do put in ""
     public ArrayList<String> syncStyles(String style, String weather){
         String statement = "styles?";
         if (style.equals("") && weather.equals("")) {

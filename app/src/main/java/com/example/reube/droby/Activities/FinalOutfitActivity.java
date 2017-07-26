@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,14 +54,32 @@ public class FinalOutfitActivity extends AppCompatActivity {
     Clothes selectedOuter = new Clothes();
     ProgressDialog pd;
     ArrayList<String> ID = new ArrayList<String>();
-
+    ImageView clothingTop;
+    ImageView clothingBottom;
+    ImageView clothingOuterwear;
+    ImageView clothingOnepiece;
+    TextView msg_top;
+    TextView msg_bottom;
+    TextView msg_outer;
+    TextView recommend_top;
+    TextView recommend_bottom;
+    TextView recommend_outer;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setTitle("Outfit of the Day");
         setContentView(R.layout.activity_final_outfit);
-
+        clothingTop = (ImageView) findViewById(R.id.top);
+        clothingBottom = (ImageView) findViewById(R.id.bottomClothing);
+        clothingOuterwear = (ImageView) findViewById(R.id.outerwear);
+        clothingOnepiece = (ImageView) findViewById(R.id.onepiece);
+        msg_top = (TextView) findViewById(R.id.msgTop);
+        msg_bottom = (TextView) findViewById(R.id.msgBottom);
+        msg_outer = (TextView) findViewById(R.id.msgOuter);
+        recommend_top = (TextView) findViewById(R.id.recommendTop);
+        recommend_bottom = (TextView) findViewById(R.id.recommendBottom);
+        recommend_outer = (TextView) findViewById(R.id.recommendOuter);
         ClothesBasketAdapter.finalOutfitList.clear(); //clear lists from clothes basket
         ClothesBasketAdapter.singleTop.clear();
         ClothesBasketAdapter.singleBottom.clear();
@@ -69,17 +88,6 @@ public class FinalOutfitActivity extends AppCompatActivity {
 
         FrameLayout layout_main = (FrameLayout) findViewById(R.id.finalOutfitFrame);
         layout_main.getForeground().setAlpha(0); // remove foreground colour
-
-        final ImageView clothingTop = (ImageView) findViewById(R.id.top);
-        final ImageView clothingBottom = (ImageView) findViewById(R.id.bottomClothing);
-        final ImageView clothingOuterwear = (ImageView) findViewById(R.id.outerwear);
-        final ImageView clothingOnepiece = (ImageView) findViewById(R.id.onepiece);
-        final TextView msg_top = (TextView) findViewById(R.id.msgTop);
-        final TextView msg_bottom = (TextView) findViewById(R.id.msgBottom);
-        final TextView msg_outer = (TextView) findViewById(R.id.msgOuter);
-        final TextView recommend_top = (TextView) findViewById(R.id.recommendTop);
-        final TextView recommend_bottom = (TextView) findViewById(R.id.recommendBottom);
-        final TextView recommend_outer = (TextView) findViewById(R.id.recommendOuter);
 
 
         //setting clothing based on clothes basket selection
@@ -122,18 +130,16 @@ public class FinalOutfitActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isNetworkAvailable()){
-                    try{
-                        ID = new SyncColour().execute(selectedBottom.getId()).get();
-                        Toast.makeText(getApplicationContext(), ID.get(0),Toast.LENGTH_SHORT).show();
-                    }
-                    catch (Exception e){
-                    }
+                    new SyncColour().execute(selectedBottom.getId(),1);
                 }
-                ArrayList<Clothes> tops = mDbHelper.getAllClothes(MainActivity.user, ID);
-                clothingTop.setImageBitmap(convertToBitmap(tops.get(0).getImage()));
-                msg_top.setVisibility(View.GONE);
-                recommend_top.setVisibility(View.GONE);
-                clothesListId.add(Integer.toString(tops.get(0).getId()));
+                else{
+                    Toast.makeText(getApplicationContext(),"No network! Unable to generate recommendation!",Toast.LENGTH_SHORT).show();
+                }
+//                ArrayList<Clothes> tops = mDbHelper.getAllClothes(MainActivity.user, ID);
+//                clothingTop.setImageBitmap(convertToBitmap(tops.get(0).getImage()));
+//                msg_top.setVisibility(View.GONE);
+//                recommend_top.setVisibility(View.GONE);
+//                clothesListId.add(Integer.toString(tops.get(0).getId()));
             }
         });
 
@@ -141,18 +147,15 @@ public class FinalOutfitActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isNetworkAvailable()){
-                    try{
-                        ID = new SyncColour().execute(selectedTop.getId()).get();
-                        Toast.makeText(getApplicationContext(), ID.get(0),Toast.LENGTH_SHORT).show();
-                    }
-                    catch (Exception e){
-                    }
+                    new SyncColour().execute(selectedTop.getId(),2);
+                } else{
+                    Toast.makeText(getApplicationContext(),"No network! Unable to generate recommendation!",Toast.LENGTH_SHORT).show();
                 }
-                ArrayList<Clothes> bottoms = mDbHelper.getAllClothes(MainActivity.user, ID);
-                clothingBottom.setImageBitmap(convertToBitmap(bottoms.get(1).getImage()));
-                msg_bottom.setVisibility(View.GONE);
-                recommend_bottom.setVisibility(View.GONE);
-                clothesListId.add(Integer.toString(bottoms.get(1).getId()));
+//                ArrayList<Clothes> bottoms = mDbHelper.getAllClothes(MainActivity.user, ID);
+//                clothingBottom.setImageBitmap(convertToBitmap(bottoms.get(1).getImage()));
+//                msg_bottom.setVisibility(View.GONE);
+//                recommend_bottom.setVisibility(View.GONE);
+//                clothesListId.add(Integer.toString(bottoms.get(1).getId()));
             }
         });
 
@@ -336,14 +339,12 @@ public class FinalOutfitActivity extends AppCompatActivity {
     }
 
     private class SyncColour extends AsyncTask<Integer, String, ArrayList<String>> {
-//        FinalOutfitActivity Activity;
-//        public SyncColour(FinalOutfitActivity Activity){
-//
-//        }
+        int type;
         @Override
         protected ArrayList<String> doInBackground(Integer... params) {
             mDbHelper = new DatabaseHandler(getApplicationContext());
             ArrayList<String> a = (mDbHelper.syncColour(params[0]));
+            type = params[1];
             mDbHelper.close();
             return a;
         }
@@ -354,9 +355,21 @@ public class FinalOutfitActivity extends AppCompatActivity {
             super.onPostExecute(result);
             if (pd.isShowing()) {
                 pd.dismiss();
-                topID = result.get(0);
-                Toast.makeText(getApplicationContext(),topID,Toast.LENGTH_SHORT).show();
             }
+             if (type ==1){
+                 ArrayList<Clothes> tops = mDbHelper.getAllClothes(MainActivity.user, result);
+                 clothingTop.setImageBitmap(convertToBitmap(tops.get(0).getImage()));
+                 msg_top.setVisibility(View.GONE);
+                 recommend_top.setVisibility(View.GONE);
+                 clothesListId.add(Integer.toString(tops.get(0).getId()));
+             }
+             else if (type ==2){
+                 ArrayList<Clothes> bottoms = mDbHelper.getAllClothes(MainActivity.user, result);
+                 clothingBottom.setImageBitmap(convertToBitmap(bottoms.get(1).getImage()));
+                 msg_bottom.setVisibility(View.GONE);
+                 recommend_bottom.setVisibility(View.GONE);
+                 clothesListId.add(Integer.toString(bottoms.get(1).getId()));
+             }
 
         }
 
