@@ -40,6 +40,7 @@ import com.example.reube.droby.R;
 
 import java.util.ArrayList;
 
+import static android.R.attr.type;
 import static com.example.reube.droby.Fragments.ClothesFragment.adapter;
 import static com.example.reube.droby.R.id.StylesFab;
 import static com.example.reube.droby.R.id.suggestion2LL;
@@ -60,9 +61,12 @@ public class StylesFragment extends Fragment {
     private ArrayList<String> suggestedOutfitList = new ArrayList<String>();
     private ArrayList<String> chosenStyle = new ArrayList<String>();
     private ArrayList<String> locationList = new ArrayList<String>();
-    DatabaseHandler db;
     ArrayList<String> styleOutfit = new ArrayList<String>();
     private  ArrayList<Clothes> styleOutfitList = new ArrayList<Clothes>();
+    ArrayList<String> s1OutfitList = new ArrayList<String>();
+    ArrayList<String> s2OutfitList = new ArrayList<String>();
+    ArrayList<String> s3OutfitList = new ArrayList<String>();
+    DatabaseHandler db;
     ProgressDialog pd;
     ImageView s1ImageTop;
     ImageView s1ImageBottom;
@@ -72,6 +76,10 @@ public class StylesFragment extends Fragment {
     ImageView s2ImageBottom;
     ImageView s2ImageOuter;
     ImageView s2ImageOnepiece;
+    ImageView s3ImageTop;
+    ImageView s3ImageBottom;
+    ImageView s3ImageOuter;
+    ImageView s3ImageOnepiece;
     LinearLayout s1LL;
     LinearLayout s2LL;
     LinearLayout s3LL;
@@ -142,6 +150,10 @@ public class StylesFragment extends Fragment {
         s2ImageBottom = (ImageView) rootView.findViewById(R.id.s2Bottom);
         s2ImageOuter = (ImageView) rootView.findViewById(R.id.s2Outerwear);
         s2ImageOnepiece = (ImageView) rootView.findViewById(R.id.s2Onepiece);
+        s3ImageTop = (ImageView) rootView.findViewById(R.id.s3Top);
+        s3ImageBottom = (ImageView) rootView.findViewById(R.id.s3Bottom);
+        s3ImageOuter = (ImageView) rootView.findViewById(R.id.s3Outerwear);
+        s3ImageOnepiece = (ImageView) rootView.findViewById(R.id.s3Onepiece);
         s1text = (TextView) rootView.findViewById(R.id.s1Text);
 
         FloatingActionButton stylesFloatingButton = (FloatingActionButton) rootView.findViewById(StylesFab);
@@ -157,8 +169,29 @@ public class StylesFragment extends Fragment {
             }
         });
 
-
-
+        //Obtaining colour matched outfits for suggestions
+//        if (isNetworkAvailable()){
+//            SyncColour syncColour = new SyncColour();
+//            syncColour.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,1);
+//        } else{
+//            Toast.makeText(getContext(),"No network! Unable to generate recommendation!",Toast.LENGTH_SHORT).show();
+//        }
+//        new SyncColour().execute(2);
+//        if (isNetworkAvailable()){
+//            SyncColour syncColour = new SyncColour();
+//            syncColour.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,2);
+//        } else{
+//            Toast.makeText(getContext(),"No network! Unable to generate recommendation!",Toast.LENGTH_SHORT).show();
+//        }
+        if (isNetworkAvailable()){
+            new SyncColour().execute(1);
+        }
+        else{
+            Toast.makeText(getContext(),"No network! Unable to generate recommendation!",Toast.LENGTH_SHORT).show();
+        }
+//
+        getSuggestions(2);
+        getSuggestions(3);
 
         //Clicking suggestion 1 wear text
         TextView wears1 = (TextView) rootView.findViewById(R.id.wearText1);
@@ -166,7 +199,28 @@ public class StylesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent pick1Intent = new Intent(getActivity(), FinalOutfitActivity.class);
-                pick1Intent.putExtra("OutfitList", suggestedOutfitList);
+                pick1Intent.putExtra("OutfitList", s1OutfitList);
+                startActivity(pick1Intent);
+            }
+        });
+
+        //Clicking suggestion 2 wear text
+        TextView wears2 = (TextView) rootView.findViewById(R.id.wearText2);
+        wears2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pick1Intent = new Intent(getActivity(), FinalOutfitActivity.class);
+                pick1Intent.putExtra("OutfitList", s2OutfitList);
+                startActivity(pick1Intent);
+            }
+        });
+        //Clicking suggestion 3 wear text
+        TextView wears3 = (TextView) rootView.findViewById(R.id.wearText3);
+        wears3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pick1Intent = new Intent(getActivity(), FinalOutfitActivity.class);
+                pick1Intent.putExtra("OutfitList", s3OutfitList);
                 startActivity(pick1Intent);
             }
         });
@@ -461,8 +515,8 @@ public class StylesFragment extends Fragment {
         @Override
         protected ArrayList<String> doInBackground(Integer... params) {
             db = new DatabaseHandler(getActivity());
-            ArrayList<String> a = (db.syncColour());
-            type = params[1];
+            ArrayList<String> a = (db.syncColour(-1));
+            type = params[0];
             db.close();
             return a;
         }
@@ -470,35 +524,132 @@ public class StylesFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<String> result) {
+
             super.onPostExecute(result);
             if (pd.isShowing()) {
                 pd.dismiss();
             }
-            if (type ==1){
-                ArrayList<Clothes> tops = mDbHelper.getAllClothes(MainActivity.user, result);
-                clothingTop.setImageBitmap(convertToBitmap(tops.get(0).getImage()));
-                msg_top.setVisibility(View.GONE);
-                recommend_top.setVisibility(View.GONE);
-                clothesListId.add(Integer.toString(tops.get(0).getId()));
+            ArrayList<Clothes> c = new ArrayList<Clothes>();
+            c = db.getAllClothes(MainActivity.user, result);
+            if(type==1){
+                s1OutfitList.addAll(result);
+                if(c.size()==2){
+                    s1ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                    s1ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
+                    s1ImageOuter.setVisibility(View.GONE);
+                }
+                else if(c.size()==1){
+                    s1ImageOnepiece.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                    s1ImageOuter.setVisibility(View.GONE);
+                }
+                else if(c.size()==3){
+                    s1ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                    s1ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
+                    s1ImageOuter.setImageBitmap(convertToBitmap(c.get(2).getImage()));
+                }
             }
-            else if (type ==2){
-                ArrayList<Clothes> bottoms = mDbHelper.getAllClothes(MainActivity.user, result);
-                clothingBottom.setImageBitmap(convertToBitmap(bottoms.get(1).getImage()));
-                msg_bottom.setVisibility(View.GONE);
-                recommend_bottom.setVisibility(View.GONE);
-                clothesListId.add(Integer.toString(bottoms.get(1).getId()));
+            else if(type==2){
+                s2OutfitList.addAll(result);
+                if(c.size()==2){
+                    s2ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                    s2ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
+                    s2ImageOuter.setVisibility(View.GONE);
+                }
+                else if(c.size()==1){
+                    s2ImageOuter.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                    s2ImageOuter.setVisibility(View.GONE);
+                }
+                else if(c.size()==3){
+                    s2ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                    s2ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
+                    s2ImageOuter.setImageBitmap(convertToBitmap(c.get(2).getImage()));
+                }
             }
-
+            else if(type==3){
+                s3OutfitList.addAll(result);
+                if(c.size()==2){
+                    s3ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                    s3ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
+                    s3ImageOuter.setVisibility(View.GONE);
+                }
+                else if(c.size()==1){
+                    s3ImageOuter.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                    s3ImageOuter.setVisibility(View.GONE);
+                }
+                else if(c.size()==3){
+                    s3ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                    s3ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
+                    s3ImageOuter.setImageBitmap(convertToBitmap(c.get(2).getImage()));
+                }
+            }
         }
 
 
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pd = new ProgressDialog(FinalOutfitActivity.this);
+            pd = new ProgressDialog(getActivity());
             pd.setMessage("Loading");
             pd.setCancelable(false);
             pd.show();
+        }
+    }
+
+    private void getSuggestions(int type){
+        ArrayList<String> a = (db.syncColour(-1));
+
+        ArrayList<Clothes> c = new ArrayList<Clothes>();
+        c = db.getAllClothes(MainActivity.user, a);
+        if(type==1){
+            s1OutfitList.addAll(a);
+            if(c.size()==2){
+                s1ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                s1ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
+                s1ImageOuter.setVisibility(View.GONE);
+            }
+            else if(c.size()==1){
+                s1ImageOnepiece.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                s1ImageOuter.setVisibility(View.GONE);
+            }
+            else if(c.size()==3){
+                s1ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                s1ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
+                s1ImageOuter.setImageBitmap(convertToBitmap(c.get(2).getImage()));
+            }
+        }
+        else if(type==2){
+            s2OutfitList.addAll(a);
+            if(c.size()==2){
+                s2ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                s2ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
+                s2ImageOuter.setVisibility(View.GONE);
+            }
+            else if(c.size()==1){
+                s2ImageOuter.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                s2ImageOuter.setVisibility(View.GONE);
+            }
+            else if(c.size()==3){
+                s2ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                s2ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
+                s2ImageOuter.setImageBitmap(convertToBitmap(c.get(2).getImage()));
+            }
+        }
+        else if(type==3){
+            s3OutfitList.addAll(a);
+            if(c.size()==2){
+                s3ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                s3ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
+                s3ImageOuter.setVisibility(View.GONE);
+            }
+            else if(c.size()==1){
+                s3ImageOuter.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                s3ImageOuter.setVisibility(View.GONE);
+            }
+            else if(c.size()==3){
+                s3ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
+                s3ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
+                s3ImageOuter.setImageBitmap(convertToBitmap(c.get(2).getImage()));
+            }
         }
     }
 
