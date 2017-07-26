@@ -683,16 +683,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
     }
 
-    //Get clothesid of colours from database, type is top,bottom,etc, if no cloth_id, set to -1
-    public ArrayList<String> syncColour(String type,int cloth_id){
+    //Get clothesid of colours from database
+    public ArrayList<String> syncColour(int cloth_id){
         String statement = "colour";
-        if (cloth_id ==-1){
-            statement +="?"+type;
+        if (cloth_id>=0){
+            statement += "?id="+cloth_id;
         }
-        else{
-            statement +="?"+type+"="+cloth_id;
-        }
-
         String result = DatabaseUtilities.getResult(statement);
         ArrayList<String> clothes_id = new ArrayList<>();
         if (result!=null){
