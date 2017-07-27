@@ -503,7 +503,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
-        if (c.moveToFirst()) {
+            if (c.moveToFirst()) {
             do {
                 Tag tag = new Tag();
                 tag.setId(c.getInt(c.getColumnIndex(KEY_ID)));

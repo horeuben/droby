@@ -40,10 +40,8 @@ import com.example.reube.droby.R;
 
 import java.util.ArrayList;
 
-import static android.R.attr.type;
 import static com.example.reube.droby.Fragments.ClothesFragment.adapter;
 import static com.example.reube.droby.R.id.StylesFab;
-import static com.example.reube.droby.R.id.suggestion2LL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,6 +83,10 @@ public class StylesFragment extends Fragment {
     LinearLayout s3LL;
     LinearLayout stylesPrompt;
     TextView s1text;
+    private static Boolean suggest = false;
+    private static ArrayList<Clothes> suggestion1 = new ArrayList<Clothes>();
+    private static ArrayList<Clothes> suggestion2 = new ArrayList<Clothes>();
+    private static ArrayList<Clothes> suggestion3 = new ArrayList<Clothes>();
 //    private static ArrayList<Clothes> AllClothes = new ArrayList<Clothes>();
 
 
@@ -170,28 +172,58 @@ public class StylesFragment extends Fragment {
         });
 
         //Obtaining colour matched outfits for suggestions
-//        if (isNetworkAvailable()){
-//            SyncColour syncColour = new SyncColour();
-//            syncColour.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,1);
-//        } else{
-//            Toast.makeText(getContext(),"No network! Unable to generate recommendation!",Toast.LENGTH_SHORT).show();
-//        }
-//        new SyncColour().execute(2);
-//        if (isNetworkAvailable()){
-//            SyncColour syncColour = new SyncColour();
-//            syncColour.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,2);
-//        } else{
-//            Toast.makeText(getContext(),"No network! Unable to generate recommendation!",Toast.LENGTH_SHORT).show();
-//        }
-        if (isNetworkAvailable()){
-            new SyncColour().execute(1);
+        suggestion1 = db.getAllClothes(MainActivity.user, MainActivity.s1);
+        s1OutfitList.addAll(MainActivity.s1);
+        if(suggestion1.size()==2){
+            s1ImageTop.setImageBitmap(convertToBitmap(suggestion1.get(0).getImage()));
+            s1ImageBottom.setImageBitmap(convertToBitmap(suggestion1.get(1).getImage()));
+            s1ImageOuter.setVisibility(View.GONE);
         }
-        else{
-            Toast.makeText(getContext(),"No network! Unable to generate recommendation!",Toast.LENGTH_SHORT).show();
+        else if(suggestion1.size()==1){
+            s1ImageOnepiece.setImageBitmap(convertToBitmap(suggestion1.get(0).getImage()));
+            s1ImageOuter.setVisibility(View.GONE);
         }
-//
-        getSuggestions(2);
-        getSuggestions(3);
+        else if(suggestion1.size()==3){
+            s1ImageTop.setImageBitmap(convertToBitmap(suggestion1.get(0).getImage()));
+            s1ImageBottom.setImageBitmap(convertToBitmap(suggestion1.get(1).getImage()));
+            s1ImageOuter.setImageBitmap(convertToBitmap(suggestion1.get(2).getImage()));
+        }
+
+        suggestion2 = db.getAllClothes(MainActivity.user, MainActivity.s2);
+        s2OutfitList.addAll(MainActivity.s2);
+        if(suggestion2.size()==2){
+            s2ImageTop.setImageBitmap(convertToBitmap(suggestion2.get(0).getImage()));
+            s2ImageBottom.setImageBitmap(convertToBitmap(suggestion2.get(1).getImage()));
+            s2ImageOuter.setVisibility(View.GONE);
+        }
+        else if(suggestion2.size()==1){
+            s2ImageOnepiece.setImageBitmap(convertToBitmap(suggestion2.get(0).getImage()));
+            s2ImageOuter.setVisibility(View.GONE);
+        }
+        else if(suggestion2.size()==3){
+            s2ImageTop.setImageBitmap(convertToBitmap(suggestion2.get(0).getImage()));
+            s2ImageBottom.setImageBitmap(convertToBitmap(suggestion2.get(1).getImage()));
+            s2ImageOuter.setImageBitmap(convertToBitmap(suggestion2.get(2).getImage()));
+        }
+
+        suggestion3 = db.getAllClothes(MainActivity.user, MainActivity.s3);
+        s3OutfitList.addAll(MainActivity.s3);
+        if(suggestion3.size()==2){
+            s3ImageTop.setImageBitmap(convertToBitmap(suggestion3.get(0).getImage()));
+            s3ImageBottom.setImageBitmap(convertToBitmap(suggestion3.get(1).getImage()));
+            s3ImageOuter.setVisibility(View.GONE);
+        }
+        else if(suggestion3.size()==1){
+            s3ImageOnepiece.setImageBitmap(convertToBitmap(suggestion3.get(0).getImage()));
+            s3ImageOuter.setVisibility(View.GONE);
+        }
+        else if(suggestion3.size()==3){
+            s3ImageTop.setImageBitmap(convertToBitmap(suggestion3.get(0).getImage()));
+            s3ImageBottom.setImageBitmap(convertToBitmap(suggestion3.get(1).getImage()));
+            s3ImageOuter.setImageBitmap(convertToBitmap(suggestion3.get(2).getImage()));
+        }
+
+
 
         //Clicking suggestion 1 wear text
         TextView wears1 = (TextView) rootView.findViewById(R.id.wearText1);
@@ -373,11 +405,11 @@ public class StylesFragment extends Fragment {
                     }
                     else{
                         if (isNetworkAvailable()){
+                            s1text.setText(chosenStyle.get(0));
                             new SyncStyles().execute(chosenStyle.get(0));
                         } else{
                             Toast.makeText(getContext(),"No network! Unable to generate recommendation!",Toast.LENGTH_SHORT).show();
                         }
-                        s1text.setText(chosenStyle.get(0));
                         popWindow.dismiss();
                         chosenStyle.clear();
                     }
@@ -463,7 +495,6 @@ public class StylesFragment extends Fragment {
             }
             ArrayList<Clothes> styleOutfitList2 = new ArrayList<Clothes>();
             styleOutfitList2 = db.getAllClothes(MainActivity.user, result);
-            Toast.makeText(getContext(),Integer.toString(styleOutfitList2.size()),Toast.LENGTH_SHORT).show();
             if (styleOutfitList2.size()==2){
 
                 s1ImageTop.setImageBitmap(convertToBitmap(styleOutfitList2.get(0).getImage()));
@@ -510,148 +541,6 @@ public class StylesFragment extends Fragment {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private class SyncColour extends AsyncTask<Integer, String, ArrayList<String>> {
-        int type;
-        @Override
-        protected ArrayList<String> doInBackground(Integer... params) {
-            db = new DatabaseHandler(getActivity());
-            ArrayList<String> a = (db.syncColour(-1));
-            type = params[0];
-            db.close();
-            return a;
-        }
-
-
-        @Override
-        protected void onPostExecute(ArrayList<String> result) {
-
-            super.onPostExecute(result);
-            if (pd.isShowing()) {
-                pd.dismiss();
-            }
-            ArrayList<Clothes> c = new ArrayList<Clothes>();
-            c = db.getAllClothes(MainActivity.user, result);
-            if(type==1){
-                s1OutfitList.addAll(result);
-                if(c.size()==2){
-                    s1ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                    s1ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
-                    s1ImageOuter.setVisibility(View.GONE);
-                }
-                else if(c.size()==1){
-                    s1ImageOnepiece.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                    s1ImageOuter.setVisibility(View.GONE);
-                }
-                else if(c.size()==3){
-                    s1ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                    s1ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
-                    s1ImageOuter.setImageBitmap(convertToBitmap(c.get(2).getImage()));
-                }
-            }
-            else if(type==2){
-                s2OutfitList.addAll(result);
-                if(c.size()==2){
-                    s2ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                    s2ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
-                    s2ImageOuter.setVisibility(View.GONE);
-                }
-                else if(c.size()==1){
-                    s2ImageOuter.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                    s2ImageOuter.setVisibility(View.GONE);
-                }
-                else if(c.size()==3){
-                    s2ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                    s2ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
-                    s2ImageOuter.setImageBitmap(convertToBitmap(c.get(2).getImage()));
-                }
-            }
-            else if(type==3){
-                s3OutfitList.addAll(result);
-                if(c.size()==2){
-                    s3ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                    s3ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
-                    s3ImageOuter.setVisibility(View.GONE);
-                }
-                else if(c.size()==1){
-                    s3ImageOuter.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                    s3ImageOuter.setVisibility(View.GONE);
-                }
-                else if(c.size()==3){
-                    s3ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                    s3ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
-                    s3ImageOuter.setImageBitmap(convertToBitmap(c.get(2).getImage()));
-                }
-            }
-        }
-
-
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pd = new ProgressDialog(getActivity());
-            pd.setMessage("Loading");
-            pd.setCancelable(false);
-            pd.show();
-        }
-    }
-
-    private void getSuggestions(int type){
-        ArrayList<String> a = (db.syncColour(-1));
-
-        ArrayList<Clothes> c = new ArrayList<Clothes>();
-        c = db.getAllClothes(MainActivity.user, a);
-        if(type==1){
-            s1OutfitList.addAll(a);
-            if(c.size()==2){
-                s1ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                s1ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
-                s1ImageOuter.setVisibility(View.GONE);
-            }
-            else if(c.size()==1){
-                s1ImageOnepiece.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                s1ImageOuter.setVisibility(View.GONE);
-            }
-            else if(c.size()==3){
-                s1ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                s1ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
-                s1ImageOuter.setImageBitmap(convertToBitmap(c.get(2).getImage()));
-            }
-        }
-        else if(type==2){
-            s2OutfitList.addAll(a);
-            if(c.size()==2){
-                s2ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                s2ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
-                s2ImageOuter.setVisibility(View.GONE);
-            }
-            else if(c.size()==1){
-                s2ImageOuter.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                s2ImageOuter.setVisibility(View.GONE);
-            }
-            else if(c.size()==3){
-                s2ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                s2ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
-                s2ImageOuter.setImageBitmap(convertToBitmap(c.get(2).getImage()));
-            }
-        }
-        else if(type==3){
-            s3OutfitList.addAll(a);
-            if(c.size()==2){
-                s3ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                s3ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
-                s3ImageOuter.setVisibility(View.GONE);
-            }
-            else if(c.size()==1){
-                s3ImageOuter.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                s3ImageOuter.setVisibility(View.GONE);
-            }
-            else if(c.size()==3){
-                s3ImageTop.setImageBitmap(convertToBitmap(c.get(0).getImage()));
-                s3ImageBottom.setImageBitmap(convertToBitmap(c.get(1).getImage()));
-                s3ImageOuter.setImageBitmap(convertToBitmap(c.get(2).getImage()));
-            }
-        }
-    }
 
 
     // TODO: Rename method, update argument and hook method into UI event
