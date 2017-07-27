@@ -95,6 +95,8 @@ public class ClothesFragment extends Fragment {
             else{clothes.get(i).setForegroundColour(0);}
         }
 
+        mDbHelper.syncTags();
+
         adapter = new ClothesAdapter(getActivity(), clothes);
 
         gridView = (GridView) rootView.findViewById(R.id.clothes_list);

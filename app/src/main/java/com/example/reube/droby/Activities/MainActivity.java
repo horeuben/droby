@@ -1,7 +1,12 @@
 package com.example.reube.droby.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -16,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,16 +46,18 @@ import java.util.Random;
 
 import static android.R.attr.max;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity implements SocialFragment.OnFragmentInteractionListener, StylesFragment.OnFragmentInteractionListener,WardrobeFragment.OnFragmentInteractionListener,MeFragment.OnFragmentInteractionListener,TrendingFragment.OnFragmentInteractionListener,FriendsFragment.OnFragmentInteractionListener,FashionFragment.OnFragmentInteractionListener{
 
     private TextView mTextMessage;
     private DatabaseHandler db;
     public static User user;
-    public static int i1 = -1;
-    public static int i2 = -1;
-    public static int i3 = -1;
     public static ArrayList<Clothes> AllClothes = new ArrayList<Clothes>();
+    ProgressDialog pd;
+    public static ArrayList<String> s1 = new ArrayList<String>();
+    public static ArrayList<String> s2 = new ArrayList<String>();
+    public static ArrayList<String> s3 = new ArrayList<String>();
 
 
     @Override
@@ -139,17 +147,20 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         }
 
 
-
-        AllClothes = db.getAllClothesTest();
-        if (AllClothes.size()>2){
-            Random r = new Random();
-            int min = 0;
-            int max = AllClothes.size();
-            i1 = r.nextInt(max - min) + min;
-            i2 = r.nextInt(max - min) + min;
-            i3 = r.nextInt(max - min) + min;
-
+        if (isNetworkAvailable()){
+            new SyncColour().execute();
         }
+        else{
+            Toast.makeText(this,"No network! Unable to generate recommendation!",Toast.LENGTH_SHORT).show();
+        }
+//        SyncColour syncColour = new SyncColour();
+//        if(syncColour.getStatus() == AsyncTask.Status.FINISHED){
+//            new SyncColour().execute(2);
+//            Toast.makeText(this,Integer.toString(s2.size()), Toast.LENGTH_SHORT).show();
+//        }
+//        if(syncColour.getStatus() == AsyncTask.Status.FINISHED){
+//            new SyncColour().execute(3);
+//        }
 
 
         // Check that the activity is using the layout version with
@@ -249,5 +260,49 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         return clothes_ids;
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private class SyncColour extends AsyncTask<Integer, String, ArrayList<ArrayList<String>>> {
+        int type;
+        @Override
+        protected ArrayList<ArrayList<String>> doInBackground(Integer... params) {
+            db = new DatabaseHandler(MainActivity.this);
+            ArrayList<ArrayList<String>> result = new ArrayList<>();
+            for(int i = 0;i<3;i++){
+                result.add(db.syncColour(-1));
+            }
+//            type = params[0];
+            db.close();
+            return result;
+        }
+
+
+        @Override
+        protected void onPostExecute(ArrayList<ArrayList<String>> result) {
+
+            super.onPostExecute(result);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+            s1.addAll(result.get(0));
+            s2.addAll(result.get(1));
+            s3.addAll(result.get(2));
+        }
+
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd = new ProgressDialog(MainActivity.this);
+            pd.setMessage("Loading");
+            pd.setCancelable(false);
+            pd.show();
+        }
+    }
 }
 

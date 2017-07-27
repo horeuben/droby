@@ -1,11 +1,15 @@
 package com.example.reube.droby.Fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,14 +40,8 @@ import com.example.reube.droby.R;
 
 import java.util.ArrayList;
 
-import static com.example.reube.droby.Activities.MainActivity.AllClothes;
-import static com.example.reube.droby.Activities.MainActivity.i1;
-import static com.example.reube.droby.Activities.MainActivity.i2;
-import static com.example.reube.droby.Activities.MainActivity.i3;
 import static com.example.reube.droby.Fragments.ClothesFragment.adapter;
 import static com.example.reube.droby.R.id.StylesFab;
-import static com.example.reube.droby.R.id.style;
-import static com.example.reube.droby.R.id.stylePromptLL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +59,34 @@ public class StylesFragment extends Fragment {
     private ArrayList<String> suggestedOutfitList = new ArrayList<String>();
     private ArrayList<String> chosenStyle = new ArrayList<String>();
     private ArrayList<String> locationList = new ArrayList<String>();
+    ArrayList<String> styleOutfit = new ArrayList<String>();
+    private  ArrayList<Clothes> styleOutfitList = new ArrayList<Clothes>();
+    ArrayList<String> s1OutfitList = new ArrayList<String>();
+    ArrayList<String> s2OutfitList = new ArrayList<String>();
+    ArrayList<String> s3OutfitList = new ArrayList<String>();
     DatabaseHandler db;
+    ProgressDialog pd;
+    ImageView s1ImageTop;
+    ImageView s1ImageBottom;
+    ImageView s1ImageOuter;
+    ImageView s1ImageOnepiece;
+    ImageView s2ImageTop;
+    ImageView s2ImageBottom;
+    ImageView s2ImageOuter;
+    ImageView s2ImageOnepiece;
+    ImageView s3ImageTop;
+    ImageView s3ImageBottom;
+    ImageView s3ImageOuter;
+    ImageView s3ImageOnepiece;
+    LinearLayout s1LL;
+    LinearLayout s2LL;
+    LinearLayout s3LL;
+    LinearLayout stylesPrompt;
+    TextView s1text;
+    private static Boolean suggest = false;
+    private static ArrayList<Clothes> suggestion1 = new ArrayList<Clothes>();
+    private static ArrayList<Clothes> suggestion2 = new ArrayList<Clothes>();
+    private static ArrayList<Clothes> suggestion3 = new ArrayList<Clothes>();
 //    private static ArrayList<Clothes> AllClothes = new ArrayList<Clothes>();
 
 
@@ -105,18 +130,33 @@ public class StylesFragment extends Fragment {
         // Inflate the layout for this fragment
         getActivity().setTitle("Style Recommendation");
 
+        db = new DatabaseHandler(getActivity());
+
         Intent intent = getActivity().getIntent();
         LinearLayout finalLL = (LinearLayout) rootView.findViewById(R.id.finalisedOutfitLL);
         LinearLayout promptLL = (LinearLayout) rootView.findViewById(R.id.plannerPromptLL);
-        LinearLayout s1LL = (LinearLayout) rootView.findViewById(R.id.suggestion1LL);
-        LinearLayout s2LL = (LinearLayout) rootView.findViewById(R.id.suggestion2LL);
-        LinearLayout s3LL = (LinearLayout) rootView.findViewById(R.id.suggestion3LL);
-        final LinearLayout stylesPrompt = (LinearLayout) rootView.findViewById(R.id.stylePromptLL);
+        s1LL = (LinearLayout) rootView.findViewById(R.id.suggestion1LL);
+        s2LL = (LinearLayout) rootView.findViewById(R.id.suggestion2LL);
+        s3LL = (LinearLayout) rootView.findViewById(R.id.suggestion3LL);
+        stylesPrompt = (LinearLayout) rootView.findViewById(R.id.stylePromptLL);
         FloatingActionButton stylesFab = (FloatingActionButton) rootView.findViewById(R.id.StylesFab);
         ImageView finalisedTop = (ImageView) rootView.findViewById(R.id.fTop);
         ImageView finalisedBottom = (ImageView) rootView.findViewById(R.id.fBottom);
         ImageView finalisedOuterwear = (ImageView) rootView.findViewById(R.id.fOuterwear);
         ImageView finalisedOnepiece = (ImageView) rootView.findViewById(R.id.fOnepiece);
+        s1ImageTop = (ImageView) rootView.findViewById(R.id.s1Top);
+        s1ImageBottom = (ImageView) rootView.findViewById(R.id.s1Bottom);
+        s1ImageOuter = (ImageView) rootView.findViewById(R.id.s1Outerwear);
+        s1ImageOnepiece = (ImageView) rootView.findViewById(R.id.s1Onepiece);
+        s2ImageTop = (ImageView) rootView.findViewById(R.id.s2Top);
+        s2ImageBottom = (ImageView) rootView.findViewById(R.id.s2Bottom);
+        s2ImageOuter = (ImageView) rootView.findViewById(R.id.s2Outerwear);
+        s2ImageOnepiece = (ImageView) rootView.findViewById(R.id.s2Onepiece);
+        s3ImageTop = (ImageView) rootView.findViewById(R.id.s3Top);
+        s3ImageBottom = (ImageView) rootView.findViewById(R.id.s3Bottom);
+        s3ImageOuter = (ImageView) rootView.findViewById(R.id.s3Outerwear);
+        s3ImageOnepiece = (ImageView) rootView.findViewById(R.id.s3Onepiece);
+        s1text = (TextView) rootView.findViewById(R.id.s1Text);
 
         FloatingActionButton stylesFloatingButton = (FloatingActionButton) rootView.findViewById(StylesFab);
         stylesFloatingButton.setOnClickListener(new View.OnClickListener() {
@@ -131,28 +171,56 @@ public class StylesFragment extends Fragment {
             }
         });
 
-        //Suggestion 1 random    generator
-//        db = new DatabaseHandler(getActivity());
-//        AllClothes = db.getAllClothesTest();
-//        int min = 0;
-//        int max = AllClothes.size();
+        //Obtaining colour matched outfits for suggestions
+        suggestion1 = db.getAllClothes(MainActivity.user, MainActivity.s1);
+        s1OutfitList.addAll(MainActivity.s1);
+        if(suggestion1.size()==2){
+            s1ImageTop.setImageBitmap(convertToBitmap(suggestion1.get(0).getImage()));
+            s1ImageBottom.setImageBitmap(convertToBitmap(suggestion1.get(1).getImage()));
+            s1ImageOuter.setVisibility(View.GONE);
+        }
+        else if(suggestion1.size()==1){
+            s1ImageOnepiece.setImageBitmap(convertToBitmap(suggestion1.get(0).getImage()));
+            s1ImageOuter.setVisibility(View.GONE);
+        }
+        else if(suggestion1.size()==3){
+            s1ImageTop.setImageBitmap(convertToBitmap(suggestion1.get(0).getImage()));
+            s1ImageBottom.setImageBitmap(convertToBitmap(suggestion1.get(1).getImage()));
+            s1ImageOuter.setImageBitmap(convertToBitmap(suggestion1.get(2).getImage()));
+        }
 
+        suggestion2 = db.getAllClothes(MainActivity.user, MainActivity.s2);
+        s2OutfitList.addAll(MainActivity.s2);
+        if(suggestion2.size()==2){
+            s2ImageTop.setImageBitmap(convertToBitmap(suggestion2.get(0).getImage()));
+            s2ImageBottom.setImageBitmap(convertToBitmap(suggestion2.get(1).getImage()));
+            s2ImageOuter.setVisibility(View.GONE);
+        }
+        else if(suggestion2.size()==1){
+            s2ImageOnepiece.setImageBitmap(convertToBitmap(suggestion2.get(0).getImage()));
+            s2ImageOuter.setVisibility(View.GONE);
+        }
+        else if(suggestion2.size()==3){
+            s2ImageTop.setImageBitmap(convertToBitmap(suggestion2.get(0).getImage()));
+            s2ImageBottom.setImageBitmap(convertToBitmap(suggestion2.get(1).getImage()));
+            s2ImageOuter.setImageBitmap(convertToBitmap(suggestion2.get(2).getImage()));
+        }
 
-//        Random r = new Random();
-//        int i1 = r.nextInt(max - min) + min;
-//        int i2 = r.nextInt(max - min) + min;
-//        int i3 = r.nextInt(max - min) + min;
-        ImageView s1ImageTop = (ImageView) rootView.findViewById(R.id.s1Top);
-        ImageView s1ImageBottom = (ImageView) rootView.findViewById(R.id.s1Bottom);
-        ImageView s1ImageOuter = (ImageView) rootView.findViewById(R.id.s1Outerwear);
-        if (i1>0){
-
-            s1ImageTop.setImageBitmap(convertToBitmap(AllClothes.get(i1).getImage()));
-            s1ImageBottom.setImageBitmap(convertToBitmap(AllClothes.get(i2).getImage()));
-            s1ImageOuter.setImageBitmap(convertToBitmap(AllClothes.get(i3).getImage()));
-            suggestedOutfitList.add(Integer.toString(AllClothes.get(i1).getId()));
-            suggestedOutfitList.add(Integer.toString(AllClothes.get(i2).getId()));
-            suggestedOutfitList.add(Integer.toString(AllClothes.get(i3).getId()));
+        suggestion3 = db.getAllClothes(MainActivity.user, MainActivity.s3);
+        s3OutfitList.addAll(MainActivity.s3);
+        if(suggestion3.size()==2){
+            s3ImageTop.setImageBitmap(convertToBitmap(suggestion3.get(0).getImage()));
+            s3ImageBottom.setImageBitmap(convertToBitmap(suggestion3.get(1).getImage()));
+            s3ImageOuter.setVisibility(View.GONE);
+        }
+        else if(suggestion3.size()==1){
+            s3ImageOnepiece.setImageBitmap(convertToBitmap(suggestion3.get(0).getImage()));
+            s3ImageOuter.setVisibility(View.GONE);
+        }
+        else if(suggestion3.size()==3){
+            s3ImageTop.setImageBitmap(convertToBitmap(suggestion3.get(0).getImage()));
+            s3ImageBottom.setImageBitmap(convertToBitmap(suggestion3.get(1).getImage()));
+            s3ImageOuter.setImageBitmap(convertToBitmap(suggestion3.get(2).getImage()));
         }
 
 
@@ -163,7 +231,28 @@ public class StylesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent pick1Intent = new Intent(getActivity(), FinalOutfitActivity.class);
-                pick1Intent.putExtra("OutfitList", suggestedOutfitList);
+                pick1Intent.putExtra("OutfitList", s1OutfitList);
+                startActivity(pick1Intent);
+            }
+        });
+
+        //Clicking suggestion 2 wear text
+        TextView wears2 = (TextView) rootView.findViewById(R.id.wearText2);
+        wears2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pick1Intent = new Intent(getActivity(), FinalOutfitActivity.class);
+                pick1Intent.putExtra("OutfitList", s2OutfitList);
+                startActivity(pick1Intent);
+            }
+        });
+        //Clicking suggestion 3 wear text
+        TextView wears3 = (TextView) rootView.findViewById(R.id.wearText3);
+        wears3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pick1Intent = new Intent(getActivity(), FinalOutfitActivity.class);
+                pick1Intent.putExtra("OutfitList", s3OutfitList);
                 startActivity(pick1Intent);
             }
         });
@@ -176,8 +265,6 @@ public class StylesFragment extends Fragment {
                 popUpWindow(v);
             }
         });
-
-
 
         //check if intent comes from FinalOutfitActivity
         if(intent != null){
@@ -193,7 +280,6 @@ public class StylesFragment extends Fragment {
             }
             else if(string.equals(string)){
                 outfitFinalList = (ArrayList<String>)intent.getExtras().getSerializable("outfitClothes");
-                db = new DatabaseHandler(getActivity());
                 finalClothesList = db.getSelectedClothesIdTest(outfitFinalList);
                 finalLL.setVisibility(LinearLayout.VISIBLE);
                 promptLL.setVisibility(LinearLayout.VISIBLE);
@@ -262,8 +348,6 @@ public class StylesFragment extends Fragment {
                     startActivity(wearIntent);
                 }
             });
-
-
         }
 
         return rootView;
@@ -285,14 +369,14 @@ public class StylesFragment extends Fragment {
             final PopupWindow popWindow = new PopupWindow(layout, 900, 1200, true);
             ListView lv = (ListView) popWindow.getContentView().findViewById(R.id.listview);
             ArrayList<String> s = new ArrayList<String>();
-            s.add("Young/Preppy");
+            s.add("Preppy");
             s.add("Chic");
             s.add("Sexy");
             s.add("Urban");
             s.add("Outdoor");
-            s.add("Glamour/Black Tie");
-            s.add("Hippie/Bohochic");
-            s.add("Modern/Office");
+            s.add("Glamourous");
+            s.add("Boho");
+            s.add("Office");
             StylesAdapter a = new StylesAdapter(getActivity(), s);
             lv.setAdapter(a);
             popWindow.setAnimationStyle(-1);
@@ -320,6 +404,12 @@ public class StylesFragment extends Fragment {
                         Toast.makeText(getContext(), "Choose only 1 style!", Toast.LENGTH_SHORT).show();
                     }
                     else{
+                        if (isNetworkAvailable()){
+                            s1text.setText(chosenStyle.get(0));
+                            new SyncStyles().execute(chosenStyle.get(0));
+                        } else{
+                            Toast.makeText(getContext(),"No network! Unable to generate recommendation!",Toast.LENGTH_SHORT).show();
+                        }
                         popWindow.dismiss();
                         chosenStyle.clear();
                     }
@@ -386,6 +476,72 @@ public class StylesFragment extends Fragment {
         }
     }
 
+    private class SyncStyles extends AsyncTask<String, String, ArrayList<String>> {
+
+        @Override
+        protected ArrayList<String> doInBackground(String... params) {
+            db = new DatabaseHandler(getActivity());
+            ArrayList<String> a = (db.syncStyles(params[0],""));
+            db.close();
+            return a;
+        }
+
+
+        @Override
+        protected void onPostExecute(ArrayList<String> result) {
+            super.onPostExecute(result);
+            if (pd.isShowing()) {
+                pd.dismiss();
+            }
+            ArrayList<Clothes> styleOutfitList2 = new ArrayList<Clothes>();
+            styleOutfitList2 = db.getAllClothes(MainActivity.user, result);
+            if (styleOutfitList2.size()==2){
+
+                s1ImageTop.setImageBitmap(convertToBitmap(styleOutfitList2.get(0).getImage()));
+                s1ImageBottom.setImageBitmap(convertToBitmap(styleOutfitList2.get(1).getImage()));
+                suggestedOutfitList.add(Integer.toString(styleOutfitList2.get(0).getId()));
+                suggestedOutfitList.add(Integer.toString(styleOutfitList2.get(1).getId()));
+                s1ImageOuter.setVisibility(View.GONE);
+                s1ImageOnepiece.setVisibility(View.GONE);
+            }
+            else if(result.size()==1){
+                s1ImageOnepiece.setImageBitmap(convertToBitmap(styleOutfitList2.get(0).getImage()));
+                suggestedOutfitList.add(Integer.toString(styleOutfitList2.get(0).getId()));
+                s1ImageTop.setVisibility(View.GONE);
+                s1ImageBottom.setVisibility(View.GONE);
+                s1ImageOuter.setVisibility(View.GONE);
+            }
+            else if(styleOutfit.size()==3){
+                s1ImageTop.setImageBitmap(convertToBitmap(styleOutfitList.get(0).getImage()));
+                s1ImageBottom.setImageBitmap(convertToBitmap(styleOutfitList.get(1).getImage()));
+                s1ImageOuter.setImageBitmap(convertToBitmap(styleOutfitList.get(2).getImage()));
+                suggestedOutfitList.add(Integer.toString(styleOutfitList.get(0).getId()));
+                suggestedOutfitList.add(Integer.toString(styleOutfitList.get(1).getId()));
+                suggestedOutfitList.add(Integer.toString(styleOutfitList.get(2).getId()));
+                s1ImageOnepiece.setVisibility(View.GONE);
+            }
+            s2LL.setVisibility(View.GONE);
+            s3LL.setVisibility(View.GONE);
+        }
+
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd = new ProgressDialog(getActivity());
+            pd.setMessage("Styling");
+            pd.setCancelable(false);
+            pd.show();
+        }
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -410,17 +566,6 @@ public class StylesFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

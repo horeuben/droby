@@ -229,7 +229,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible"
+                android:visibility="gone"
                 style="@style/BorderMargins"
                 android:background="@drawable/background_styles_fragment"
                 android:layout_marginTop="6dp">
@@ -299,6 +299,7 @@
                 android:layout_marginTop="6dp">
 
                 <TextView
+                    android:id="@+id/s1Text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/Suggestion1"
@@ -306,59 +307,60 @@
                     style="@style/StylesFragSideMargins"
                     android:layout_marginTop="12dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Business, Formal"
-                    style="@style/StylesFragSideMargins"
-                    android:layout_marginTop="8dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/s1Top"
                         android:layout_width="165dp"
                         android:layout_height="235dp"
-                        android:src="@drawable/black_shirt"
-                        android:layout_marginRight="30dp"
-                        app:layout_constraintRight_toRightOf="parent"
+                        tools:src="@drawable/pink_tshirt"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginLeft="150dp"
-                        app:layout_constraintLeft_toLeftOf="parent" />
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="100dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintLeft_toRightOf="@+id/s1Outerwear"
+                        android:layout_marginLeft="70dp"
+                        app:layout_constraintHorizontal_bias="0.46" />
 
                     <ImageView
                         android:id="@+id/s1Bottom"
                         android:layout_width="162dp"
-                        android:layout_height="205dp"
-                        android:src="@drawable/black_shirt"
+                        android:layout_height="225dp"
+                        tools:src="@drawable/pink_tshirt"
                         android:layout_marginTop="0dp"
                         app:layout_constraintTop_toBottomOf="@+id/s1Top"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginRight="47dp"
-                        app:layout_constraintVertical_bias="0.0"
-                        app:layout_constraintRight_toRightOf="parent" />
+                        android:layout_marginRight="0dp"
+                        app:layout_constraintRight_toRightOf="@+id/s1Top" />
 
                     <ImageView
                         android:id="@+id/s1Outerwear"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:src="@drawable/black_shirt"
-                        app:layout_constraintRight_toLeftOf="@+id/s1Top"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginLeft="20dp"
+                        android:layout_width="169dp"
+                        android:layout_height="292dp"
+                        tools:src="@drawable/pink_tshirt"
+                        android:layout_marginLeft="10dp"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="70dp"
+                        android:layout_marginTop="50dp"
                         app:layout_constraintBottom_toBottomOf="@+id/s1Bottom"
-                        app:layout_constraintHorizontal_bias="1.0"
                         android:layout_marginBottom="85dp"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintVertical_bias="0.163" />
+
+                    <ImageView
+                        android:id="@+id/s1Onepiece"
+                        android:layout_width="169dp"
+                        android:layout_height="424dp"
+                        tools:src="@drawable/blue_jeans"
+                        tools:layout_editor_absoluteY="16dp"
+                        android:layout_marginRight="90dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintLeft_toRightOf="@+id/s1Outerwear"
+                        android:layout_marginLeft="70dp"
+                        app:layout_constraintHorizontal_bias="0.429"
+                        tools:layout_editor_absoluteX="211dp" />
                 </android.support.constraint.ConstraintLayout>
 
                 <RelativeLayout
@@ -411,11 +413,12 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:visibility="visible"
-                style="@style/BorderMargins"
                 android:background="@drawable/background_styles_fragment"
+                style="@style/BorderMargins"
                 android:layout_marginTop="6dp">
 
                 <TextView
+                    android:id="@+id/s2Text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/Suggestion2"
@@ -423,59 +426,60 @@
                     style="@style/StylesFragSideMargins"
                     android:layout_marginTop="12dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Business, Formal"
-                    style="@style/StylesFragSideMargins"
-                    android:layout_marginTop="8dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/s2Top"
                         android:layout_width="165dp"
                         android:layout_height="235dp"
-                        android:src="@drawable/black_shirt"
-                        android:layout_marginRight="30dp"
-                        app:layout_constraintRight_toRightOf="parent"
+                        tools:src="@drawable/pink_tshirt"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginLeft="150dp"
-                        app:layout_constraintLeft_toLeftOf="parent" />
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="100dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintLeft_toRightOf="@+id/s2Outerwear"
+                        android:layout_marginLeft="70dp"
+                        app:layout_constraintHorizontal_bias="0.46" />
 
                     <ImageView
                         android:id="@+id/s2Bottom"
                         android:layout_width="162dp"
-                        android:layout_height="205dp"
-                        android:src="@drawable/black_shirt"
+                        android:layout_height="225dp"
+                        tools:src="@drawable/pink_tshirt"
                         android:layout_marginTop="0dp"
                         app:layout_constraintTop_toBottomOf="@+id/s2Top"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginRight="47dp"
-                        app:layout_constraintVertical_bias="0.0"
-                        app:layout_constraintRight_toRightOf="parent" />
+                        android:layout_marginRight="0dp"
+                        app:layout_constraintRight_toRightOf="@+id/s2Top" />
 
                     <ImageView
                         android:id="@+id/s2Outerwear"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:src="@drawable/black_shirt"
-                        app:layout_constraintRight_toLeftOf="@+id/s2Top"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginLeft="20dp"
+                        android:layout_width="169dp"
+                        android:layout_height="292dp"
+                        tools:src="@drawable/pink_tshirt"
+                        android:layout_marginLeft="10dp"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="70dp"
+                        android:layout_marginTop="50dp"
                         app:layout_constraintBottom_toBottomOf="@+id/s2Bottom"
-                        app:layout_constraintHorizontal_bias="1.0"
                         android:layout_marginBottom="85dp"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintVertical_bias="0.163" />
+
+                    <ImageView
+                        android:id="@+id/s2Onepiece"
+                        android:layout_width="169dp"
+                        android:layout_height="424dp"
+                        tools:src="@drawable/blue_jeans"
+                        tools:layout_editor_absoluteY="16dp"
+                        android:layout_marginRight="90dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintLeft_toRightOf="@+id/s2Outerwear"
+                        android:layout_marginLeft="70dp"
+                        app:layout_constraintHorizontal_bias="0.429"
+                        tools:layout_editor_absoluteX="211dp" />
                 </android.support.constraint.ConstraintLayout>
 
                 <RelativeLayout
@@ -485,6 +489,8 @@
 
                     <TextView
                         android:id="@+id/wearText2"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Pick"
@@ -526,11 +532,12 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:visibility="visible"
-                style="@style/BorderMargins"
                 android:background="@drawable/background_styles_fragment"
+                style="@style/BorderMargins"
                 android:layout_marginTop="6dp">
 
                 <TextView
+                    android:id="@+id/s3Text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/Suggestion3"
@@ -538,59 +545,60 @@
                     style="@style/StylesFragSideMargins"
                     android:layout_marginTop="12dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Business, Formal"
-                    style="@style/StylesFragSideMargins"
-                    android:layout_marginTop="8dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1">
 
                     <ImageView
                         android:id="@+id/s3Top"
                         android:layout_width="165dp"
                         android:layout_height="235dp"
-                        android:src="@drawable/black_shirt"
-                        android:layout_marginRight="30dp"
-                        app:layout_constraintRight_toRightOf="parent"
+                        tools:src="@drawable/pink_tshirt"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginLeft="150dp"
-                        app:layout_constraintLeft_toLeftOf="parent" />
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="100dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintLeft_toRightOf="@+id/s3Outerwear"
+                        android:layout_marginLeft="70dp"
+                        app:layout_constraintHorizontal_bias="0.46" />
 
                     <ImageView
                         android:id="@+id/s3Bottom"
                         android:layout_width="162dp"
-                        android:layout_height="205dp"
-                        android:src="@drawable/black_shirt"
+                        android:layout_height="225dp"
+                        tools:src="@drawable/pink_tshirt"
                         android:layout_marginTop="0dp"
                         app:layout_constraintTop_toBottomOf="@+id/s3Top"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginRight="47dp"
-                        app:layout_constraintVertical_bias="0.0"
-                        app:layout_constraintRight_toRightOf="parent" />
+                        android:layout_marginRight="0dp"
+                        app:layout_constraintRight_toRightOf="@+id/s3Top" />
 
                     <ImageView
                         android:id="@+id/s3Outerwear"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:src="@drawable/black_shirt"
-                        app:layout_constraintRight_toLeftOf="@+id/s3Top"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginLeft="20dp"
+                        android:layout_width="169dp"
+                        android:layout_height="292dp"
+                        tools:src="@drawable/pink_tshirt"
+                        android:layout_marginLeft="10dp"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginTop="70dp"
+                        android:layout_marginTop="50dp"
                         app:layout_constraintBottom_toBottomOf="@+id/s3Bottom"
-                        app:layout_constraintHorizontal_bias="1.0"
                         android:layout_marginBottom="85dp"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintVertical_bias="0.163" />
+
+                    <ImageView
+                        android:id="@+id/s3Onepiece"
+                        android:layout_width="169dp"
+                        android:layout_height="424dp"
+                        tools:src="@drawable/blue_jeans"
+                        tools:layout_editor_absoluteY="16dp"
+                        android:layout_marginRight="90dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintLeft_toRightOf="@+id/s3Outerwear"
+                        android:layout_marginLeft="70dp"
+                        app:layout_constraintHorizontal_bias="0.429"
+                        tools:layout_editor_absoluteX="211dp" />
                 </android.support.constraint.ConstraintLayout>
 
                 <RelativeLayout
@@ -600,6 +608,8 @@
 
                     <TextView
                         android:id="@+id/wearText3"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Pick"
