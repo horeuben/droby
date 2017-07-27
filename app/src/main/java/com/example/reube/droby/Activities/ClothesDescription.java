@@ -12,12 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
 import com.example.reube.droby.Database.Tag;
 import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.R;
+import com.pchmn.materialchips.ChipView;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.Chip;
 import com.pchmn.materialchips.model.ChipInterface;
@@ -79,6 +81,7 @@ public class ClothesDescription extends AppCompatActivity {
         imageView.setImageBitmap(convertToBitmap(item.get(0).getImage()));
         textView.setText(item.get(0).getDescription());
         allTags = item.get(0).getTags();
+
         if (allTags.size()>0){
             for (int i=0;i<allTags.size();i++){
                 tagNoEditLayout.addChip(allTags.get(i).getName(),null);

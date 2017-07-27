@@ -90,6 +90,7 @@ public class SplashActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             db = new DatabaseHandler(getApplicationContext());
             //db.syncClothes();
+            db.syncClothesTags();
             db.close();
             return "";
         }
