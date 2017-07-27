@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.reube.droby.Database.Clothes;
 import com.example.reube.droby.Database.DatabaseHandler;
+import com.example.reube.droby.Database.Tag;
 import com.example.reube.droby.Database.User;
 import com.example.reube.droby.Fragments.ClothesFragment;
 import com.example.reube.droby.Fragments.MeFragment;
@@ -231,6 +232,19 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
             if (TextUtils.isEmpty(clothes.get(i).getDescription())){
                 clothes_ids.add(Integer.toString(clothes.get(i).getId()));
             }
+            // <-- use this part on first run to set all the tags and then remove after
+            ArrayList<String> tags = db.getClothesTags(clothes.get(i));
+            ArrayList<Tag> addTag = new ArrayList<>();
+            for(int j =0;j<tags.size();j++){
+                Tag tag = new Tag();
+                tag.setClothes_id(clothes.get(i).getId());
+                tag.setName(tags.get(j));
+                tag.setUser_id(user.getId());
+                addTag.add(tag);
+            }
+            clothes.get(i).setTags(addTag);
+            db.updateClothes(clothes.get(i));
+            // until here --> //
         }
         return clothes_ids;
     }

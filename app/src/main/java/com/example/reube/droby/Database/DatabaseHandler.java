@@ -37,8 +37,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 6;
-    private MobileServiceSyncTable<Clothes> clothesMobileServiceSyncTable;
+    private static final int DATABASE_VERSION = 7;
     // Database Name
     private static final String DATABASE_NAME = "droby_database";
 
@@ -49,7 +48,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_OUTFIT ="outfit";
     private static final String TABLE_TAG ="tag";
     private static final String TABLE_FREQUENCY = "frequency";
-
+    private static final String TABLE_CLOTHESTAGS = "clothestags";
     //Common Column names
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
@@ -84,6 +83,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Frequency Table Column names
     private static final String KEY_DATE_WORN = "date_worn";
 
+    //ClothesTags Table Column names
+    private static final String KEY_COLOUR = "colour";
+    private static final String KEY_FIT = "fit";
+    private static final String KEY_CUT = "cut";
+    private static final String KEY_WEATHER = "weather";
+    private static final String KEY_SPECIFIC_CUT = "specific_cut";
+    private static final String KEY_PRINTS = "prints";
+    private static final String KEY_EMBELLISHMENTS = "embellishments";
+    private static final String KEY_MATERIAL = "material";
+    private static final String KEY_FORMALITY = "formality";
+    private static final String KEY_COLOUR_SCHEME = "colour_scheme";
+    private static final String KEY_STYLE = "style";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -97,12 +108,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_OUTFIT_TABLE = "CREATE TABLE " + TABLE_OUTFIT + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+ KEY_OUTFIT_ID + " INTEGER, " + KEY_USER_ID + " INTEGER, "+ KEY_CLOTHES_ID + " INTEGER, "+ KEY_CATEGORY_ID + " TEXT, "+ KEY_NAME+" TEXT, " + KEY_IS_DELETED + " BOOLEAN " + ")";
         String CREATE_TAG_TABLE = "CREATE TABLE " + TABLE_TAG + "("+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_NAME + " TEXT,"+ KEY_USER_ID + " INTEGER," + KEY_CLOTHES_ID + " INTEGER," + KEY_IS_DELETED + " TEXT "+ ")";
         String CREATE_FREQUENCY_TABLE = "CREATE TABLE " + TABLE_FREQUENCY + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_CLOTHES_ID + " INTEGER,"+ KEY_DATE_WORN + " DATETIME "+ ")";
+        String CREATE_CLOTHES_TAGS_TABLE = "CREATE TABLE " + TABLE_CLOTHESTAGS + "(" + KEY_CLOTHES_ID + " INTEGER PRIMARY KEY," + KEY_COLOUR + " TEXT," + KEY_FIT + " TEXT," +KEY_CUT + " TEXT," +KEY_WEATHER + " TEXT," +KEY_SPECIFIC_CUT + " TEXT," +KEY_PRINTS + " TEXT," +KEY_EMBELLISHMENTS + " TEXT," +KEY_MATERIAL + " TEXT," +KEY_FORMALITY + " TEXT," +KEY_COLOUR_SCHEME + " TEXT," +KEY_STYLE + " TEXT)";
 
         db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_CLOTHES_TABLE);
         db.execSQL(CREATE_OUTFIT_TABLE);
         db.execSQL(CREATE_TAG_TABLE);
         db.execSQL(CREATE_FREQUENCY_TABLE);
+        db.execSQL(CREATE_CLOTHES_TAGS_TABLE);
     }
 
     // Upgrading database
@@ -114,6 +127,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_OUTFIT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TAG);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FREQUENCY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CLOTHESTAGS);
         // Create tables again
         onCreate(db);
     }
@@ -346,6 +360,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
                 clothes.setLocation(c.getInt(c.getColumnIndex(KEY_LOCATION)));
                 clothes.setTags(this.getTags(clothes));
+                clothes.setCTags(this.getClothesTags(clothes));
 
                 // Adding clothes to list
                 clothesList.add(clothes);
@@ -379,6 +394,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
                 clothes.setLocation(c.getInt(c.getColumnIndex(KEY_LOCATION)));
                 clothes.setTags(this.getTags(clothes));
+                clothes.setCTags(this.getClothesTags(clothes));
 
                 // Adding clothes to list
                 clothesList.add(clothes);
@@ -412,6 +428,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 clothes.setCreated_date(new Date(c.getLong(c.getColumnIndex(KEY_CREATED_DATE))*1000));
                 clothes.setLocation(c.getInt(c.getColumnIndex(KEY_LOCATION)));
                 clothes.setTags(this.getTags(clothes));
+                clothes.setCTags(this.getClothesTags(clothes));
                 // Adding clothes to list
                 clothesList.add(clothes);
             } while (c.moveToNext());
@@ -496,6 +513,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Tag stuff
+    // NOTE: DO NOT USE THIS METHOD AS ITS MEANT TO BE USED IN GETCLOTHES
+    public ArrayList<String> getClothesTags(Clothes clothes){
+        ArrayList<String> tags = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " + TABLE_CLOTHESTAGS + " WHERE "+ KEY_CLOTHES_ID + " = '"+ clothes.getId()+"'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c.moveToFirst()){
+            do{
+                ClothesTags ct = new ClothesTags();
+                ct.setClothes_id(clothes.getId());
+                ct.setColour(c.getString(c.getColumnIndex(KEY_COLOUR)));
+                ct.setFit(c.getString(c.getColumnIndex(KEY_FIT)));
+                ct.setCut(c.getString(c.getColumnIndex(KEY_CUT)));
+                ct.setWeather(c.getString(c.getColumnIndex(KEY_WEATHER)));
+                ct.setSpecific_cut(c.getString(c.getColumnIndex(KEY_SPECIFIC_CUT)));
+                ct.setPrints(c.getString(c.getColumnIndex(KEY_PRINTS)));
+                ct.setEmbellishments(c.getString(c.getColumnIndex(KEY_EMBELLISHMENTS)));
+                ct.setMaterial(c.getString(c.getColumnIndex(KEY_MATERIAL)));
+                ct.setFormality(c.getString(c.getColumnIndex(KEY_FORMALITY)));
+                ct.setColour_scheme(c.getString(c.getColumnIndex(KEY_COLOUR_SCHEME)));
+                ct.setStyle(c.getString(c.getColumnIndex(KEY_STYLE)));
+
+                tags.addAll(ct.getTags());
+            } while (c.moveToNext());
+        }
+        c.close();
+        db.close();
+        return tags;
+    }
     // NOTE: DO NOT USE THIS METHOD AS ITS MEANT TO BE USED IN GETCLOTHES
     public ArrayList<Tag> getTags(Clothes clothes){
         ArrayList<Tag> tags = new ArrayList<>();
@@ -781,7 +828,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     outfit.setCategory_id(o.getString(KEY_CATEGORY_ID));
                     outfit.setDeleted(o.getBoolean(KEY_IS_DELETED));
 
-                    String query = "INSERT OR REPLACE INTO "+ TABLE_OUTFIT + " (" + KEY_ID + ","+KEY_USER_ID+ "," + KEY_NAME + "," + KEY_OUTFIT_ID+ ","+ KEY_CLOTHES_ID +","+ KEY_CATEGORY_ID +", " + KEY_IS_DELETED+") VALUES ("+outfit.getId()+ ","+outfit.getUser_id()+ ","+outfit.getName()+ ","+outfit.getOutfit_id()+ ","+outfit.getClothes_id()+"," + outfit.getCategory_id()+"," + outfit.isDeleted()+ ")";
+                    String query = "INSERT OR REPLACE INTO "+ TABLE_OUTFIT + " (" + KEY_ID + ","+KEY_USER_ID+ "," + KEY_NAME + "," + KEY_OUTFIT_ID+ ","+ KEY_CLOTHES_ID +","+ KEY_CATEGORY_ID +", " + KEY_IS_DELETED+") VALUES ('"+outfit.getId()+ "','"+outfit.getUser_id()+ "','"+outfit.getName()+ "','"+outfit.getOutfit_id()+ "','"+outfit.getClothes_id()+"','" + outfit.getCategory_id()+"','" + outfit.isDeleted()+ "')";
                     SQLiteDatabase db = this.getWritableDatabase();
                     Cursor cursor = db.rawQuery(query, null);
                     cursor.close();
@@ -878,6 +925,42 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             }
         } return pics;
+    }
+
+    //Sync clothesTags
+    public void syncClothesTags(){
+        String statement = "Select * from clothestags";
+        String result = DatabaseUtilities.getResult(statement);
+        if (result!=null) {
+            try {
+                JSONArray tags = new JSONArray(result);
+                for (int i = 0; i < tags.length(); i++) {
+                    JSONObject o = tags.getJSONObject(i);
+
+                    ContentValues values = new ContentValues();
+                    values.put(KEY_CLOTHES_ID,o.getInt(KEY_CLOTHES_ID));
+                    values.put(KEY_COLOUR,o.getString(KEY_COLOUR));
+                    values.put(KEY_FIT,o.getString(KEY_FIT));
+                    values.put(KEY_CUT,o.getString(KEY_CUT));
+                    values.put(KEY_WEATHER,o.getString(KEY_WEATHER));
+                    values.put(KEY_SPECIFIC_CUT,o.getString(KEY_SPECIFIC_CUT));
+                    values.put(KEY_PRINTS,o.getString(KEY_PRINTS));
+                    values.put(KEY_EMBELLISHMENTS,o.getString(KEY_EMBELLISHMENTS));
+                    values.put(KEY_MATERIAL,o.getString(KEY_MATERIAL));
+                    values.put(KEY_FORMALITY,o.getString(KEY_FORMALITY));
+                    values.put(KEY_COLOUR_SCHEME,o.getString(KEY_COLOUR_SCHEME));
+                    values.put(KEY_STYLE,o.getString(KEY_STYLE));
+
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    // updating row
+                    db.replace(TABLE_CLOTHESTAGS, null,values);
+                    db.close();
+                }
+            } catch (JSONException e){
+                Log.e(TAG, "Json parsing error: " + e.getMessage());
+
+            }
+        }
     }
 
 }

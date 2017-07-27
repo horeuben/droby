@@ -137,9 +137,15 @@ public class Clothes implements Parcelable {
     private boolean selected;
     private int foregroundColour;
     private boolean checkboxClickable;
+    private ArrayList<String> cTags;
 
+    public ArrayList<String> getCTags() {
+        return cTags;
+    }
 
-
+    public void setCTags(ArrayList<String> clothesTags) {
+        this.cTags = clothesTags;
+    }
 
     @Override
     public int describeContents() {
