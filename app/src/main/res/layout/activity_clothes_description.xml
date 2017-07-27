@@ -67,6 +67,7 @@
             app:chip_hasAvatarIcon="false"
             app:chip_labelColor="@color/white"
             app:chip_deletable="false"
+            app:maxRows="3"
             app:hint="Enter a tag"
 
             app:showChipDetailed="false" />
@@ -79,6 +80,7 @@
             app:chip_hasAvatarIcon="false"
             app:chip_labelColor="@color/white"
             app:chip_deletable="true"
+            app:maxRows="3"
             app:hint="Enter a tag"
             app:showChipDetailed="false" />
 
