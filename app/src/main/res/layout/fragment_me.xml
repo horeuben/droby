@@ -23,14 +23,14 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:cropToPadding="false"
-                app:srcCompat="@drawable/ladygaga" />
+                android:src="@drawable/gaga" />
 
             <ImageView
                 android:id="@+id/imageView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                app:srcCompat="@drawable/stats" />
+                app:srcCompat="@drawable/me_stats" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

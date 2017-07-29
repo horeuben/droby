@@ -1,13 +1,16 @@
 package com.example.reube.droby.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
+import com.example.reube.droby.Activities.MeActivity;
 import com.example.reube.droby.R;
 
 /**
@@ -67,7 +70,38 @@ public class MeFragment extends Fragment {
         getActivity().setTitle("Me");
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_me, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_me, container, false);
+
+        ImageButton collection = (ImageButton) rootView.findViewById(R.id.collectionButton);
+        ImageButton friends = (ImageButton) rootView.findViewById(R.id.friendsButton);
+        ImageButton planner = (ImageButton) rootView.findViewById(R.id.plannerButton);
+
+        collection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent collectionIntent = new Intent(getActivity(), MeActivity.class);
+                collectionIntent.putExtra("Extra", "collection");
+                startActivity(collectionIntent);
+            }
+        });
+        friends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent friendsIntent = new Intent(getActivity(), MeActivity.class);
+                friendsIntent.putExtra("Extra", "friends");
+                startActivity(friendsIntent);
+            }
+        });
+        planner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent plannerIntent = new Intent(getActivity(), MeActivity.class);
+                plannerIntent.putExtra("Extra", "planner");
+                startActivity(plannerIntent);
+            }
+        });
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

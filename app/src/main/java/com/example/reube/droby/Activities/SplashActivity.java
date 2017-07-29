@@ -56,7 +56,7 @@ public class SplashActivity extends AppCompatActivity {
         });
         //Check if there's internet connection. if there is, do sync, else just resume from app
         if (isNetworkAvailable()){
-            new SyncDatabase().execute();
+//            new SyncDatabase().execute();
 
         }
     }

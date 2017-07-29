@@ -118,7 +118,7 @@ public class ClothesDescription extends AppCompatActivity {
 
                 saveChanges.setVisibility(View.GONE);
                 editClothesItem.setVisibility(View.VISIBLE);
-                clickTagsMsg.setVisibility(View.INVISIBLE);
+                clickTagsMsg.setVisibility(View.GONE);
                 tagNoEditLayout.setVisibility(View.VISIBLE);
                 tagEditLayout.setVisibility(View.GONE);
                 List<Chip> tags = (List<Chip>) tagEditLayout.getSelectedChipList();

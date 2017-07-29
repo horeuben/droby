@@ -133,19 +133,6 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         disableShiftMode(navigation);
 
-        //has clothes that needs editing
-        db = new DatabaseHandler(this);
-        ArrayList<Clothes> editList = new ArrayList<Clothes>();
-        editList = db.getAllClothes(user, checkIfClothesNeedEditing(user));
-        if (editList.size() > 0) {
-
-            for(int i=0;i<editList.size();i++){
-                Intent editClothesIntent = new Intent(MainActivity.this, NewClothesActivity.class);
-                editClothesIntent.putExtra("clothesID",editList.get(i).getId());
-                startActivity(editClothesIntent);
-            }
-        }
-
 
         if (isNetworkAvailable()){
             new SyncColour().execute();
@@ -153,14 +140,6 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
         else{
             Toast.makeText(this,"No network! Unable to generate recommendation!",Toast.LENGTH_SHORT).show();
         }
-//        SyncColour syncColour = new SyncColour();
-//        if(syncColour.getStatus() == AsyncTask.Status.FINISHED){
-//            new SyncColour().execute(2);
-//            Toast.makeText(this,Integer.toString(s2.size()), Toast.LENGTH_SHORT).show();
-//        }
-//        if(syncColour.getStatus() == AsyncTask.Status.FINISHED){
-//            new SyncColour().execute(3);
-//        }
 
 
         // Check that the activity is using the layout version with
@@ -191,6 +170,21 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
                     // Add the fragment to the 'fragment_container' FrameLayout
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.fragment_container, firstFragment).commit();
+
+                    //has clothes that needs editing
+                    db = new DatabaseHandler(this);
+                    if(checkIfClothesNeedEditing(user).size()>0){
+                        ArrayList<Clothes> editList = new ArrayList<Clothes>();
+                        editList = db.getAllClothes(user, checkIfClothesNeedEditing(user));
+                        if (editList.size() > 0) {
+                            for(int i=0;i<editList.size();i++){
+                                Intent editClothesIntent = new Intent(MainActivity.this, NewClothesActivity.class);
+                                editClothesIntent.putExtra("clothesID",editList.get(i).getId());
+                                startActivity(editClothesIntent);
+                            }
+                        }
+                    }
+
                 }
                 else if(string.equals("Style")){
                     StylesFragment newFragment = new StylesFragment();
@@ -199,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
                             .add(R.id.fragment_container, newFragment).commit();
                     BottomNavigationView navigationView = (BottomNavigationView) findViewById(R.id.navigation);
                     navigationView.setSelectedItemId(R.id.navigation_outfits);
+
 
                 }
 
@@ -244,17 +239,17 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
                 clothes_ids.add(Integer.toString(clothes.get(i).getId()));
             }
             // <-- use this part on first run to set all the tags and then remove after
-            ArrayList<String> tags = db.getClothesTags(clothes.get(i));
-            ArrayList<Tag> addTag = new ArrayList<>();
-            for(int j =0;j<tags.size();j++){
-                Tag tag = new Tag();
-                tag.setClothes_id(clothes.get(i).getId());
-                tag.setName(tags.get(j));
-                tag.setUser_id(user.getId());
-                addTag.add(tag);
-            }
-            clothes.get(i).setTags(addTag);
-            db.updateClothes(clothes.get(i));
+//            ArrayList<String> tags = db.getClothesTags(clothes.get(i));
+//            ArrayList<Tag> addTag = new ArrayList<>();
+//            for(int j =0;j<tags.size();j++){
+//                Tag tag = new Tag();
+//                tag.setClothes_id(clothes.get(i).getId());
+//                tag.setName(tags.get(j));
+//                tag.setUser_id(user.getId());
+//                addTag.add(tag);
+//            }
+//            clothes.get(i).setTags(addTag);
+//            db.updateClothes(clothes.get(i));
             // until here --> //
         }
         return clothes_ids;
@@ -289,6 +284,9 @@ public class MainActivity extends AppCompatActivity implements SocialFragment.On
             if (pd.isShowing()) {
                 pd.dismiss();
             }
+            s1.clear();
+            s2.clear();
+            s3.clear();
             s1.addAll(result.get(0));
             s2.addAll(result.get(1));
             s3.addAll(result.get(2));

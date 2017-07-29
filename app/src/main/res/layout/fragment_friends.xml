@@ -21,9 +21,14 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add Image"
+                android:text=""
                 android:id="@+id/add_image"
-                android:layout_alignParentRight="true"/>
+                android:background="@color/white"
+                android:textColor="@color/white"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="309dp" />
 
             <ImageView
                 android:id="@+id/imageView"

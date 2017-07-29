@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
                 User user = db.getUser(email.getText().toString(),password.getText().toString());
                 if (user!=null){
                     //login successfully!
-                    Toast.makeText(getApplicationContext(),"User "+ user.getNickname()+ " has logged in!",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"User "+ user.getNickname()+ " has logged in!",Toast.LENGTH_SHORT).show();
                     Intent intent=new Intent();
                     //intent.putExtra("email",user.getEmail());
                     MainActivity.user = user;

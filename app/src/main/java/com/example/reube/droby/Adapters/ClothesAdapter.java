@@ -85,7 +85,6 @@ public class ClothesAdapter extends ArrayAdapter<Clothes> {
                         clothes_basket_cart.add(Integer.toString(item.getId()));
                         clothes_cart.add(item);
 //                        Toast.makeText(getContext(), Integer.toString(item.getLocation()),Toast.LENGTH_SHORT).show();
-                        Toast.makeText(getContext(), item.getTags().get(0).getName(),Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
